@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.2.32516.85
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moli-app", "Moli-app.csproj", "{A425D7C5-FD53-4441-8AEB-94CECCF0AE1A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A425D7C5-FD53-4441-8AEB-94CECCF0AE1A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A425D7C5-FD53-4441-8AEB-94CECCF0AE1A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A425D7C5-FD53-4441-8AEB-94CECCF0AE1A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A425D7C5-FD53-4441-8AEB-94CECCF0AE1A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {FC6D9EB6-90F5-48A0-92D9-E3A29D22AB7A}
+	EndGlobalSection
+EndGlobal
