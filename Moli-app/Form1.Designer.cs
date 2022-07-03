@@ -286,6 +286,7 @@
             // 
             // btnAddLogo
             // 
+            this.btnAddLogo.Enabled = false;
             this.btnAddLogo.Location = new System.Drawing.Point(544, 163);
             this.btnAddLogo.Name = "btnAddLogo";
             this.btnAddLogo.Size = new System.Drawing.Size(46, 23);
