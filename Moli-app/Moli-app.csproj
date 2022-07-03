@@ -8,4 +8,9 @@
     <UseWindowsForms>true</UseWindowsForms>
   </PropertyGroup>
 
+  <ItemGroup>
+    <None Remove="Common\Util.cs~RF13b1ef5.TMP" />
+    <None Remove="Common\Util.cs~RF1676a02.TMP" />
+  </ItemGroup>
+
 </Project>
