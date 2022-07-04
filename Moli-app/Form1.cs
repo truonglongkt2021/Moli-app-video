@@ -16,6 +16,7 @@ namespace Moli_app
     public partial class Form1 : Form
     {
         public List<VideoModels> listVideo = new List<VideoModels>();
+        private string Processlog = "";
 
         public Form1()
         {
@@ -31,6 +32,7 @@ namespace Moli_app
 
         private void btnAddFolderVideo_Click(object sender, EventArgs e)
         {
+            listVideo.Clear();
             using (var fbd = new FolderBrowserDialog())
             {
                 DialogResult result = fbd.ShowDialog();
@@ -49,9 +51,10 @@ namespace Moli_app
                     foreach (var file in collection)
                     {
                         // var filePath = fbd.SelectedPath +"\\" + file;
-                        listVideo.Add(new VideoModels { Num = collection.ToList().IndexOf(file) + 1, FileName = Path.GetFileName(file.Name), FilePath = file.FullName });
+                        listVideo.Add(new VideoModels { Num = collection.ToList().IndexOf(file) + 1, GuId = Guid.NewGuid().ToString(), FileName = Path.GetFileName(file.Name), FilePath = file.FullName });
                     }
-                    dataGridView1.DataSource = listVideo;
+                    dataGridView1.DataSource = listVideo.Select(p => new { p.Num, p.FilePath, p.FileName, p.TempPath, p.Commandl }).ToList();
+                    dataGridView1.Refresh();
                 }
             }
         }
@@ -135,60 +138,181 @@ namespace Moli_app
             }
         }
 
-        private void btnProcess1_Click(object sender, EventArgs e)
+        private async void btnProcess1_Click(object sender, EventArgs e)
         {
+            count = 0;
             btnProcess1.Enabled = false;
-            var firstPath = txtAddFirstVideo.Text + cbSelectVideoFirst.SelectedItem;
-            var lastPath = txtAddLastVideo.Text + cbSelectVideoLast.SelectedItem;
+            List<VideoModels> ListTemp = new List<VideoModels>();
+            var fistNameVideo = cbSelectVideoFirst.SelectedItem.ToString();
+            var firstPath = txtAddFirstVideo.Text + fistNameVideo;
+            ListTemp.Add(new VideoModels { FileName = fistNameVideo, FilePath = firstPath, GuId = Guid.NewGuid().ToString() });
+            ListTemp.AddRange(listVideo);
+            var lastNameVideo = cbSelectVideoLast.SelectedItem.ToString();
+            var lastPath = txtAddLastVideo.Text + lastNameVideo;
+            ListTemp.Add(new VideoModels { FileName = lastNameVideo, FilePath = firstPath, GuId = Guid.NewGuid().ToString() });
+            listVideo = ListTemp;
+
             var outputPath = txtVideoOutput.Text;
             var logoPath = txtLogoPath.Text;
+
             var mergef = new Util();
-            var result = mergef.MergeFiles(listVideo, firstPath, lastPath, logoPath, outputPath);
-            rtbCommandProcess.Text = result[1];
-            process(result[0], result[1]);
+            var ffpath = Application.StartupPath + "ffmpeg.exe";
+            string newFolder = Guid.NewGuid().ToString();
+            System.IO.Directory.CreateDirectory(Application.StartupPath + newFolder);
+            //create file cmd
+            if (File.Exists("list.txt")) // If file does not exists
+            {
+                File.Delete("list.txt");
+            }
+            File.Create("list.txt").Close();
+            using (StreamWriter sw = File.AppendText("list.txt"))
+            {
+                foreach (var item in listVideo)
+                {
+                    var OutputEncodeVideo = Guid.NewGuid().ToString() + ".mkv";
+                    sw.WriteLine("file '" + OutputEncodeVideo + "'");
+                    var result = from r in listVideo where r.GuId == item.GuId select r;
+                    result.First().TempPath = OutputEncodeVideo;
+                    var commandl = " -i \"" + item.FilePath + "\" -r 25 -af apad -vf scale=1280:720 -crf 15.0 -vcodec libx264 -acodec aac -ar 48000 -b:a 192k -coder 1 -rc_lookahead 60 -threads 0 -shortest -avoid_negative_ts make_zero -fflags +genpts \"" + OutputEncodeVideo + "\"";
+                    result.First().Commandl = commandl;
+                    result.First().Num = listVideo.IndexOf(item) + 1;
+                    //_ = await processV2(ffpath, commandl);
+                    //this.rtbCommandProcess.Text = commandl;
+                }
+            }
+            dataGridView1.DataSource = listVideo.Select(p => new { p.Num, p.FilePath, p.FileName, p.TempPath, p.Commandl }).OrderBy(p => p.Num).ToList();
+            dataGridView1.Refresh();
+
+            foreach (var item in listVideo)
+            {
+                this.rtbCommandProcess.Text = item.Commandl;
+                eventHandled = new TaskCompletionSource<bool>();
+                await processV2(ffpath, item.Commandl).ConfigureAwait(true);
+                Task.WhenAll();
+            }
+            //rtbCommandProcess.Text = result[1];
+            //process(result[0], result[1]);
             btnProcess1.Enabled = true;
+
+        }
+        private void Timer1_Tick(object Sender, EventArgs e)
+        {
+            // Set the caption to the current time.  
+            //this.rtbResultProcess.Text = DateTime.Now.Second.ToString();
 
         }
         public void ProgressMessage(string message)
         {
             this.rtbResultProcess.Text = message;
         }
-       
-        public void process(string Path_FFMPEG, string strParam)
+        private TaskCompletionSource<bool> eventHandled;
+
+        public async Task<Task> processV2(string Path_FFMPEG, string strParam)
         {
+            Debug.WriteLine("aaaaaa");
             try
             {
-                Process ffmpeg = new Process
+                using (var ffmpeg = new Process())
                 {
+                    ffmpeg.StartInfo.FileName = Path_FFMPEG;
+                    ffmpeg.StartInfo.Arguments = strParam;
+                    ffmpeg.StartInfo.UseShellExecute = false;
+                    ffmpeg.StartInfo.RedirectStandardError = true;
+                    ffmpeg.StartInfo.RedirectStandardOutput = true;
+                    ffmpeg.StartInfo.CreateNoWindow = true;
+                    //ffmpeg.OutputDataReceived += (s, e) => Debug.WriteLine($@"data: {e.Data}");
+                    //ffmpeg.ErrorDataReceived += (s, e) => Debug.WriteLine($@"Error: {e.Data}");
+                    ffmpeg.Start();
+                    ffmpeg.BeginOutputReadLine();
+                    ffmpeg.BeginErrorReadLine();
+                    this.rtbResultProcess.Text = ffmpeg.StandardOutput.ReadToEnd();
+                    this.rtbResultProcess.Update();
+                    //string? processOutput = null;
+                    //while ((processOutput = ffmpeg.StandardError.ReadLine()) != null)
+                    //{
+                    //    // do something with processOutput
+                    //    this.rtbResultProcess.Text += processOutput;
+                    //}
+                    //Task.WaitAll();
+                   // ffmpeg.WaitForExit();
+                    await ffmpeg.WaitForExitAsync().ConfigureAwait(true);
+                    //ffmpeg.Close();
+                    //ffmpeg.Dispose();
+                }
+                return Task.CompletedTask;
+            }
+            catch (Exception ex)
+            {
 
-                    StartInfo = new ProcessStartInfo
-                    {
-                        FileName = Path_FFMPEG,
-                        Arguments = strParam,
-                        UseShellExecute = false,
-                        RedirectStandardError = true,
-                        RedirectStandardOutput = true,
-                        CreateNoWindow = true,
-                    },
-                    EnableRaisingEvents = true
-                };
+            }
+
+            return Task.CompletedTask;
+        }
+        public async Task<bool> processV3(string Path_FFMPEG, string strParam)
+        {
+            Debug.WriteLine("aaaaaa");
+            try
+            {
+                var ffmpeg = new Process();
+                ffmpeg.StartInfo.FileName = Path_FFMPEG;
+                ffmpeg.StartInfo.Arguments = strParam;
+                ffmpeg.StartInfo.UseShellExecute = false;
+                ffmpeg.StartInfo.RedirectStandardError = true;
+                ffmpeg.StartInfo.RedirectStandardOutput = true;
+                ffmpeg.StartInfo.CreateNoWindow = true;
+                //ffmpeg.OutputDataReceived += (s, e) => Debug.WriteLine($@"data: {e.Data}");
+                //ffmpeg.ErrorDataReceived += (s, e) => Debug.WriteLine($@"Error: {e.Data}");
                 ffmpeg.Start();
+                ffmpeg.BeginOutputReadLine();
+                ffmpeg.BeginErrorReadLine();
+                this.rtbResultProcess.Text = ffmpeg.StandardOutput.ReadToEnd();
+                this.rtbResultProcess.Update();
                 //string? processOutput = null;
                 //while ((processOutput = ffmpeg.StandardError.ReadLine()) != null)
                 //{
                 //    // do something with processOutput
                 //    this.rtbResultProcess.Text += processOutput;
                 //}
-                ffmpeg.WaitForExit(3000);
+                //Task.WaitAll();
                 //ffmpeg.WaitForExit();
+                await ffmpeg.WaitForExitAsync().ConfigureAwait(true);
                 ffmpeg.Close();
                 ffmpeg.Dispose();
-                ffmpeg = null;
+                return true;
             }
             catch (Exception ex)
             {
 
             }
+
+            return true;
         }
+        int count = 0;
+        // Handle Exited event and display process information.
+        private void myProcess_Exited(object sender, System.EventArgs e)
+        {
+            this.rtbResultProcess.Text = (count++).ToString();
+            eventHandled.TrySetResult(true);
+        }
+        private void KillAllFFMPEG()
+        {
+            Process killFfmpeg = new Process();
+            ProcessStartInfo taskkillStartInfo = new ProcessStartInfo
+            {
+                FileName = "taskkill",
+                Arguments = "/F /IM ffmpeg.exe",
+                UseShellExecute = false,
+                CreateNoWindow = true
+            };
+
+            killFfmpeg.StartInfo = taskkillStartInfo;
+            killFfmpeg.Start();
+        }
+
+        private void Form1_Closing(object sender, FormClosingEventArgs e)
+        {
+            KillAllFFMPEG();
+        }
+
     }
 }

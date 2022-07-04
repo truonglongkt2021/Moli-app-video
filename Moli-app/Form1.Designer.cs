@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabMergeVideo = new System.Windows.Forms.TabPage();
             this.btnProcess3 = new System.Windows.Forms.Button();
@@ -82,6 +83,7 @@
             this.rtbResultProcess = new System.Windows.Forms.RichTextBox();
             this.label16 = new System.Windows.Forms.Label();
             this.rtbCommandProcess = new System.Windows.Forms.RichTextBox();
+            this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.tabControl1.SuspendLayout();
             this.tabMergeVideo.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
@@ -98,7 +100,7 @@
             this.tabControl1.Location = new System.Drawing.Point(12, 12);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(605, 532);
+            this.tabControl1.Size = new System.Drawing.Size(605, 600);
             this.tabControl1.TabIndex = 0;
             // 
             // tabMergeVideo
@@ -140,14 +142,14 @@
             this.tabMergeVideo.Location = new System.Drawing.Point(4, 24);
             this.tabMergeVideo.Name = "tabMergeVideo";
             this.tabMergeVideo.Padding = new System.Windows.Forms.Padding(3);
-            this.tabMergeVideo.Size = new System.Drawing.Size(597, 504);
+            this.tabMergeVideo.Size = new System.Drawing.Size(597, 572);
             this.tabMergeVideo.TabIndex = 0;
             this.tabMergeVideo.Text = "Nối Video";
             this.tabMergeVideo.UseVisualStyleBackColor = true;
             // 
             // btnProcess3
             // 
-            this.btnProcess3.Location = new System.Drawing.Point(484, 472);
+            this.btnProcess3.Location = new System.Drawing.Point(484, 532);
             this.btnProcess3.Name = "btnProcess3";
             this.btnProcess3.Size = new System.Drawing.Size(106, 23);
             this.btnProcess3.TabIndex = 33;
@@ -156,7 +158,7 @@
             // 
             // btnProcess2
             // 
-            this.btnProcess2.Location = new System.Drawing.Point(372, 473);
+            this.btnProcess2.Location = new System.Drawing.Point(372, 533);
             this.btnProcess2.Name = "btnProcess2";
             this.btnProcess2.Size = new System.Drawing.Size(106, 23);
             this.btnProcess2.TabIndex = 32;
@@ -165,7 +167,7 @@
             // 
             // btnProcess1
             // 
-            this.btnProcess1.Location = new System.Drawing.Point(260, 473);
+            this.btnProcess1.Location = new System.Drawing.Point(260, 533);
             this.btnProcess1.Name = "btnProcess1";
             this.btnProcess1.Size = new System.Drawing.Size(106, 23);
             this.btnProcess1.TabIndex = 1;
@@ -177,7 +179,7 @@
             // 
             this.cboxYoutubeStarndard.AutoSize = true;
             this.cboxYoutubeStarndard.Enabled = false;
-            this.cboxYoutubeStarndard.Location = new System.Drawing.Point(11, 476);
+            this.cboxYoutubeStarndard.Location = new System.Drawing.Point(11, 536);
             this.cboxYoutubeStarndard.Name = "cboxYoutubeStarndard";
             this.cboxYoutubeStarndard.Size = new System.Drawing.Size(137, 19);
             this.cboxYoutubeStarndard.TabIndex = 31;
@@ -186,11 +188,12 @@
             // 
             // dataGridView1
             // 
+            this.dataGridView1.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridView1.Location = new System.Drawing.Point(8, 242);
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.RowTemplate.Height = 25;
-            this.dataGridView1.Size = new System.Drawing.Size(582, 204);
+            this.dataGridView1.Size = new System.Drawing.Size(582, 284);
             this.dataGridView1.TabIndex = 30;
             // 
             // label12
@@ -356,6 +359,7 @@
             this.txtVideoOutput.Name = "txtVideoOutput";
             this.txtVideoOutput.Size = new System.Drawing.Size(531, 23);
             this.txtVideoOutput.TabIndex = 10;
+            this.txtVideoOutput.Text = "F:\\";
             // 
             // label4
             // 
@@ -382,6 +386,7 @@
             this.txtAddLastVideo.Name = "txtAddLastVideo";
             this.txtAddLastVideo.Size = new System.Drawing.Size(260, 23);
             this.txtAddLastVideo.TabIndex = 7;
+            this.txtAddLastVideo.Text = "E:\\";
             // 
             // btnAddFirstVideo
             // 
@@ -399,6 +404,7 @@
             this.txtAddFirstVideo.Name = "txtAddFirstVideo";
             this.txtAddFirstVideo.Size = new System.Drawing.Size(211, 23);
             this.txtAddFirstVideo.TabIndex = 5;
+            this.txtAddFirstVideo.Text = "E:\\";
             // 
             // label3
             // 
@@ -434,6 +440,7 @@
             this.txtFolderVideo.Name = "txtFolderVideo";
             this.txtFolderVideo.Size = new System.Drawing.Size(531, 23);
             this.txtFolderVideo.TabIndex = 1;
+            this.txtFolderVideo.Text = "C:\\Users\\Admins\\Downloads";
             // 
             // label1
             // 
@@ -449,7 +456,7 @@
             this.tabRandomVideoTime.Location = new System.Drawing.Point(4, 24);
             this.tabRandomVideoTime.Name = "tabRandomVideoTime";
             this.tabRandomVideoTime.Padding = new System.Windows.Forms.Padding(3);
-            this.tabRandomVideoTime.Size = new System.Drawing.Size(597, 504);
+            this.tabRandomVideoTime.Size = new System.Drawing.Size(597, 572);
             this.tabRandomVideoTime.TabIndex = 1;
             this.tabRandomVideoTime.Text = "Random Thời gian video";
             this.tabRandomVideoTime.UseVisualStyleBackColor = true;
@@ -459,7 +466,7 @@
             this.tabDownBitrateVideo.Location = new System.Drawing.Point(4, 24);
             this.tabDownBitrateVideo.Name = "tabDownBitrateVideo";
             this.tabDownBitrateVideo.Padding = new System.Windows.Forms.Padding(3);
-            this.tabDownBitrateVideo.Size = new System.Drawing.Size(597, 504);
+            this.tabDownBitrateVideo.Size = new System.Drawing.Size(597, 572);
             this.tabDownBitrateVideo.TabIndex = 2;
             this.tabDownBitrateVideo.Text = "Giảm Bitrate Video";
             this.tabDownBitrateVideo.UseVisualStyleBackColor = true;
@@ -469,7 +476,7 @@
             this.tabAddProxy.Location = new System.Drawing.Point(4, 24);
             this.tabAddProxy.Name = "tabAddProxy";
             this.tabAddProxy.Padding = new System.Windows.Forms.Padding(3);
-            this.tabAddProxy.Size = new System.Drawing.Size(597, 504);
+            this.tabAddProxy.Size = new System.Drawing.Size(597, 572);
             this.tabAddProxy.TabIndex = 3;
             this.tabAddProxy.Text = "Add Proxy";
             this.tabAddProxy.UseVisualStyleBackColor = true;
@@ -595,15 +602,21 @@
             this.rtbCommandProcess.BackColor = System.Drawing.SystemColors.Control;
             this.rtbCommandProcess.Location = new System.Drawing.Point(629, 470);
             this.rtbCommandProcess.Name = "rtbCommandProcess";
-            this.rtbCommandProcess.Size = new System.Drawing.Size(376, 70);
+            this.rtbCommandProcess.Size = new System.Drawing.Size(376, 138);
             this.rtbCommandProcess.TabIndex = 38;
             this.rtbCommandProcess.Text = "";
+            // 
+            // timer1
+            // 
+            this.timer1.Interval = 2000;
+            this.timer1.Tick += new System.EventHandler(this.Timer1_Tick);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1023, 556);
+            this.AutoValidate = System.Windows.Forms.AutoValidate.Disable;
+            this.ClientSize = new System.Drawing.Size(1023, 624);
             this.Controls.Add(this.rtbCommandProcess);
             this.Controls.Add(this.label16);
             this.Controls.Add(this.rtbResultProcess);
@@ -612,6 +625,7 @@
             this.Controls.Add(this.tabControl1);
             this.Name = "Form1";
             this.Text = "Form1";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_Closing);
             this.tabControl1.ResumeLayout(false);
             this.tabMergeVideo.ResumeLayout(false);
             this.tabMergeVideo.PerformLayout();
@@ -680,5 +694,6 @@
         private System.Windows.Forms.RichTextBox rtbResultProcess;
         private System.Windows.Forms.Label label16;
         private System.Windows.Forms.RichTextBox rtbCommandProcess;
+        private System.Windows.Forms.Timer timer1;
     }
 }
