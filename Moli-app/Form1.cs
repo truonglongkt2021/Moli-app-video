@@ -8,6 +8,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -140,56 +141,62 @@ namespace Moli_app
 
         private async void btnProcess1_Click(object sender, EventArgs e)
         {
-            count = 0;
-            btnProcess1.Enabled = false;
-            List<VideoModels> ListTemp = new List<VideoModels>();
-            var fistNameVideo = cbSelectVideoFirst.SelectedItem.ToString();
-            var firstPath = txtAddFirstVideo.Text + fistNameVideo;
-            ListTemp.Add(new VideoModels { FileName = fistNameVideo, FilePath = firstPath, GuId = Guid.NewGuid().ToString() });
-            ListTemp.AddRange(listVideo);
-            var lastNameVideo = cbSelectVideoLast.SelectedItem.ToString();
-            var lastPath = txtAddLastVideo.Text + lastNameVideo;
-            ListTemp.Add(new VideoModels { FileName = lastNameVideo, FilePath = firstPath, GuId = Guid.NewGuid().ToString() });
-            listVideo = ListTemp;
-
-            var outputPath = txtVideoOutput.Text;
-            var logoPath = txtLogoPath.Text;
-
-            var mergef = new Util();
-            var ffpath = Application.StartupPath + "ffmpeg.exe";
-            string newFolder = Guid.NewGuid().ToString();
-            System.IO.Directory.CreateDirectory(Application.StartupPath + newFolder);
-            //create file cmd
-            if (File.Exists("list.txt")) // If file does not exists
+            if (ValidateInput())
             {
-                File.Delete("list.txt");
-            }
-            File.Create("list.txt").Close();
-            using (StreamWriter sw = File.AppendText("list.txt"))
-            {
+                count = 0;
+                btnProcess1.Enabled = false;
+                List<VideoModels> ListTemp = new List<VideoModels>();
+                var fistNameVideo = cbSelectVideoFirst.SelectedItem.ToString();
+                var firstPath = txtAddFirstVideo.Text + fistNameVideo;
+                ListTemp.Add(new VideoModels { FileName = fistNameVideo, FilePath = firstPath, GuId = Guid.NewGuid().ToString() });
+                ListTemp.AddRange(listVideo);
+                var lastNameVideo = cbSelectVideoLast.SelectedItem.ToString();
+                var lastPath = txtAddLastVideo.Text + lastNameVideo;
+                ListTemp.Add(new VideoModels { FileName = lastNameVideo, FilePath = firstPath, GuId = Guid.NewGuid().ToString() });
+                listVideo = ListTemp;
+
+                var outputPath = txtVideoOutput.Text;
+                var logoPath = txtLogoPath.Text;
+
+                var mergef = new Util();
+                var ffpath = Application.StartupPath + "ffmpeg.exe";
+                string newFolder = Guid.NewGuid().ToString();
+                //create file cmd
+                if (File.Exists("list.txt")) // If file does not exists
+                {
+                    File.Delete("list.txt");
+                }
+                File.Create("list.txt").Close();
+                using (StreamWriter sw = File.AppendText("list.txt"))
+                {
+                    foreach (var item in listVideo)
+                    {
+                        var OutputEncodeVideo = Guid.NewGuid().ToString() + ".mkv";
+                        sw.WriteLine("file '" + OutputEncodeVideo + "'");
+                        var result = from r in listVideo where r.GuId == item.GuId select r;
+                        result.First().TempPath = OutputEncodeVideo;
+                        var commandl = " -i \"" + item.FilePath + "\" -r 25 -af apad -vf scale=1280:720 -crf 15.0 -vcodec libx264 -acodec aac -ar 48000 -b:a 192k -coder 1 -rc_lookahead 60 -threads 0 -shortest -avoid_negative_ts make_zero -fflags +genpts \"" + OutputEncodeVideo + "\"";
+                        result.First().Commandl = commandl;
+                        result.First().Num = listVideo.IndexOf(item) + 1;
+                        //_ = await processV2(ffpath, commandl);
+                        //this.rtbCommandProcess.Text = commandl;
+                    }
+                }
+                dataGridView1.DataSource = listVideo.Select(p => new { p.Num, p.FilePath, p.FileName, p.TempPath, p.Commandl }).OrderBy(p => p.Num).ToList();
+                dataGridView1.Refresh();
+
                 foreach (var item in listVideo)
                 {
-                    var OutputEncodeVideo = Guid.NewGuid().ToString() + ".mkv";
-                    sw.WriteLine("file '" + OutputEncodeVideo + "'");
-                    var result = from r in listVideo where r.GuId == item.GuId select r;
-                    result.First().TempPath = OutputEncodeVideo;
-                    var commandl = " -i \"" + item.FilePath + "\" -r 25 -af apad -vf scale=1280:720 -crf 15.0 -vcodec libx264 -acodec aac -ar 48000 -b:a 192k -coder 1 -rc_lookahead 60 -threads 0 -shortest -avoid_negative_ts make_zero -fflags +genpts \"" + OutputEncodeVideo + "\"";
-                    result.First().Commandl = commandl;
-                    result.First().Num = listVideo.IndexOf(item) + 1;
-                    //_ = await processV2(ffpath, commandl);
-                    //this.rtbCommandProcess.Text = commandl;
+                    this.rtbCommandProcess.Text = item.Commandl;
+                    eventHandled = new TaskCompletionSource<bool>();
+                    await processV3(ffpath, item.Commandl);
                 }
+                string commandMerge = " -f concat -safe 0 -i \"" + Application.StartupPath + "list.txt\" -c copy " + outputPath + Guid.NewGuid().ToString() + "_output.mp4";
+                this.rtbCommandProcess.Text = commandMerge;
+                await processV3(ffpath, commandMerge);
+                RemoveVideoTemp();
             }
-            dataGridView1.DataSource = listVideo.Select(p => new { p.Num, p.FilePath, p.FileName, p.TempPath, p.Commandl }).OrderBy(p => p.Num).ToList();
-            dataGridView1.Refresh();
 
-            foreach (var item in listVideo)
-            {
-                this.rtbCommandProcess.Text = item.Commandl;
-                eventHandled = new TaskCompletionSource<bool>();
-                await processV2(ffpath, item.Commandl).ConfigureAwait(true);
-                Task.WhenAll();
-            }
             //rtbCommandProcess.Text = result[1];
             //process(result[0], result[1]);
             btnProcess1.Enabled = true;
@@ -201,12 +208,62 @@ namespace Moli_app
             //this.rtbResultProcess.Text = DateTime.Now.Second.ToString();
 
         }
-        public void ProgressMessage(string message)
+        public bool ValidateInput()
         {
-            this.rtbResultProcess.Text = message;
+            string message = "Vui lòng chọn :";
+            string title = "Thông Báo";
+            MessageBoxButtons buttons = MessageBoxButtons.OK;
+            DialogResult result = DialogResult.No;
+            if (txtFolderVideo.Text == "")
+            {
+                result = MessageBox.Show(message + "Danh sách Video", title, buttons);
+            }
+            else if (cbSelectVideoFirst.SelectedItem == null)
+            {
+                result = MessageBox.Show(message + "Video Ghép Đầu Tiên", title, buttons);
+            }
+            else if (cbSelectVideoLast.SelectedItem == null)
+            {
+                result = MessageBox.Show(message + "Video Ghép Cuối", title, buttons);
+            }
+            else if (txtVideoOutput.Text == "")
+            {
+                result = MessageBox.Show(message + "Nơi xuất Video", title, buttons);
+            }
+            if (result == DialogResult.OK)
+            {
+                btnProcess1.Enabled = true;
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+
         }
         private TaskCompletionSource<bool> eventHandled;
+        private void RemoveVideoTemp()
+        {
+            foreach (string sFile in System.IO.Directory.GetFiles(Application.StartupPath, "*.mkv"))
+            {
+                this.rtbCommandProcess.Text = "Xóa file tạm " + sFile;
+                System.IO.File.Delete(sFile);
+            }
 
+
+            //foreach (var item in listVideo)
+            //{
+            //    this.rtbCommandProcess.Text = "Xóa file tạm " + item.TempPath;
+            //    //if (File.Exists(Path.Combine(Application.StartupPath, item.TempPath)))
+            //    //{
+            //    //    this.rtbCommandProcess.Text = "Xóa file tạm " + item.TempPath;
+            //    //    //If file found, delete it
+            //    //    File.Delete(Path.Combine(Application.StartupPath, item.TempPath));
+            //    //    Thread.Sleep(3000);
+            //    //    Console.WriteLine("File deleted.");
+            //    //}
+            //}
+        }
         public async Task<Task> processV2(string Path_FFMPEG, string strParam)
         {
             Debug.WriteLine("aaaaaa");
@@ -234,7 +291,7 @@ namespace Moli_app
                     //    this.rtbResultProcess.Text += processOutput;
                     //}
                     //Task.WaitAll();
-                   // ffmpeg.WaitForExit();
+                    // ffmpeg.WaitForExit();
                     await ffmpeg.WaitForExitAsync().ConfigureAwait(true);
                     //ffmpeg.Close();
                     //ffmpeg.Dispose();
@@ -260,13 +317,12 @@ namespace Moli_app
                 ffmpeg.StartInfo.RedirectStandardError = true;
                 ffmpeg.StartInfo.RedirectStandardOutput = true;
                 ffmpeg.StartInfo.CreateNoWindow = true;
-                //ffmpeg.OutputDataReceived += (s, e) => Debug.WriteLine($@"data: {e.Data}");
-                //ffmpeg.ErrorDataReceived += (s, e) => Debug.WriteLine($@"Error: {e.Data}");
+                ffmpeg.OutputDataReceived += myProcess_Exited;
+                ffmpeg.ErrorDataReceived += myProcess_Exited;
                 ffmpeg.Start();
                 ffmpeg.BeginOutputReadLine();
                 ffmpeg.BeginErrorReadLine();
-                this.rtbResultProcess.Text = ffmpeg.StandardOutput.ReadToEnd();
-                this.rtbResultProcess.Update();
+
                 //string? processOutput = null;
                 //while ((processOutput = ffmpeg.StandardError.ReadLine()) != null)
                 //{
@@ -289,10 +345,16 @@ namespace Moli_app
         }
         int count = 0;
         // Handle Exited event and display process information.
-        private void myProcess_Exited(object sender, System.EventArgs e)
+        private void myProcess_Exited(object sender, DataReceivedEventArgs e)
         {
-            this.rtbResultProcess.Text = (count++).ToString();
-            eventHandled.TrySetResult(true);
+            //var text = e.Data;
+            rtbResultProcess.Text = e.Data;
+            //if (!string.IsNullOrEmpty(text))
+            //{
+            //    txtBitrateMergeVideo.Text = $"{text.Split("bitrate=")[1].ToString().Split("kbits/s")[0].ToString()}";
+            //}
+            //if (e.Data != null)
+            //    Dispatcher.BeginInvoke(new Action(() => txtOut.Text += (Environment.NewLine + e.Data)));
         }
         private void KillAllFFMPEG()
         {

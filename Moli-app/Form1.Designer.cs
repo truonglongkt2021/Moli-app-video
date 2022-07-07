@@ -584,6 +584,7 @@
             this.rtbResultProcess.BackColor = System.Drawing.SystemColors.Control;
             this.rtbResultProcess.Location = new System.Drawing.Point(629, 357);
             this.rtbResultProcess.Name = "rtbResultProcess";
+            this.rtbResultProcess.ReadOnly = true;
             this.rtbResultProcess.Size = new System.Drawing.Size(376, 92);
             this.rtbResultProcess.TabIndex = 36;
             this.rtbResultProcess.Text = "";
