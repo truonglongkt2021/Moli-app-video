@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,5 +15,29 @@ namespace Moli_app.Common
         public string FilePath { get; set; }
         public string TempPath { get; set; }
         public string Commandl { get; set; }
+    }
+    public static class LogoModels
+    {
+        public static string Path_Logo { get; set; }
+        public static int Scale { get; set; }
+        public static PosLogo Pos_Logo { get; set; }
+        public static int PosY { get; set; }
+        public static int PosX { get; set; }
+        public static string ImagePath { get; set; }
+        public static Size ResizeKeepAspect(this Size src, int maxWidth, int maxHeight, bool enlarge = false)
+        {
+            maxWidth = enlarge ? maxWidth : Math.Min(maxWidth, src.Width);
+            maxHeight = enlarge ? maxHeight : Math.Min(maxHeight, src.Height);
+
+            decimal rnd = Math.Min(maxWidth / (decimal)src.Width, maxHeight / (decimal)src.Height);
+            return new Size((int)Math.Round(src.Width * rnd), (int)Math.Round(src.Height * rnd));
+        }
+    }
+    public enum PosLogo
+    {
+        Left_Top = 1,
+        Left_Bottom = 2,
+        Right_Top = 3,
+        Right_Bottom=4
     }
 }

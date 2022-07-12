@@ -137,6 +137,7 @@ namespace Moli_app
                 fileName = dlg.FileName;
                 txtLogoPath.Text = fileName;
             }
+            LogoModels.Path_Logo = txtLogoPath.Text;
         }
 
         private async void btnProcess1_Click(object sender, EventArgs e)
@@ -264,47 +265,7 @@ namespace Moli_app
             //    //}
             //}
         }
-        public async Task<Task> processV2(string Path_FFMPEG, string strParam)
-        {
-            Debug.WriteLine("aaaaaa");
-            try
-            {
-                using (var ffmpeg = new Process())
-                {
-                    ffmpeg.StartInfo.FileName = Path_FFMPEG;
-                    ffmpeg.StartInfo.Arguments = strParam;
-                    ffmpeg.StartInfo.UseShellExecute = false;
-                    ffmpeg.StartInfo.RedirectStandardError = true;
-                    ffmpeg.StartInfo.RedirectStandardOutput = true;
-                    ffmpeg.StartInfo.CreateNoWindow = true;
-                    //ffmpeg.OutputDataReceived += (s, e) => Debug.WriteLine($@"data: {e.Data}");
-                    //ffmpeg.ErrorDataReceived += (s, e) => Debug.WriteLine($@"Error: {e.Data}");
-                    ffmpeg.Start();
-                    ffmpeg.BeginOutputReadLine();
-                    ffmpeg.BeginErrorReadLine();
-                    this.rtbResultProcess.Text = ffmpeg.StandardOutput.ReadToEnd();
-                    this.rtbResultProcess.Update();
-                    //string? processOutput = null;
-                    //while ((processOutput = ffmpeg.StandardError.ReadLine()) != null)
-                    //{
-                    //    // do something with processOutput
-                    //    this.rtbResultProcess.Text += processOutput;
-                    //}
-                    //Task.WaitAll();
-                    // ffmpeg.WaitForExit();
-                    await ffmpeg.WaitForExitAsync().ConfigureAwait(true);
-                    //ffmpeg.Close();
-                    //ffmpeg.Dispose();
-                }
-                return Task.CompletedTask;
-            }
-            catch (Exception ex)
-            {
-
-            }
-
-            return Task.CompletedTask;
-        }
+        
         public async Task<bool> processV3(string Path_FFMPEG, string strParam)
         {
             Debug.WriteLine("aaaaaa");
@@ -376,5 +337,55 @@ namespace Moli_app
             KillAllFFMPEG();
         }
 
+        private async void btnProcess2_Click(object sender, EventArgs e)
+        {
+            if (listVideo.FirstOrDefault() != null)
+            {
+                LogoModels.ImagePath = await GetPathRandomImagePath(listVideo.FirstOrDefault().FilePath);
+            }
+
+            AddLogo addLogo = new AddLogo();
+            addLogo.Show();
+        }
+        public async Task<string> GetPathRandomImagePath(string videoPath)
+        {
+            Debug.WriteLine("aaaaaa");
+            try
+            {
+                string outputPath = Application.StartupPath + Guid.NewGuid().ToString() + "_Image.png";
+                using (var ffmpeg = new Process())
+                {
+                    ffmpeg.StartInfo.FileName = Application.StartupPath + "ffmpeg.exe"; 
+                    ffmpeg.StartInfo.Arguments = rtbCommandProcess.Text = " -i \"" + videoPath + "\" -ss 10 -frames:v 1 \"" + outputPath+"\"";
+                    ffmpeg.StartInfo.UseShellExecute = false;
+                    ffmpeg.StartInfo.RedirectStandardError = true;
+                    ffmpeg.StartInfo.RedirectStandardOutput = true;
+                    ffmpeg.StartInfo.CreateNoWindow = true;
+                    //ffmpeg.OutputDataReceived += (s, e) => Debug.WriteLine($@"data: {e.Data}");
+                    //ffmpeg.ErrorDataReceived += (s, e) => Debug.WriteLine($@"Error: {e.Data}");
+                    ffmpeg.Start();
+                    ffmpeg.BeginOutputReadLine();
+                    ffmpeg.BeginErrorReadLine();
+                    //string? processOutput = null;
+                    //while ((processOutput = ffmpeg.StandardError.ReadLine()) != null)
+                    //{
+                    //    // do something with processOutput
+                    //    this.rtbResultProcess.Text += processOutput;
+                    //}
+                    //Task.WaitAll();
+                    // ffmpeg.WaitForExit();
+                    await ffmpeg.WaitForExitAsync().ConfigureAwait(true);
+                    //ffmpeg.Close();
+                    //ffmpeg.Dispose();
+                }
+                return outputPath;
+            }
+            catch (Exception ex)
+            {
+
+            }
+
+            return "";
+        }
     }
 }

@@ -162,8 +162,9 @@
             this.btnProcess2.Name = "btnProcess2";
             this.btnProcess2.Size = new System.Drawing.Size(106, 23);
             this.btnProcess2.TabIndex = 32;
-            this.btnProcess2.Text = "Thực hiện 2";
+            this.btnProcess2.Text = "Add logo";
             this.btnProcess2.UseVisualStyleBackColor = true;
+            this.btnProcess2.Click += new System.EventHandler(this.btnProcess2_Click);
             // 
             // btnProcess1
             // 
@@ -289,7 +290,6 @@
             // 
             // btnAddLogo
             // 
-            this.btnAddLogo.Enabled = false;
             this.btnAddLogo.Location = new System.Drawing.Point(544, 163);
             this.btnAddLogo.Name = "btnAddLogo";
             this.btnAddLogo.Size = new System.Drawing.Size(46, 23);
