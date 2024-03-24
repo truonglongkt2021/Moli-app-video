@@ -43,25 +43,30 @@ namespace Moli_app
 
         private void btnSelectDestPath_Click(object sender, EventArgs e)
         {
-            using (var ofd = new OpenFileDialog())
+            using (var fbd = new FolderBrowserDialog())
             {
-                // Thiết lập filter để chỉ hiển thị các file video
-                ofd.Filter = "Video Files|*.mp4;*.avi;*.mov;*.mkv";
+                // Optionally set a description that appears above the tree view control in the dialog box
+                fbd.Description = "Select a destination folder";
 
-                DialogResult result = ofd.ShowDialog();
+                // Optionally set the root folder where the browsing starts from
+                // fbd.RootFolder = Environment.SpecialFolder.MyComputer;
 
-                if (result == DialogResult.OK && !string.IsNullOrWhiteSpace(ofd.FileName))
+                DialogResult result = fbd.ShowDialog();
+
+                if (result == DialogResult.OK && !string.IsNullOrWhiteSpace(fbd.SelectedPath))
                 {
-                    string selectedFilePath = ofd.FileName;
-                    // Sử dụng đường dẫn file đã chọn ở đây
-                    // Ví dụ: Hiển thị đường dẫn file trong một TextBox
-                    txtDestPath.Text = selectedFilePath;
+                    string selectedFolderPath = fbd.SelectedPath;
+                    // Use the selected folder path here
+                    // For example: Display the folder path in a TextBox
+                    txtDestPath.Text = selectedFolderPath;
                 }
             }
         }
 
         private async void btnSplitScense_ClickAsync(object sender, EventArgs e)
         {
+            btnSplitScense.Enabled = false;
+            btnMergeForm.Enabled = false;
             var ffpath = Path.Combine(Application.StartupPath, "ffmpeg.exe");
             string videoSourcePath = txtSourceVideoPath.Text;
             //string command = $"-i \"{videoSourcePath}\" -vf blackdetect=d=0.1:pix_th=0.1 -f rawvideo -y NUL";
@@ -69,7 +74,9 @@ namespace Moli_app
             bool success = await processV3(ffpath, videoSourcePath);
             if (success)
             {
-                // Tiếp tục xử lý sau khi ffmpeg hoàn thành
+                btnSplitScense.Enabled = true;
+                btnMergeForm.Enabled = true;
+
             }
 
         }
@@ -78,7 +85,7 @@ namespace Moli_app
         public async Task<bool> processV3(string Path_FFMPEG, string videoSourcePath)
         {
             // Thư mục chứa file kết quả sau khi phân tích
-            string outputDir = Path.Combine(Path.GetDirectoryName(videoSourcePath), "Scenes");
+            string outputDir = Path.Combine(Path.GetDirectoryName(txtDestPath.Text), "Split_"+Guid.NewGuid().ToString());
             Directory.CreateDirectory(outputDir); // Tạo thư mục nếu chưa tồn tại
 
             // File lưu kết quả phân tích chuyển cảnh
@@ -193,6 +200,7 @@ namespace Moli_app
                     cutProcess.WaitForExit();
                 }
                 rtxError.Text = "done";
+                KillAllFFMPEG();
                 return true;
             }
             catch (Exception ex)
@@ -230,5 +238,19 @@ namespace Moli_app
             killFfmpeg.Start();
         }
 
+        private void btnMergeForm_Click(object sender, EventArgs e)
+        {
+            // Create an instance of FormABC
+            MergeVideo formABC = new MergeVideo();
+
+            // Hide the current form
+            this.Hide();
+
+            // Show FormABC
+            formABC.Show();
+
+            // Optional: Close the current form when FormABC is closed
+            formABC.FormClosed += (s, args) => this.Close();
+        }
     }
 }

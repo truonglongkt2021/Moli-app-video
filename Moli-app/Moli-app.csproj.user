@@ -7,6 +7,9 @@
     <Compile Update="Form1.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Update="MergeVideo.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Update="tiktok.cs">
       <SubType>Form</SubType>
     </Compile>

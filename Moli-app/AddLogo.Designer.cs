@@ -235,7 +235,7 @@
             // 
             this.pbLogoOvelay.BackColor = System.Drawing.Color.Transparent;
             this.pbLogoOvelay.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.pbLogoOvelay.Location = new System.Drawing.Point(407, 256);
+            this.pbLogoOvelay.Location = new System.Drawing.Point(441, 36);
             this.pbLogoOvelay.MinimumSize = new System.Drawing.Size(30, 30);
             this.pbLogoOvelay.Name = "pbLogoOvelay";
             this.pbLogoOvelay.Size = new System.Drawing.Size(50, 50);
