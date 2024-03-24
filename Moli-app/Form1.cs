@@ -49,11 +49,11 @@ namespace Moli_app
                     //show number of video read
                     txtTotalVideoEachVideo_1.Text = collection.Length.ToString();
                     //string[] files = (string[])Directory.GetFiles(fbd.SelectedPath).Where(file => allowedVideoExtensions.Any(file.ToLower().EndsWith));
-                    foreach (var file in collection)
-                    {
-                        // var filePath = fbd.SelectedPath +"\\" + file;
-                        listVideo.Add(new VideoModels { Num = collection.ToList().IndexOf(file) + 1, GuId = Guid.NewGuid().ToString(), FileName = Path.GetFileName(file.Name), FilePath = file.FullName });
-                    }
+                    //foreach (var file in collection)
+                    //{
+                    //    // var filePath = fbd.SelectedPath +"\\" + file;
+                    //    listVideo.Add(new VideoModels { Num = collection.ToList().IndexOf(file) + 1, GuId = Guid.NewGuid().ToString(), FileName = Path.GetFileName(file.Name), FilePath = file.FullName });
+                    //}
                     dataGridView1.DataSource = listVideo.Select(p => new { p.Num, p.FilePath, p.FileName, p.TempPath, p.Commandl }).ToList();
                     dataGridView1.Refresh();
                 }
@@ -278,8 +278,8 @@ namespace Moli_app
                 ffmpeg.StartInfo.RedirectStandardError = true;
                 ffmpeg.StartInfo.RedirectStandardOutput = true;
                 ffmpeg.StartInfo.CreateNoWindow = true;
-                ffmpeg.OutputDataReceived += myProcess_Exited;
-                ffmpeg.ErrorDataReceived += myProcess_Exited;
+                //ffmpeg.OutputDataReceived += myProcess_Exited;
+                //ffmpeg.ErrorDataReceived += myProcess_Exited;
                 ffmpeg.Start();
                 ffmpeg.BeginOutputReadLine();
                 ffmpeg.BeginErrorReadLine();
