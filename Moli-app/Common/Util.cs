@@ -12,6 +12,14 @@ using System.Text.RegularExpressions;
 
 namespace Moli_app.Common
 {
+    public class VideoYoutubeShort
+    {
+        public string Name { get; set; }
+        public string Title{ get; set; }
+        public string ImageUrl { get; set; }
+        public string VideoUrl { get; set; }
+        public string Duration { get; set; }
+    }
     public class VideoShort
     {
         public VideoShort()
@@ -62,7 +70,7 @@ namespace Moli_app.Common
         public static TimeSpan GetMediaDurationWithFFmpeg(string filePath)
         {
             // Đường dẫn tới ffmpeg, thay đổi nếu cần
-            string ffmpegPath = Path.Combine(Application.StartupPath, "ffmpeg.exe");
+            string ffmpegPath = Path.Combine(Application.StartupPath, "amazingtech.exe");
 
             // Tạo và cấu hình ProcessStartInfo
             var processStartInfo = new ProcessStartInfo
@@ -114,7 +122,7 @@ namespace Moli_app.Common
             for (int i = 0; i < totalNumVidOut && i < listAudioShort.Count; i++)
             {
                 var mixVideo = new MixVideo();
-                mixVideo.audioShort = listAudioShort.OrderBy(x => rnd.Next()).ToList()[i];
+                mixVideo.audioShort = listAudioShort.OrderBy(x => rnd.Next()).ToList()[0];
 
                 TimeSpan currentDuration = TimeSpan.Zero;
 
@@ -141,36 +149,53 @@ namespace Moli_app.Common
 
                 listMixVideos.Add(mixVideo);
             }
-
             return listMixVideos;
         }
+        public static void KillAllFFMPEG()
+        {
+            Process killFfmpeg = new Process();
+            ProcessStartInfo taskkillStartInfo = new ProcessStartInfo
+            {
+                FileName = "taskkill",
+                Arguments = "/F /IM ffmpeg.exe",
+                UseShellExecute = false,
+                CreateNoWindow = true
+            };
 
-        public static void MergeVideosWithAudio(MixVideo mixVideo, string outputFilePath)
+            killFfmpeg.StartInfo = taskkillStartInfo;
+            killFfmpeg.Start();
+        }
+        public static void MergeVideosWithAudio(MixVideo mixVideo, string outputFilePath, bool isHorizontal)
         {
             StringBuilder filterComplex = new StringBuilder();
             StringBuilder inputFiles = new StringBuilder();
-            var ffpath = Path.Combine(Application.StartupPath, "ffmpeg.exe");
+            var ffpath = Path.Combine(Application.StartupPath, "amazingtech.exe");
             int videoIndex = 0;
 
-            // Thêm các video vào danh sách input
+            // Xác định tỉ lệ màn hình dựa vào isHorizontal
+            string scaleFilter = isHorizontal ? "scale=1920:1080" : "scale=1080:1920"; // Ví dụ về tỉ lệ 16:9 cho ngang và 9:16 cho dọc
+
             foreach (var video in mixVideo.listVideo)
             {
                 inputFiles.Append($"-i \"{video.FullPath}\" ");
-                // Chỉ thêm stream video vào filter_complex, bỏ qua stream audio của video
-                filterComplex.Append($"[{videoIndex}:v:0] ");
+                // Thêm điều chỉnh tỉ lệ màn hình vào filter_complex
+                filterComplex.Append($"[{videoIndex}:v:0] {scaleFilter} [scaled{videoIndex}]; ");
                 videoIndex++;
             }
 
-            // Thêm audio vào danh sách input
-            inputFiles.Append($"-i \"{mixVideo.audioShort.FullPath}\" ");
-            // Sử dụng filter_complex để ghép các video (không có âm thanh) và sau đó thêm audio
-            // Cắt audio sao cho bằng với tổng thời gian của video
+            // Tạo phần concat trong filter_complex
+            for (int i = 0; i < videoIndex; i++)
+            {
+                filterComplex.Append($"[scaled{i}] ");
+            }
             filterComplex.Append($"concat=n={videoIndex}:v=1:a=0 [v]; ");
-            filterComplex.Append($"[{videoIndex}:a:0] atrim=0:{TotalVideoDuration(mixVideo)} [aout]");
+
+            // Thêm audio vào danh sách input và thiết lập atrim
+            inputFiles.Append($"-i \"{mixVideo.audioShort.FullPath}\" ");
+            filterComplex.Append($"[{videoIndex}:a:0] atrim=0:{TotalVideoDuration(mixVideo)} [aout];");
 
             string ffmpegArgs = $"{inputFiles} -filter_complex \"{filterComplex}\" -map \"[v]\" -map \"[aout]\" \"{outputFilePath}\\{Guid.NewGuid().ToString()}{mixVideo.name}.mp4\"";
 
-            // Khởi chạy FFmpeg với các tham số đã được xây dựng
             using (var process = new Process())
             {
                 process.StartInfo.FileName = ffpath;
@@ -180,11 +205,11 @@ namespace Moli_app.Common
                 process.StartInfo.CreateNoWindow = true;
                 process.Start();
 
-                // Đọc output để debug nếu cần
                 string stderr = process.StandardError.ReadToEnd();
                 process.WaitForExit();
             }
         }
+
 
         // Hàm để tính tổng thời gian của các video
         public static double TotalVideoDuration(MixVideo mixVideo)
@@ -208,8 +233,8 @@ namespace Moli_app.Common
         {
             List<string> listResult = new List<string>();
             var tasks = new List<Task>();
-            listResult.Add(Application.StartupPath + "ffmpeg.exe");
-            var ffpath = Application.StartupPath + "ffmpeg.exe";
+            listResult.Add(Application.StartupPath + "amazingtech.exe");
+            var ffpath = Application.StartupPath + "amazingtech.exe";
             string newFolder = Guid.NewGuid().ToString();
             System.IO.Directory.CreateDirectory(Application.StartupPath + newFolder);
             //create file cmd
@@ -251,7 +276,7 @@ namespace Moli_app.Common
         {
             List<string> listResult = new List<string>();
 
-            listResult.Add(Application.StartupPath + "ffmpeg.exe");
+            listResult.Add(Application.StartupPath + "amazingtech.exe");
 
             //Merging two videos               
             string _FirstPath = FirstPath;

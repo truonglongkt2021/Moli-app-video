@@ -38,6 +38,7 @@
             this.rtbResultProcess = new System.Windows.Forms.RichTextBox();
             this.rtxError = new System.Windows.Forms.RichTextBox();
             this.btnMergeForm = new System.Windows.Forms.Button();
+            this.btnSearchYoutubeShort = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // txtSourceVideoPath
@@ -131,11 +132,22 @@
             this.btnMergeForm.UseVisualStyleBackColor = false;
             this.btnMergeForm.Click += new System.EventHandler(this.btnMergeForm_Click);
             // 
+            // btnSearchYoutubeShort
+            // 
+            this.btnSearchYoutubeShort.Location = new System.Drawing.Point(30, 314);
+            this.btnSearchYoutubeShort.Name = "btnSearchYoutubeShort";
+            this.btnSearchYoutubeShort.Size = new System.Drawing.Size(506, 43);
+            this.btnSearchYoutubeShort.TabIndex = 10;
+            this.btnSearchYoutubeShort.Text = "Tìm Video Short";
+            this.btnSearchYoutubeShort.UseVisualStyleBackColor = true;
+            this.btnSearchYoutubeShort.Click += new System.EventHandler(this.btnSearchYoutubeShort_Click);
+            // 
             // tiktok
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(576, 320);
+            this.ClientSize = new System.Drawing.Size(576, 369);
+            this.Controls.Add(this.btnSearchYoutubeShort);
             this.Controls.Add(this.btnMergeForm);
             this.Controls.Add(this.rtxError);
             this.Controls.Add(this.rtbResultProcess);
@@ -165,5 +177,6 @@
         private System.Windows.Forms.RichTextBox rtbResultProcess;
         private System.Windows.Forms.RichTextBox rtxError;
         private System.Windows.Forms.Button btnMergeForm;
+        private System.Windows.Forms.Button btnSearchYoutubeShort;
     }
 }

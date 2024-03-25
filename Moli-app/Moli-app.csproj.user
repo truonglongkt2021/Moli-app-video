@@ -1,5 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <_LastSelectedProfileId>D:\Project\moliapp\Moli-app-video\Moli-app\Properties\PublishProfiles\ClickOnceProfile.pubxml</_LastSelectedProfileId>
+  </PropertyGroup>
   <ItemGroup>
     <Compile Update="AddLogo.cs">
       <SubType>Form</SubType>
@@ -8,6 +11,9 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Update="MergeVideo.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="SearchVideoShort.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Update="tiktok.cs">

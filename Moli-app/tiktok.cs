@@ -65,9 +65,19 @@ namespace Moli_app
 
         private async void btnSplitScense_ClickAsync(object sender, EventArgs e)
         {
+            if(txtSourceVideoPath.Text=="")
+            {
+                MessageBox.Show("Vui lòng chọn đường dẫn Video");
+                return;
+            }
+            else if(txtDestPath.Text=="")
+            {
+                MessageBox.Show("Vui lòng chọn đường dẫn tách Video");
+                return;
+            }    
             btnSplitScense.Enabled = false;
             btnMergeForm.Enabled = false;
-            var ffpath = Path.Combine(Application.StartupPath, "ffmpeg.exe");
+            var ffpath = Path.Combine(Application.StartupPath, "amazingtech.exe");
             string videoSourcePath = txtSourceVideoPath.Text;
             //string command = $"-i \"{videoSourcePath}\" -vf blackdetect=d=0.1:pix_th=0.1 -f rawvideo -y NUL";
 
@@ -85,7 +95,7 @@ namespace Moli_app
         public async Task<bool> processV3(string Path_FFMPEG, string videoSourcePath)
         {
             // Thư mục chứa file kết quả sau khi phân tích
-            string outputDir = Path.Combine(Path.GetDirectoryName(txtDestPath.Text), "Split_"+Guid.NewGuid().ToString());
+            string outputDir = Path.GetDirectoryName(txtDestPath.Text+"\\Split_"+Guid.NewGuid().ToString());
             Directory.CreateDirectory(outputDir); // Tạo thư mục nếu chưa tồn tại
 
             // File lưu kết quả phân tích chuyển cảnh
@@ -242,6 +252,21 @@ namespace Moli_app
         {
             // Create an instance of FormABC
             MergeVideo formABC = new MergeVideo();
+
+            // Hide the current form
+            this.Hide();
+
+            // Show FormABC
+            formABC.Show();
+
+            // Optional: Close the current form when FormABC is closed
+            formABC.FormClosed += (s, args) => this.Close();
+        }
+
+        private void btnSearchYoutubeShort_Click(object sender, EventArgs e)
+        {
+            // Create an instance of FormABC
+            SearchVideoShort formABC = new SearchVideoShort();
 
             // Hide the current form
             this.Hide();

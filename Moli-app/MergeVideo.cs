@@ -142,18 +142,57 @@ namespace Moli_app
 
         private void btnMergeVideo_Click(object sender, EventArgs e)
         {
+            DisableAllButtons(this,false);
+            gbMergeVideo.Visible = true;
+            gbMergeVideo.Value = 1;
+            if (!VideoShorts.Any())
+            {
+                DisableAllButtons(this, true);
+
+                MessageBox.Show("Vui lòng chọn nguồn phát Videos");
+                return;
+            }
+            else if (!AudioShorts.Any())
+            {
+                DisableAllButtons(this, true);
+
+                MessageBox.Show("Vui lòng chọn nguồn phát Audio");
+                return;
+            }
+            else if (txtOutputPath.Text == "")
+            {
+                DisableAllButtons(this, true);
+
+                MessageBox.Show("Vui lòng chọn đường dẫn xuất video");
+                return;
+            }
+            var isHorizontal = false;
+            if (rbHorizontal.Checked)
+            {
+                isHorizontal = true;
+            }
             btnMergeVideo.Enabled = false;
             var totalVideoOut = int.Parse(txtNumOfVideo.Text);
             TimeSpan duration;
-
             try
             {
                 duration = TimeSpan.Parse(txtDurationVideo.Text);
                 // Parse thành công, 'duration' giờ chứa giá trị TimeSpan tương ứng
                 var listMix = Util.MixVideoUtil(VideoShorts, AudioShorts, totalVideoOut, duration);
+                // Kiểm tra để tránh chia cho 0
+                if (listMix.Count() > 0)
+                {
+                    gbMergeVideo.Step = (int)Math.Round((1 / (double)listMix.Count()) * 100, 0);
+                }
+                else
+                {
+                    // Đặt gbMergeVideo.Step tới một giá trị mặc định nếu listMix không có phần tử nào
+                    gbMergeVideo.Step = 0; // Hoặc bất kỳ giá trị mặc định nào phù hợp
+                }
                 foreach (var item in listMix)
                 {
-                    Util.MergeVideosWithAudio(item, txtOutputPath.Text);
+                    Util.MergeVideosWithAudio(item, txtOutputPath.Text, isHorizontal);
+                    gbMergeVideo.PerformStep();
                 }
             }
             catch (Exception ex)
@@ -161,9 +200,28 @@ namespace Moli_app
                 Console.WriteLine(ex.Message);
             }
             btnMergeVideo.Enabled = true;
-
+            DisableAllButtons(this, true);
+            gbMergeVideo.Visible = false;
+            gbMergeVideo.Value = 0;
+            gbMergeVideo.Step = 0;
         }
+        private void DisableAllButtons(Control parent,bool enablebutton=false)
+        {
+            foreach (Control c in parent.Controls)
+            {
+                // Nếu control là Button, vô hiệu hóa nó
+                if (c is Button)
+                {
+                    ((Button)c).Enabled = enablebutton;
+                }
 
+                // Nếu control chứa các control khác (ví dụ: Panel, GroupBox,...), kiểm tra chúng một cách đệ quy
+                if (c.HasChildren)
+                {
+                    DisableAllButtons(c);
+                }
+            }
+        }
         private void btnSelectOutputPath_Click(object sender, EventArgs e)
         {
             using (var fbd = new FolderBrowserDialog())
@@ -181,6 +239,11 @@ namespace Moli_app
                     txtOutputPath.Text = selectedFolderPath;
                 }
             }
+        }
+
+        private void tìmVideoShortToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
         }
     }
 

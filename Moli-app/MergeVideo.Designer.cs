@@ -50,19 +50,27 @@
             this.label11 = new System.Windows.Forms.Label();
             this.lbTotalDurationAudio = new System.Windows.Forms.Label();
             this.btnSplitVideo = new System.Windows.Forms.Button();
-            this.rtbOutput = new System.Windows.Forms.RichTextBox();
             this.aaa = new System.Windows.Forms.Label();
             this.txtOutputPath = new System.Windows.Forms.TextBox();
             this.btnSelectOutputPath = new System.Windows.Forms.Button();
+            this.rbVertical = new System.Windows.Forms.RadioButton();
+            this.rbHorizontal = new System.Windows.Forms.RadioButton();
+            this.gbMergeVideo = new System.Windows.Forms.ProgressBar();
+            this.menuStrip1 = new System.Windows.Forms.MenuStrip();
+            this.menuFull = new System.Windows.Forms.ToolStripMenuItem();
+            this.tìmVideoShortToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.táchVideoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.ghépVideoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.dgvListOutput)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvAudioList)).BeginInit();
+            this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // lbtotalDurationVideo
             // 
             this.lbtotalDurationVideo.AutoSize = true;
             this.lbtotalDurationVideo.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.lbtotalDurationVideo.Location = new System.Drawing.Point(190, 242);
+            this.lbtotalDurationVideo.Location = new System.Drawing.Point(190, 295);
             this.lbtotalDurationVideo.Name = "lbtotalDurationVideo";
             this.lbtotalDurationVideo.Size = new System.Drawing.Size(55, 15);
             this.lbtotalDurationVideo.TabIndex = 34;
@@ -71,7 +79,7 @@
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(123, 242);
+            this.label8.Location = new System.Drawing.Point(123, 295);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(64, 15);
             this.label8.TabIndex = 33;
@@ -81,7 +89,7 @@
             // 
             this.lbTotalVideoSource.AutoSize = true;
             this.lbTotalVideoSource.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.lbTotalVideoSource.Location = new System.Drawing.Point(86, 241);
+            this.lbTotalVideoSource.Location = new System.Drawing.Point(86, 294);
             this.lbTotalVideoSource.Name = "lbTotalVideoSource";
             this.lbTotalVideoSource.Size = new System.Drawing.Size(14, 15);
             this.lbTotalVideoSource.TabIndex = 32;
@@ -90,7 +98,7 @@
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(26, 241);
+            this.label6.Location = new System.Drawing.Point(26, 294);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(54, 15);
             this.label6.TabIndex = 31;
@@ -99,7 +107,7 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(23, 22);
+            this.label5.Location = new System.Drawing.Point(23, 75);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(77, 15);
             this.label5.TabIndex = 30;
@@ -107,14 +115,14 @@
             // 
             // txtSourceVideoMerge
             // 
-            this.txtSourceVideoMerge.Location = new System.Drawing.Point(106, 19);
+            this.txtSourceVideoMerge.Location = new System.Drawing.Point(106, 72);
             this.txtSourceVideoMerge.Name = "txtSourceVideoMerge";
-            this.txtSourceVideoMerge.Size = new System.Drawing.Size(315, 23);
+            this.txtSourceVideoMerge.Size = new System.Drawing.Size(210, 23);
             this.txtSourceVideoMerge.TabIndex = 29;
             // 
             // btnSelectVideoMerge
             // 
-            this.btnSelectVideoMerge.Location = new System.Drawing.Point(427, 19);
+            this.btnSelectVideoMerge.Location = new System.Drawing.Point(322, 72);
             this.btnSelectVideoMerge.Name = "btnSelectVideoMerge";
             this.btnSelectVideoMerge.Size = new System.Drawing.Size(102, 23);
             this.btnSelectVideoMerge.TabIndex = 28;
@@ -124,9 +132,9 @@
             // 
             // btnMergeVideo
             // 
-            this.btnMergeVideo.Location = new System.Drawing.Point(449, 312);
+            this.btnMergeVideo.Location = new System.Drawing.Point(853, 195);
             this.btnMergeVideo.Name = "btnMergeVideo";
-            this.btnMergeVideo.Size = new System.Drawing.Size(170, 23);
+            this.btnMergeVideo.Size = new System.Drawing.Size(374, 31);
             this.btnMergeVideo.TabIndex = 27;
             this.btnMergeVideo.Text = "Ghép";
             this.btnMergeVideo.UseVisualStyleBackColor = true;
@@ -135,7 +143,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(243, 321);
+            this.label4.Location = new System.Drawing.Point(1073, 119);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(73, 15);
             this.label4.TabIndex = 26;
@@ -143,22 +151,24 @@
             // 
             // txtDurationVideo
             // 
-            this.txtDurationVideo.Location = new System.Drawing.Point(322, 313);
+            this.txtDurationVideo.Location = new System.Drawing.Point(1152, 116);
             this.txtDurationVideo.Name = "txtDurationVideo";
-            this.txtDurationVideo.Size = new System.Drawing.Size(102, 23);
+            this.txtDurationVideo.Size = new System.Drawing.Size(75, 23);
             this.txtDurationVideo.TabIndex = 25;
+            this.txtDurationVideo.Text = "00:01:00";
             // 
             // txtNumOfVideo
             // 
-            this.txtNumOfVideo.Location = new System.Drawing.Point(120, 313);
+            this.txtNumOfVideo.Location = new System.Drawing.Point(961, 116);
             this.txtNumOfVideo.Name = "txtNumOfVideo";
-            this.txtNumOfVideo.Size = new System.Drawing.Size(104, 23);
+            this.txtNumOfVideo.Size = new System.Drawing.Size(79, 23);
             this.txtNumOfVideo.TabIndex = 24;
+            this.txtNumOfVideo.Text = "3";
             // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(18, 317);
+            this.label3.Location = new System.Drawing.Point(853, 119);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(96, 15);
             this.label3.TabIndex = 23;
@@ -167,16 +177,16 @@
             // dgvListOutput
             // 
             this.dgvListOutput.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvListOutput.Location = new System.Drawing.Point(23, 53);
+            this.dgvListOutput.Location = new System.Drawing.Point(23, 106);
             this.dgvListOutput.Name = "dgvListOutput";
             this.dgvListOutput.RowTemplate.Height = 25;
-            this.dgvListOutput.Size = new System.Drawing.Size(506, 179);
+            this.dgvListOutput.Size = new System.Drawing.Size(401, 179);
             this.dgvListOutput.TabIndex = 22;
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(565, 27);
+            this.label1.Location = new System.Drawing.Point(441, 77);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(98, 15);
             this.label1.TabIndex = 35;
@@ -184,14 +194,14 @@
             // 
             // txtSourceAudio
             // 
-            this.txtSourceAudio.Location = new System.Drawing.Point(669, 24);
+            this.txtSourceAudio.Location = new System.Drawing.Point(545, 74);
             this.txtSourceAudio.Name = "txtSourceAudio";
-            this.txtSourceAudio.Size = new System.Drawing.Size(319, 23);
+            this.txtSourceAudio.Size = new System.Drawing.Size(169, 23);
             this.txtSourceAudio.TabIndex = 36;
             // 
             // btnSelectSourceAudio
             // 
-            this.btnSelectSourceAudio.Location = new System.Drawing.Point(994, 24);
+            this.btnSelectSourceAudio.Location = new System.Drawing.Point(723, 75);
             this.btnSelectSourceAudio.Name = "btnSelectSourceAudio";
             this.btnSelectSourceAudio.Size = new System.Drawing.Size(98, 23);
             this.btnSelectSourceAudio.TabIndex = 37;
@@ -202,16 +212,16 @@
             // dgvAudioList
             // 
             this.dgvAudioList.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvAudioList.Location = new System.Drawing.Point(565, 53);
+            this.dgvAudioList.Location = new System.Drawing.Point(441, 106);
             this.dgvAudioList.Name = "dgvAudioList";
             this.dgvAudioList.RowTemplate.Height = 25;
-            this.dgvAudioList.Size = new System.Drawing.Size(527, 179);
+            this.dgvAudioList.Size = new System.Drawing.Size(380, 179);
             this.dgvAudioList.TabIndex = 38;
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(565, 242);
+            this.label2.Location = new System.Drawing.Point(565, 295);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(54, 15);
             this.label2.TabIndex = 39;
@@ -221,7 +231,7 @@
             // 
             this.lbTotalAudio.AutoSize = true;
             this.lbTotalAudio.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.lbTotalAudio.Location = new System.Drawing.Point(622, 242);
+            this.lbTotalAudio.Location = new System.Drawing.Point(622, 295);
             this.lbTotalAudio.Name = "lbTotalAudio";
             this.lbTotalAudio.Size = new System.Drawing.Size(14, 15);
             this.lbTotalAudio.TabIndex = 40;
@@ -230,7 +240,7 @@
             // label11
             // 
             this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(669, 242);
+            this.label11.Location = new System.Drawing.Point(669, 295);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(67, 15);
             this.label11.TabIndex = 41;
@@ -240,7 +250,7 @@
             // 
             this.lbTotalDurationAudio.AutoSize = true;
             this.lbTotalDurationAudio.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.lbTotalDurationAudio.Location = new System.Drawing.Point(742, 242);
+            this.lbTotalDurationAudio.Location = new System.Drawing.Point(742, 295);
             this.lbTotalDurationAudio.Name = "lbTotalDurationAudio";
             this.lbTotalDurationAudio.Size = new System.Drawing.Size(55, 15);
             this.lbTotalDurationAudio.TabIndex = 42;
@@ -249,27 +259,18 @@
             // btnSplitVideo
             // 
             this.btnSplitVideo.BackColor = System.Drawing.SystemColors.Highlight;
-            this.btnSplitVideo.Location = new System.Drawing.Point(651, 312);
+            this.btnSplitVideo.Location = new System.Drawing.Point(853, 232);
             this.btnSplitVideo.Name = "btnSplitVideo";
-            this.btnSplitVideo.Size = new System.Drawing.Size(170, 24);
+            this.btnSplitVideo.Size = new System.Drawing.Size(374, 53);
             this.btnSplitVideo.TabIndex = 43;
             this.btnSplitVideo.Text = "Tách Video";
             this.btnSplitVideo.UseVisualStyleBackColor = false;
             this.btnSplitVideo.Click += new System.EventHandler(this.btnSplitVideo_Click);
             // 
-            // rtbOutput
-            // 
-            this.rtbOutput.BackColor = System.Drawing.SystemColors.InactiveCaption;
-            this.rtbOutput.Location = new System.Drawing.Point(847, 239);
-            this.rtbOutput.Name = "rtbOutput";
-            this.rtbOutput.Size = new System.Drawing.Size(245, 96);
-            this.rtbOutput.TabIndex = 44;
-            this.rtbOutput.Text = "";
-            // 
             // aaa
             // 
             this.aaa.AutoSize = true;
-            this.aaa.Location = new System.Drawing.Point(58, 284);
+            this.aaa.Location = new System.Drawing.Point(853, 82);
             this.aaa.Name = "aaa";
             this.aaa.Size = new System.Drawing.Size(56, 15);
             this.aaa.TabIndex = 45;
@@ -277,30 +278,103 @@
             // 
             // txtOutputPath
             // 
-            this.txtOutputPath.Location = new System.Drawing.Point(120, 281);
+            this.txtOutputPath.Location = new System.Drawing.Point(915, 78);
             this.txtOutputPath.Name = "txtOutputPath";
-            this.txtOutputPath.Size = new System.Drawing.Size(304, 23);
+            this.txtOutputPath.Size = new System.Drawing.Size(213, 23);
             this.txtOutputPath.TabIndex = 46;
             // 
             // btnSelectOutputPath
             // 
-            this.btnSelectOutputPath.Location = new System.Drawing.Point(454, 280);
+            this.btnSelectOutputPath.Location = new System.Drawing.Point(1134, 77);
             this.btnSelectOutputPath.Name = "btnSelectOutputPath";
-            this.btnSelectOutputPath.Size = new System.Drawing.Size(165, 23);
+            this.btnSelectOutputPath.Size = new System.Drawing.Size(93, 23);
             this.btnSelectOutputPath.TabIndex = 47;
             this.btnSelectOutputPath.Text = "Chọn";
             this.btnSelectOutputPath.UseVisualStyleBackColor = true;
             this.btnSelectOutputPath.Click += new System.EventHandler(this.btnSelectOutputPath_Click);
             // 
+            // rbVertical
+            // 
+            this.rbVertical.AutoSize = true;
+            this.rbVertical.Location = new System.Drawing.Point(856, 157);
+            this.rbVertical.Name = "rbVertical";
+            this.rbVertical.Size = new System.Drawing.Size(99, 19);
+            this.rbVertical.TabIndex = 48;
+            this.rbVertical.Text = "Màn hình dọc";
+            this.rbVertical.UseVisualStyleBackColor = true;
+            // 
+            // rbHorizontal
+            // 
+            this.rbHorizontal.AutoSize = true;
+            this.rbHorizontal.Checked = true;
+            this.rbHorizontal.Location = new System.Drawing.Point(977, 157);
+            this.rbHorizontal.Name = "rbHorizontal";
+            this.rbHorizontal.Size = new System.Drawing.Size(113, 19);
+            this.rbHorizontal.TabIndex = 49;
+            this.rbHorizontal.TabStop = true;
+            this.rbHorizontal.Text = "Màn hình ngang";
+            this.rbHorizontal.UseVisualStyleBackColor = true;
+            // 
+            // gbMergeVideo
+            // 
+            this.gbMergeVideo.Location = new System.Drawing.Point(305, 300);
+            this.gbMergeVideo.Name = "gbMergeVideo";
+            this.gbMergeVideo.Size = new System.Drawing.Size(198, 23);
+            this.gbMergeVideo.Step = 1;
+            this.gbMergeVideo.TabIndex = 50;
+            this.gbMergeVideo.Visible = false;
+            // 
+            // menuStrip1
+            // 
+            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.menuFull});
+            this.menuStrip1.Location = new System.Drawing.Point(0, 0);
+            this.menuStrip1.Name = "menuStrip1";
+            this.menuStrip1.RenderMode = System.Windows.Forms.ToolStripRenderMode.System;
+            this.menuStrip1.Size = new System.Drawing.Size(1239, 24);
+            this.menuStrip1.TabIndex = 51;
+            this.menuStrip1.Text = "menuStrip1";
+            // 
+            // menuFull
+            // 
+            this.menuFull.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.tìmVideoShortToolStripMenuItem,
+            this.táchVideoToolStripMenuItem,
+            this.ghépVideoToolStripMenuItem});
+            this.menuFull.Name = "menuFull";
+            this.menuFull.Size = new System.Drawing.Size(50, 20);
+            this.menuFull.Text = "Menu";
+            // 
+            // tìmVideoShortToolStripMenuItem
+            // 
+            this.tìmVideoShortToolStripMenuItem.Name = "tìmVideoShortToolStripMenuItem";
+            this.tìmVideoShortToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.tìmVideoShortToolStripMenuItem.Text = "Tìm Video Short";
+            this.tìmVideoShortToolStripMenuItem.Click += new System.EventHandler(this.tìmVideoShortToolStripMenuItem_Click);
+            // 
+            // táchVideoToolStripMenuItem
+            // 
+            this.táchVideoToolStripMenuItem.Name = "táchVideoToolStripMenuItem";
+            this.táchVideoToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.táchVideoToolStripMenuItem.Text = "Tách Video";
+            // 
+            // ghépVideoToolStripMenuItem
+            // 
+            this.ghépVideoToolStripMenuItem.Name = "ghépVideoToolStripMenuItem";
+            this.ghépVideoToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.ghépVideoToolStripMenuItem.Text = "Ghép Video";
+            // 
             // MergeVideo
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1120, 358);
+            this.ClientSize = new System.Drawing.Size(1239, 393);
+            this.Controls.Add(this.gbMergeVideo);
+            this.Controls.Add(this.rbHorizontal);
+            this.Controls.Add(this.rbVertical);
             this.Controls.Add(this.btnSelectOutputPath);
             this.Controls.Add(this.txtOutputPath);
             this.Controls.Add(this.aaa);
-            this.Controls.Add(this.rtbOutput);
             this.Controls.Add(this.btnSplitVideo);
             this.Controls.Add(this.lbTotalDurationAudio);
             this.Controls.Add(this.label11);
@@ -323,10 +397,14 @@
             this.Controls.Add(this.txtNumOfVideo);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.dgvListOutput);
+            this.Controls.Add(this.menuStrip1);
+            this.MainMenuStrip = this.menuStrip1;
             this.Name = "MergeVideo";
             this.Text = "MergeVideo";
             ((System.ComponentModel.ISupportInitialize)(this.dgvListOutput)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvAudioList)).EndInit();
+            this.menuStrip1.ResumeLayout(false);
+            this.menuStrip1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -357,9 +435,16 @@
         private System.Windows.Forms.Label label12;
         private System.Windows.Forms.Button btnSplitVideo;
         private System.Windows.Forms.Label lbTotalDurationAudio;
-        private System.Windows.Forms.RichTextBox rtbOutput;
         private System.Windows.Forms.Label aaa;
         private System.Windows.Forms.TextBox txtOutputPath;
         private System.Windows.Forms.Button btnSelectOutputPath;
+        private System.Windows.Forms.RadioButton rbVertical;
+        private System.Windows.Forms.RadioButton rbHorizontal;
+        private System.Windows.Forms.ProgressBar gbMergeVideo;
+        private System.Windows.Forms.MenuStrip menuStrip1;
+        private System.Windows.Forms.ToolStripMenuItem menuFull;
+        private System.Windows.Forms.ToolStripMenuItem tìmVideoShortToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem táchVideoToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem ghépVideoToolStripMenuItem;
     }
 }
