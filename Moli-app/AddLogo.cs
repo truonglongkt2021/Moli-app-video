@@ -1,4 +1,6 @@
-﻿using Moli_app.Common;
+﻿using LibVLCSharp.Shared;
+using LibVLCSharp.WinForms;
+using Moli_app.Common;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -15,27 +17,34 @@ namespace Moli_app
 {
     public partial class AddLogo : Form
     {
-        public AddLogo()
+        LogoModelsV2 _LogoModelV2 = new LogoModelsV2();
+        LibVLC _libVLC;
+        public AddLogo(LogoModelsV2 logoModelV2)
         {
             InitializeComponent();
-            pbDemoAddLogo.Image = Image.FromFile(LogoModels.ImagePath);
-            Bitmap finalImg = new Bitmap(pbDemoAddLogo.Image, pbDemoAddLogo.Image.Width, pbDemoAddLogo.Image.Height);
-            pbDemoAddLogo.SizeMode = PictureBoxSizeMode.CenterImage;
-            pbDemoAddLogo.Image = finalImg;
+            _LogoModelV2 = logoModelV2;
 
-            pbDemoAddLogo.Show();
+            // Tải ảnh gốc
+            //Image originalImage = Image.FromFile(logoModelV2.ImagePath);
 
+            //// Sử dụng ResizeKeepAspect để tính toán kích thước mới mà không vượt quá chiều ngang 239px
+            //Size newSize = LogoModels.ResizeKeepAspect(originalImage.Size, 239, int.MaxValue, false); // Sử dụng int.MaxValue cho chiều cao để không giới hạn chiều cao
 
-            pbLogoPreview.Image = Image.FromFile(LogoModels.Path_Logo);
-            //pbLogoPreview.Load(LogoModels.Path_Logo);
-            var size = LogoModels.ResizeKeepAspect(pbLogoPreview.Image.Size, 50, 50, false);
-            finalImg = new Bitmap(pbLogoPreview.Image, size.Width, size.Height);
-            pbLogoPreview.SizeMode = PictureBoxSizeMode.AutoSize;
-            pbLogoPreview.Image = finalImg;
-            pbLogoPreview.Show();
-            ShowImages();
+            //// Tạo một Bitmap mới với kích thước đã được điều chỉnh
+            //Bitmap finalImg = new Bitmap(originalImage, newSize.Width, newSize.Height);
 
+            //// Cập nhật PictureBox
+            //pbDemoAddLogo.SizeMode = PictureBoxSizeMode.CenterImage; // Hoặc sử dụng PictureBoxSizeMode.Zoom để tự động điều chỉnh kích thước nhưng vẫn giữ tỉ lệ
+            //pbDemoAddLogo.Image = finalImg;
 
+            //// Cập nhật kích thước PictureBox để phù hợp với ảnh, nếu muốn
+            //pbDemoAddLogo.Size = newSize;
+
+            //pbDemoAddLogo.Show();
+            _libVLC = new LibVLC();
+            vlcPlayer.MediaPlayer = new MediaPlayer(_libVLC);
+            vlcPlayer.MediaPlayer.Play(new Media(_libVLC, logoModelV2.ImagePath, FromType.FromPath));
+            // Phần còn lại của code
         }
 
         private void nSliderControl1_ValueChanged(Nevron.Nov.Dom.NValueChangeEventArgs arg)
@@ -56,29 +65,29 @@ namespace Moli_app
                         //Left_top
                         pbLogoOvelay.Location = new Point(23, 27);
                         pbLogoOvelay.Refresh();
-                        LogoModels.PosX = tbarX.Value = 23;
-                        LogoModels.PosY = tbarY.Value = 27;
+                        _LogoModelV2.PosX = tbarX.Value = 23;
+                        _LogoModelV2.PosY = tbarY.Value = 27;
                         break;
                     case 2:
                         //left_bottom
                         pbLogoOvelay.Location = new Point(23, (345 - pbLogoOvelay.Height));
                         pbLogoOvelay.Refresh();
-                        LogoModels.PosX = tbarX.Value = 23;
-                        LogoModels.PosY = tbarY.Value = (345 - pbLogoOvelay.Height);
+                        _LogoModelV2.PosX = tbarX.Value = 23;
+                        _LogoModelV2.PosY = tbarY.Value = (345 - pbLogoOvelay.Height);
                         break;
                     case 3:
                         //right_top
                         pbLogoOvelay.Location = new Point((504 - pbLogoOvelay.Width), 27);
                         pbLogoOvelay.Refresh();
-                        LogoModels.PosX = tbarX.Value = (504 - pbLogoOvelay.Width);
-                        LogoModels.PosY = tbarY.Value = 27;
+                        _LogoModelV2.PosX = tbarX.Value = (504 - pbLogoOvelay.Width);
+                        _LogoModelV2.PosY = tbarY.Value = 27;
                         break;
                     default:
                         //right_bottom
                         pbLogoOvelay.Location = new Point((504 - pbLogoOvelay.Width), (345 - pbLogoOvelay.Height));
                         pbLogoOvelay.Refresh();
-                        LogoModels.PosX = tbarX.Value = (504 - pbLogoOvelay.Width);
-                        LogoModels.PosY = tbarY.Value = (345 - pbLogoOvelay.Height);
+                        _LogoModelV2.PosX = tbarX.Value = (504 - pbLogoOvelay.Width);
+                        _LogoModelV2.PosY = tbarY.Value = (345 - pbLogoOvelay.Height);
                         break;
                 }
             }
@@ -95,7 +104,7 @@ namespace Moli_app
                 fileName = dlg.FileName;
                 txtLogoPath.Text = fileName;
             }
-            LogoModels.Path_Logo = txtLogoPath.Text;
+            _LogoModelV2.Path_Logo = txtLogoPath.Text;
         }
 
         private void btnBack_Click(object sender, EventArgs e)
@@ -108,9 +117,9 @@ namespace Moli_app
             var checkedButton = gbPos.Controls.OfType<RadioButton>()
                                       .FirstOrDefault(r => r.Checked);
             if (checkedButton != null)
-                LogoModels.Pos_Logo = (PosLogo)checkedButton.TabIndex;
+                _LogoModelV2.Pos_Logo = (PosLogo)checkedButton.TabIndex;
 
-            LogoModels.Scale = (int)NumScale.Value;
+            _LogoModelV2.Scale = (int)NumScale.Value;
         }
 
         private void tbarScale_Scroll(object sender, EventArgs e)
@@ -134,7 +143,7 @@ namespace Moli_app
         }
         private void ShowImages()
         {
-            pbLogoOvelay.Image = Image.FromFile(LogoModels.Path_Logo);
+            pbLogoOvelay.Image = Image.FromFile(_LogoModelV2.Path_Logo);
             var size = LogoModels.ResizeKeepAspect(pbLogoOvelay.Size, tbarScale.Value, tbarScale.Value, false);
 
             Bitmap finalImg = new Bitmap(pbLogoOvelay.Image, size.Width, size.Height);
@@ -147,14 +156,14 @@ namespace Moli_app
         private void tbarX_ValueChanged(object sender, EventArgs e)
         {
             pbLogoOvelay.Location = new Point(tbarX.Value, pbLogoOvelay.Location.Y);
-            LogoModels.PosX = tbarX.Value;
+            _LogoModelV2.PosX = tbarX.Value;
             pbLogoOvelay.Refresh();
         }
 
         private void tbarY_ValueChanged(object sender, EventArgs e)
         {
             pbLogoOvelay.Location = new Point(pbLogoOvelay.Location.X, tbarY.Value);
-            LogoModels.PosY = tbarY.Value;
+            _LogoModelV2.PosY = tbarY.Value;
             pbLogoOvelay.Refresh();
         }
        

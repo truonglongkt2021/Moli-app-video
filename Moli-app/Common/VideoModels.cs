@@ -18,6 +18,7 @@ namespace Moli_app.Common
     }
     public static class LogoModels
     {
+        
         public static string Path_Logo { get; set; }
         public static int Scale { get; set; }
         public static PosLogo Pos_Logo { get; set; }
@@ -32,6 +33,24 @@ namespace Moli_app.Common
             decimal rnd = Math.Min(maxWidth / (decimal)src.Width, maxHeight / (decimal)src.Height);
             return new Size((int)Math.Round(src.Width * rnd), (int)Math.Round(src.Height * rnd));
         }
+    }
+    public class LogoModelsV2
+    {
+        public LogoModelsV2()
+        {
+            Path_Logo = "";
+            Scale= 1;
+            PosX= 0;
+            PosY= 0;
+            ImagePath= Path_Logo;
+            Pos_Logo=PosLogo.Right_Top;
+        }
+        public  string Path_Logo { get; set; }
+        public  int Scale { get; set; }
+        public  PosLogo Pos_Logo { get; set; }
+        public  int PosY { get; set; }
+        public  int PosX { get; set; }
+        public  string ImagePath { get; set; }
     }
     public enum PosLogo
     {

@@ -77,6 +77,7 @@ namespace Moli_app
         {
             btnSearchYoutube.Enabled = false;
             string searchKeyword = txtKeyword.Text; // Lấy từ khóa từ textbox
+            string searchchannelName = txtChannelName.Text; // Lấy từ khóa từ textbox
             string countryCode = txtCountry.Text;
             string numVideo = txtNumVideo.Text;
             var youtubedl = Path.Combine(Application.StartupPath, "yt-dlp.exe");
@@ -85,13 +86,16 @@ namespace Moli_app
             var videosList = new List<VideoYoutubeShort>();
 
             var youtubeDl = new Process();
-            //var args = $"ytsearch10:{searchKeyword} --get-id --get-title --get-duration --get-thumbnail --skip-download --dump-single-json -J";
-            var args = $"ytsearch{numVideo}:{searchKeyword} --match-title \"#shorts\" --geo-bypass-country {countryCode} --skip-download --dump-single-json";
-
+            //var args = $" 'https://www.youtube.com/@YoutubeNetFlex/shorts' --get-id --get-title --skip-download --dump-single-json";
+            var argsKeyword = $"ytsearch{numVideo}:{searchKeyword} --match-title \"#shorts\" --geo-bypass-country {countryCode} --skip-download --max-downloads {numVideo}  --dump-single-json";
+            if (searchchannelName != "")
+            {
+                argsKeyword = $"\"https://www.youtube.com/@{searchchannelName}/shorts\" --get-id --skip-download  --max-downloads {numVideo}  --dump-single-json";
+            }
             try
             {
                 youtubeDl.StartInfo.FileName = youtubedl; // Đảm bảo yt-dlp có thể được gọi từ dòng lệnh
-                youtubeDl.StartInfo.Arguments = args;
+                youtubeDl.StartInfo.Arguments = argsKeyword;
                 youtubeDl.StartInfo.UseShellExecute = false;
                 youtubeDl.StartInfo.RedirectStandardOutput = true;
                 youtubeDl.StartInfo.CreateNoWindow = true;
@@ -111,8 +115,26 @@ namespace Moli_app
                     trimmedOutput = trimmedOutput.Substring(0, trimmedOutput.LastIndexOf("\n")).TrimEnd();
                 }
                 // Phân tích dữ liệu JSON thành danh sách VideoYoutubeShort
-                dynamic videoData = JsonConvert.DeserializeObject<dynamic>(trimmedOutput)["entries"];
-                foreach (var video in videoData)
+                dynamic videodata = null;
+                if (txtChannelName.Text != "")
+                {
+                    videodata = trimmedOutput.Split("\n");
+                    foreach (var item in videodata)
+                    {
+                        videosList.Add(new VideoYoutubeShort
+                        {
+                            Name = item,
+                            Title = item,
+                            ImageUrl = $"https://i.ytimg.com/vi_webp/{item}/1.webp",
+                            VideoUrl = $"https://www.youtube.com/shorts/{item}",
+                            Duration = item // Giả sử bạn đã thêm thuộc tính Duration vào lớp VideoYoutubeShort
+                        });
+                    }
+                }
+                else
+                {
+                    videodata = JsonConvert.DeserializeObject<dynamic>(trimmedOutput)["entries"];
+                foreach (var video in videodata)
                 {
                     videosList.Add(new VideoYoutubeShort
                     {
@@ -122,6 +144,7 @@ namespace Moli_app
                         VideoUrl = $"https://www.youtube.com/shorts/{video.id}",
                         Duration = video.duration // Giả sử bạn đã thêm thuộc tính Duration vào lớp VideoYoutubeShort
                     });
+                }
                 }
             }
             catch (Exception ex)
@@ -177,7 +200,7 @@ namespace Moli_app
                     {
                         // Thiết lập Process để gọi yt-dlp
                         youtubeDlProcess.StartInfo.FileName = youtubedl; // Hoặc đường dẫn đầy đủ tới yt-dlp nếu không có trong PATH
-                        youtubeDlProcess.StartInfo.Arguments = $"{video.VideoUrl} -o \"{pathOutPut}\\%(title)s.%(ext)s\""; // Định dạng tên file được lưu
+                        youtubeDlProcess.StartInfo.Arguments = $"{video.VideoUrl} -o \"{pathOutPut}\\{txtChannelName.Text}_{Guid.NewGuid().ToString()}.%(ext)s\""; // Định dạng tên file được lưu
                         youtubeDlProcess.StartInfo.UseShellExecute = false;
                         youtubeDlProcess.StartInfo.RedirectStandardOutput = true;
                         youtubeDlProcess.StartInfo.RedirectStandardError = true;
@@ -245,11 +268,13 @@ namespace Moli_app
             foreach (var item in videoPaths)
             {
                 bool success = await processV3(ffpath, item);
+
             }
             rtbResult.AppendText("Done");
         }
         public async Task<bool> processV3(string Path_FFMPEG, string videoSourcePath)
         {
+            btnSplitVideoYoutube.Enabled = false;
             // Thư mục chứa file kết quả sau khi phân tích
             string outputDir = Path.GetDirectoryName(txtPathSplit.Text + "\\Split_" + Guid.NewGuid().ToString());
             Directory.CreateDirectory(outputDir); // Tạo thư mục nếu chưa tồn tại
@@ -268,7 +293,8 @@ namespace Moli_app
             }
             try
             {
-                var agrument = $"-i \"{videoSourcePath}\" -filter:v \"select='gt(scene,0.4)',showinfo\" -f null -";
+                //var agrument = $"-i \"{videoSourcePath}\" -filter:v \"select='gt(scene,0.4)',showinfo\" -f null -";
+                var agrument = $"-i \"{videoSourcePath}\" -vf \"mpdecimate,setpts=N/FRAME_RATE/TB,select='gt(scene,0.4)',showinfo\" -f null -";
                 using (var writer = new StreamWriter(outputFileName))
                 {
                     var ffmpeg = new Process();
@@ -342,14 +368,19 @@ namespace Moli_app
                 }
 
                 // Sử dụng thông tin từ sceneChanges để cắt video
+                var hflip = "";
+                if (cbMirror.Checked)
+                {
+                    hflip = "hflip,";
+                }
                 foreach (var scene in sceneChanges)
                 {
                     if (scene.end - scene.start <= TimeSpan.FromMilliseconds(1500))
                     {
                         continue;
                     }
-                    string cutCommand = $" -ss {scene.start} -to {scene.end} -i \"{videoSourcePath}\" -c copy {outputDir}\\output_" +
-                        $"{Guid.NewGuid().ToString()}.mp4";
+                    string cutCommand = $" -ss {scene.start} -to {scene.end} -i \"{videoSourcePath}\" -vf " +
+                        $"\"{hflip}eq=brightness=0.06:contrast=1.5\" -an \"{outputDir}\\output_{Guid.NewGuid().ToString()}.mp4\"";
                     rtbResult.AppendText("\n");
                     rtbResult.AppendText(cutCommand);
                     Process cutProcess = new Process
@@ -364,9 +395,11 @@ namespace Moli_app
                     };
 
                     cutProcess.Start();
-                   await cutProcess.WaitForExitAsync();
+                    await cutProcess.WaitForExitAsync();
                 }
-                KillAllFFMPEG();
+                btnSplitVideoYoutube.Enabled = true;
+
+                //KillAllFFMPEG();
                 return true;
             }
             catch (Exception ex)
@@ -415,6 +448,41 @@ namespace Moli_app
                     txtPathSplit.Text = selectedFolderPath;
                 }
             }
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            // Create an instance of FormABC
+            tiktok formABC = new tiktok();
+
+            // Hide the current form
+            this.Hide();
+
+            // Show FormABC
+            formABC.Show();
+
+            // Optional: Close the current form when FormABC is closed
+            formABC.FormClosed += (s, args) => this.Close();
+        }
+
+        private void btnBack_Click(object sender, EventArgs e)
+        {
+            // Create an instance of FormABC
+            tiktok formABC = new tiktok();
+
+            // Hide the current form
+            this.Hide();
+
+            // Show FormABC
+            formABC.Show();
+
+            // Optional: Close the current form when FormABC is closed
+            formABC.FormClosed += (s, args) => this.Close();
+        }
+
+        private void rtbResult_TextChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }

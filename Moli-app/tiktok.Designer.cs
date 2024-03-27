@@ -39,6 +39,7 @@
             this.rtxError = new System.Windows.Forms.RichTextBox();
             this.btnMergeForm = new System.Windows.Forms.Button();
             this.btnSearchYoutubeShort = new System.Windows.Forms.Button();
+            this.button1 = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // txtSourceVideoPath
@@ -142,11 +143,22 @@
             this.btnSearchYoutubeShort.UseVisualStyleBackColor = true;
             this.btnSearchYoutubeShort.Click += new System.EventHandler(this.btnSearchYoutubeShort_Click);
             // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(261, 374);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.TabIndex = 11;
+            this.button1.Text = "button1";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click_1);
+            // 
             // tiktok
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(576, 369);
+            this.ClientSize = new System.Drawing.Size(576, 409);
+            this.Controls.Add(this.button1);
             this.Controls.Add(this.btnSearchYoutubeShort);
             this.Controls.Add(this.btnMergeForm);
             this.Controls.Add(this.rtxError);
@@ -178,5 +190,6 @@
         private System.Windows.Forms.RichTextBox rtxError;
         private System.Windows.Forms.Button btnMergeForm;
         private System.Windows.Forms.Button btnSearchYoutubeShort;
+        private System.Windows.Forms.Button button1;
     }
 }

@@ -344,7 +344,7 @@ namespace Moli_app
                 LogoModels.ImagePath = await GetPathRandomImagePath(listVideo.FirstOrDefault().FilePath);
             }
 
-            AddLogo addLogo = new AddLogo();
+            AddLogo addLogo = new AddLogo(new LogoModelsV2());
             addLogo.Show();
         }
         public async Task<string> GetPathRandomImagePath(string videoPath)

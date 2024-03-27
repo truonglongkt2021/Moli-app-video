@@ -23,6 +23,8 @@ namespace Moli_app
         public MergeVideo()
         {
             InitializeComponent();
+            var a = LogoModels.Scale;
+            a = a + 1;
         }
 
         private void btnSplitVideo_Click(object sender, EventArgs e)

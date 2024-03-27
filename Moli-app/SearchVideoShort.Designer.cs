@@ -46,6 +46,9 @@
             this.label5 = new System.Windows.Forms.Label();
             this.txtPathSplit = new System.Windows.Forms.TextBox();
             this.btnPathSplitOutput = new System.Windows.Forms.Button();
+            this.txtChannelName = new System.Windows.Forms.TextBox();
+            this.label6 = new System.Windows.Forms.Label();
+            this.cbMirror = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.dgvListyoutube)).BeginInit();
             this.SuspendLayout();
             // 
@@ -84,11 +87,12 @@
             this.btnBack.TabIndex = 3;
             this.btnBack.Text = "Quay Về";
             this.btnBack.UseVisualStyleBackColor = false;
+            this.btnBack.Click += new System.EventHandler(this.btnBack_Click);
             // 
             // dgvListyoutube
             // 
             this.dgvListyoutube.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvListyoutube.Location = new System.Drawing.Point(12, 69);
+            this.dgvListyoutube.Location = new System.Drawing.Point(12, 100);
             this.dgvListyoutube.Name = "dgvListyoutube";
             this.dgvListyoutube.RowTemplate.Height = 25;
             this.dgvListyoutube.Size = new System.Drawing.Size(776, 236);
@@ -128,7 +132,7 @@
             // 
             // btnDownload
             // 
-            this.btnDownload.Location = new System.Drawing.Point(12, 360);
+            this.btnDownload.Location = new System.Drawing.Point(12, 477);
             this.btnDownload.Name = "btnDownload";
             this.btnDownload.Size = new System.Drawing.Size(206, 61);
             this.btnDownload.TabIndex = 9;
@@ -139,7 +143,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(12, 319);
+            this.label4.Location = new System.Drawing.Point(12, 391);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(97, 15);
             this.label4.TabIndex = 10;
@@ -147,14 +151,14 @@
             // 
             // txtPathDownload
             // 
-            this.txtPathDownload.Location = new System.Drawing.Point(115, 316);
+            this.txtPathDownload.Location = new System.Drawing.Point(115, 388);
             this.txtPathDownload.Name = "txtPathDownload";
             this.txtPathDownload.Size = new System.Drawing.Size(221, 23);
             this.txtPathDownload.TabIndex = 11;
             // 
             // btnSelectPathDownload
             // 
-            this.btnSelectPathDownload.Location = new System.Drawing.Point(342, 316);
+            this.btnSelectPathDownload.Location = new System.Drawing.Point(342, 388);
             this.btnSelectPathDownload.Name = "btnSelectPathDownload";
             this.btnSelectPathDownload.Size = new System.Drawing.Size(75, 23);
             this.btnSelectPathDownload.TabIndex = 12;
@@ -165,7 +169,7 @@
             // btnSplitVideoYoutube
             // 
             this.btnSplitVideoYoutube.BackColor = System.Drawing.SystemColors.ActiveCaption;
-            this.btnSplitVideoYoutube.Location = new System.Drawing.Point(569, 360);
+            this.btnSplitVideoYoutube.Location = new System.Drawing.Point(569, 477);
             this.btnSplitVideoYoutube.Name = "btnSplitVideoYoutube";
             this.btnSplitVideoYoutube.Size = new System.Drawing.Size(219, 61);
             this.btnSplitVideoYoutube.TabIndex = 14;
@@ -176,16 +180,17 @@
             // rtbResult
             // 
             this.rtbResult.BackColor = System.Drawing.SystemColors.InactiveCaption;
-            this.rtbResult.Location = new System.Drawing.Point(224, 360);
+            this.rtbResult.Location = new System.Drawing.Point(224, 477);
             this.rtbResult.Name = "rtbResult";
             this.rtbResult.Size = new System.Drawing.Size(339, 61);
             this.rtbResult.TabIndex = 15;
             this.rtbResult.Text = "";
+            this.rtbResult.TextChanged += new System.EventHandler(this.rtbResult_TextChanged);
             // 
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(423, 320);
+            this.label5.Location = new System.Drawing.Point(423, 392);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(63, 15);
             this.label5.TabIndex = 16;
@@ -193,14 +198,14 @@
             // 
             // txtPathSplit
             // 
-            this.txtPathSplit.Location = new System.Drawing.Point(492, 319);
+            this.txtPathSplit.Location = new System.Drawing.Point(492, 391);
             this.txtPathSplit.Name = "txtPathSplit";
             this.txtPathSplit.Size = new System.Drawing.Size(215, 23);
             this.txtPathSplit.TabIndex = 17;
             // 
             // btnPathSplitOutput
             // 
-            this.btnPathSplitOutput.Location = new System.Drawing.Point(713, 320);
+            this.btnPathSplitOutput.Location = new System.Drawing.Point(713, 392);
             this.btnPathSplitOutput.Name = "btnPathSplitOutput";
             this.btnPathSplitOutput.Size = new System.Drawing.Size(75, 23);
             this.btnPathSplitOutput.TabIndex = 18;
@@ -208,11 +213,42 @@
             this.btnPathSplitOutput.UseVisualStyleBackColor = true;
             this.btnPathSplitOutput.Click += new System.EventHandler(this.btnPathSplitOutput_Click);
             // 
+            // txtChannelName
+            // 
+            this.txtChannelName.Location = new System.Drawing.Point(81, 71);
+            this.txtChannelName.Name = "txtChannelName";
+            this.txtChannelName.Size = new System.Drawing.Size(233, 23);
+            this.txtChannelName.TabIndex = 20;
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(12, 74);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(54, 15);
+            this.label6.TabIndex = 21;
+            this.label6.Text = "Channel ";
+            // 
+            // cbMirror
+            // 
+            this.cbMirror.AutoSize = true;
+            this.cbMirror.Checked = true;
+            this.cbMirror.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.cbMirror.Location = new System.Drawing.Point(12, 439);
+            this.cbMirror.Name = "cbMirror";
+            this.cbMirror.Size = new System.Drawing.Size(113, 19);
+            this.cbMirror.TabIndex = 22;
+            this.cbMirror.Text = "Hiệu ứng gương";
+            this.cbMirror.UseVisualStyleBackColor = true;
+            // 
             // SearchVideoShort
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.ClientSize = new System.Drawing.Size(800, 550);
+            this.Controls.Add(this.cbMirror);
+            this.Controls.Add(this.label6);
+            this.Controls.Add(this.txtChannelName);
             this.Controls.Add(this.btnPathSplitOutput);
             this.Controls.Add(this.txtPathSplit);
             this.Controls.Add(this.label5);
@@ -260,5 +296,8 @@
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.TextBox txtPathSplit;
         private System.Windows.Forms.Button btnPathSplitOutput;
+        private System.Windows.Forms.TextBox txtChannelName;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.CheckBox cbMirror;
     }
 }

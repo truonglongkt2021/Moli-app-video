@@ -51,6 +51,9 @@
             this.tbarX = new System.Windows.Forms.TrackBar();
             this.lbx = new System.Windows.Forms.Label();
             this.lby = new System.Windows.Forms.Label();
+            this.btnPlay = new System.Windows.Forms.Button();
+            this.btnPause = new System.Windows.Forms.Button();
+            this.vlcPlayer = new LibVLCSharp.WinForms.VideoView();
             ((System.ComponentModel.ISupportInitialize)(this.pbDemoAddLogo)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).BeginInit();
             this.gbPos.SuspendLayout();
@@ -60,6 +63,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.pbLogoOvelay)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.tbarY)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.tbarX)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.vlcPlayer)).BeginInit();
             this.SuspendLayout();
             // 
             // pbDemoAddLogo
@@ -67,16 +71,16 @@
             this.pbDemoAddLogo.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
             this.pbDemoAddLogo.Location = new System.Drawing.Point(12, 12);
             this.pbDemoAddLogo.Name = "pbDemoAddLogo";
-            this.pbDemoAddLogo.Size = new System.Drawing.Size(512, 360);
+            this.pbDemoAddLogo.Size = new System.Drawing.Size(239, 360);
             this.pbDemoAddLogo.TabIndex = 0;
             this.pbDemoAddLogo.TabStop = false;
             // 
             // trackBar1
             // 
-            this.trackBar1.Location = new System.Drawing.Point(12, 378);
+            this.trackBar1.Location = new System.Drawing.Point(265, 378);
             this.trackBar1.Maximum = 1000;
             this.trackBar1.Name = "trackBar1";
-            this.trackBar1.Size = new System.Drawing.Size(776, 45);
+            this.trackBar1.Size = new System.Drawing.Size(523, 45);
             this.trackBar1.TabIndex = 3;
             // 
             // txtLogoPath
@@ -235,7 +239,7 @@
             // 
             this.pbLogoOvelay.BackColor = System.Drawing.Color.Transparent;
             this.pbLogoOvelay.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.pbLogoOvelay.Location = new System.Drawing.Point(441, 36);
+            this.pbLogoOvelay.Location = new System.Drawing.Point(25, 18);
             this.pbLogoOvelay.MinimumSize = new System.Drawing.Size(30, 30);
             this.pbLogoOvelay.Name = "pbLogoOvelay";
             this.pbLogoOvelay.Size = new System.Drawing.Size(50, 50);
@@ -284,11 +288,42 @@
             this.lby.TabIndex = 25;
             this.lby.Text = "Vị Trí Y";
             // 
+            // btnPlay
+            // 
+            this.btnPlay.Location = new System.Drawing.Point(275, 349);
+            this.btnPlay.Name = "btnPlay";
+            this.btnPlay.Size = new System.Drawing.Size(52, 23);
+            this.btnPlay.TabIndex = 26;
+            this.btnPlay.Text = "Play";
+            this.btnPlay.UseVisualStyleBackColor = true;
+            // 
+            // btnPause
+            // 
+            this.btnPause.Location = new System.Drawing.Point(333, 349);
+            this.btnPause.Name = "btnPause";
+            this.btnPause.Size = new System.Drawing.Size(50, 23);
+            this.btnPause.TabIndex = 27;
+            this.btnPause.Text = "Pause";
+            this.btnPause.UseVisualStyleBackColor = true;
+            // 
+            // vlcPlayer
+            // 
+            this.vlcPlayer.BackColor = System.Drawing.Color.Black;
+            this.vlcPlayer.Location = new System.Drawing.Point(12, 12);
+            this.vlcPlayer.MediaPlayer = null;
+            this.vlcPlayer.Name = "vlcPlayer";
+            this.vlcPlayer.Size = new System.Drawing.Size(241, 360);
+            this.vlcPlayer.TabIndex = 28;
+            this.vlcPlayer.Text = "videoView1";
+            // 
             // AddLogo
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.vlcPlayer);
+            this.Controls.Add(this.btnPause);
+            this.Controls.Add(this.btnPlay);
             this.Controls.Add(this.lby);
             this.Controls.Add(this.lbx);
             this.Controls.Add(this.tbarX);
@@ -318,6 +353,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.pbLogoOvelay)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.tbarY)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.tbarX)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.vlcPlayer)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -347,5 +383,8 @@
         private System.Windows.Forms.TrackBar tbarX;
         private System.Windows.Forms.Label lbx;
         private System.Windows.Forms.Label lby;
+        private System.Windows.Forms.Button btnPlay;
+        private System.Windows.Forms.Button btnPause;
+        private LibVLCSharp.WinForms.VideoView vlcPlayer;
     }
 }

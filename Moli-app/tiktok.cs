@@ -1,4 +1,5 @@
-﻿using Nevron.Nov.UI;
+﻿using Moli_app.Common;
+using Nevron.Nov.UI;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -17,6 +18,7 @@ namespace Moli_app
 {
     public partial class tiktok : Form
     {
+        
         public tiktok()
         {
             InitializeComponent();
@@ -112,13 +114,15 @@ namespace Moli_app
             }
             try
             {
+                var ag = $"-i \"{videoSourcePath}\" -filter:v \"mpdecimate,setpts=N/FRAME_RATE/TB,select='gt(scene,0.4)',showinfo -f null -";
+                rtxError.AppendText(ag);
                 using (var writer = new StreamWriter(outputFileName))
                 {
                     var ffmpeg = new Process();
                     try
                     {
                         ffmpeg.StartInfo.FileName = Path_FFMPEG;
-                        ffmpeg.StartInfo.Arguments = $"-i \"{videoSourcePath}\" -filter:v \"select='gt(scene,0.4)',showinfo\" -f null -";
+                        ffmpeg.StartInfo.Arguments = $"-i \"{videoSourcePath}\" -filter:v \"mpdecimate,setpts=N/FRAME_RATE/TB,select='gt(scene,0.4)',showinfo -f null -";
                         ffmpeg.StartInfo.UseShellExecute = false;
                         ffmpeg.StartInfo.RedirectStandardError = true;
                         ffmpeg.StartInfo.CreateNoWindow = true;
@@ -209,7 +213,7 @@ namespace Moli_app
                     cutProcess.Start();
                     cutProcess.WaitForExit();
                 }
-                rtxError.Text = "done";
+                rtxError.AppendText("done");
                 KillAllFFMPEG();
                 return true;
             }
@@ -250,6 +254,7 @@ namespace Moli_app
 
         private void btnMergeForm_Click(object sender, EventArgs e)
         {
+            LogoModels.Scale = 3;
             // Create an instance of FormABC
             MergeVideo formABC = new MergeVideo();
 
@@ -276,6 +281,57 @@ namespace Moli_app
 
             // Optional: Close the current form when FormABC is closed
             formABC.FormClosed += (s, args) => this.Close();
+        }
+        public LogoModelsV2 logoModelV2 = new LogoModelsV2();
+        private async void button1_Click_1(object sender, EventArgs e)
+        {
+            if (txtSourceVideoPath.Text!="")
+            {
+                logoModelV2.ImagePath = txtSourceVideoPath.Text;
+            }
+
+            AddLogo addLogo = new AddLogo(logoModelV2);
+            addLogo.Show();
+        }
+        public async Task<string> GetPathRandomImagePath(string videoPath)
+        {
+            Debug.WriteLine("aaaaaa");
+            try
+            {
+                string outputPath = Application.StartupPath + Guid.NewGuid().ToString() + "_Image.png";
+                using (var ffmpeg = new Process())
+                {
+                    ffmpeg.StartInfo.FileName = Application.StartupPath + "amazingtech.exe";
+                    ffmpeg.StartInfo.Arguments = rtbResultProcess.Text = " -i \"" + videoPath + "\" -ss 10 -frames:v 1 \"" + outputPath + "\"";
+                    ffmpeg.StartInfo.UseShellExecute = false;
+                    ffmpeg.StartInfo.RedirectStandardError = true;
+                    ffmpeg.StartInfo.RedirectStandardOutput = true;
+                    ffmpeg.StartInfo.CreateNoWindow = true;
+                    //ffmpeg.OutputDataReceived += (s, e) => Debug.WriteLine($@"data: {e.Data}");
+                    //ffmpeg.ErrorDataReceived += (s, e) => Debug.WriteLine($@"Error: {e.Data}");
+                    ffmpeg.Start();
+                    ffmpeg.BeginOutputReadLine();
+                    ffmpeg.BeginErrorReadLine();
+                    //string? processOutput = null;
+                    //while ((processOutput = ffmpeg.StandardError.ReadLine()) != null)
+                    //{
+                    //    // do something with processOutput
+                    //    this.rtbResultProcess.Text += processOutput;
+                    //}
+                    //Task.WaitAll();
+                    // ffmpeg.WaitForExit();
+                    await ffmpeg.WaitForExitAsync().ConfigureAwait(true);
+                    //ffmpeg.Close();
+                    //ffmpeg.Dispose();
+                }
+                return outputPath;
+            }
+            catch (Exception ex)
+            {
+
+            }
+
+            return "";
         }
     }
 }
