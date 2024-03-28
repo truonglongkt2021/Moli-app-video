@@ -334,7 +334,7 @@ namespace Moli_app.Common
                 // Tạo lệnh ffmpeg và thực thi
                 string ffmpegArgs = $"{inputFiles}-filter_complex \"{filterComplex}\" -map \"[v]\" -map \"[a]\" \"{outputFilePath}\\intro_outtro_{Guid.NewGuid().ToString()}.mp4\"";
 
-                using (var process = new Process())
+                using ( var process = new Process())
                 {
                     process.StartInfo.FileName = ffpath;
                     process.StartInfo.Arguments = ffmpegArgs;
