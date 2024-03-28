@@ -22,6 +22,7 @@ namespace Moli_app
         public tiktok()
         {
             InitializeComponent();
+            Util.KillAllFFMPEG();
             this.StartPosition = FormStartPosition.CenterScreen;
 
         }
