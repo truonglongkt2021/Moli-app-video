@@ -62,6 +62,7 @@ namespace Moli_app.Common
     }
     public class Util
     {
+        public delegate void UpdateUIDelegate(string text);
         //public static OpenDialog()
         //{
 
@@ -112,14 +113,19 @@ namespace Moli_app.Common
             }
         }
 
-        public static List<MixVideo> MixVideoUtil(List<VideoShort> listVidShort, List<AudioShort> listAudioShort, int totalNumVidOut, TimeSpan durationEachVidSecs, bool addAudio = true)
+        public static List<MixVideo> MixVideoUtil(List<VideoShort> listVidShort, List<AudioShort> listAudioShort
+            , int totalNumVidOut, TimeSpan durationEachVidSecs, bool addAudio = true, bool isRandom = true, double speed=1.0)
         {
             var listMixVideos = new List<MixVideo>();
             TimeSpan durationEachVid = TimeSpan.FromMilliseconds(durationEachVidSecs.TotalMilliseconds);
             Random rnd = new Random(); // Đối tượng Random để xáo trộn danh sách
-
+            if (!isRandom)
+            {
+                totalNumVidOut = listVidShort.Count();
+            }
+            var shuffledListVidShort = listVidShort;
             // Mặc định, sử dụng mỗi AudioShort cho mỗi MixVideo, thay đổi logic này nếu cần
-            for (int i = 0; i < totalNumVidOut && i < listAudioShort.Count; i++)
+            for (int i = 0; i < totalNumVidOut ; i++)
             {
                 var mixVideo = new MixVideo();
                 // Nếu addAudio là true, thì mới thêm audio vào mixVideo
@@ -131,27 +137,43 @@ namespace Moli_app.Common
                 TimeSpan currentDuration = TimeSpan.Zero;
 
                 // Xáo trộn danh sách VideoShort trước khi chọn để đảm bảo sự ngẫu nhiên
-                var shuffledListVidShort = listVidShort.OrderBy(x => rnd.Next()).ToList();
+                if (isRandom)
+                {
+                    shuffledListVidShort = listVidShort.OrderBy(x => rnd.Next()).ToList();
+                }
 
                 foreach (var video in shuffledListVidShort)
                 {
-                    if (currentDuration + video.Duration <= durationEachVid)
+                    // Điều chỉnh thời lượng video dựa trên speed
+                    TimeSpan adjustedDuration = TimeSpan.FromMilliseconds(video.Duration.TotalMilliseconds / speed);
+
+                    if (!isRandom)
+                    {
+                        //nếu chỉ xuất từng video thì cho nó bằng luôn
+                        durationEachVid = adjustedDuration;
+                    }
+                    if (currentDuration + adjustedDuration <= durationEachVid)
                     {
                         mixVideo.listVideo.Add(video);
                         mixVideo.name = mixVideo.name + "_" + listVidShort.IndexOf(video).ToString();
-                        currentDuration += video.Duration;
+                        currentDuration += adjustedDuration;
                     }
 
                     if (currentDuration >= durationEachVid)
                     {
+                        if (!isRandom)
+                        {
+                            //nếu chỉ xuất từng video thì cho nó bằng luôn
+                            listVidShort.Remove(video);
+                        }
                         break;
                     }
                 }
 
                 // Cập nhật lại listVidShort bằng cách loại bỏ các VideoShort đã được sử dụng
                 //listVidShort = listVidShort.Except(mixVideo.listVideo).ToList();
-
                 listMixVideos.Add(mixVideo);
+                var a = i;
             }
             return listMixVideos;
         }
@@ -169,85 +191,111 @@ namespace Moli_app.Common
             killFfmpeg.StartInfo = taskkillStartInfo;
             killFfmpeg.Start();
         }
-        public static async void MergeVideosWithAudio(MixVideo mixVideo, string outputFilePath, bool isHorizontal, bool isMirror, double speed = 1.0)
+        public static async void MergeVideosWithAudio(MixVideo mixVideo, string outputFilePath, bool isHorizontal, bool isMirror, UpdateUIDelegate UpdateUI,
+            double speed = 1.0, bool isTreCon = false, bool isNguoiLon = false)
         {
+            try
+            {
             StringBuilder filterComplex = new StringBuilder();
             StringBuilder inputFiles = new StringBuilder();
             var ffpath = Path.Combine(Application.StartupPath, "amazingtech.exe");
             int videoIndex = 0;
 
-            // Xác định tỉ lệ màn hình dựa vào isHorizontal
-            string scaleFilter = isHorizontal ? "scale=1920:1080" : "scale=1080:1920"; // Ví dụ về tỉ lệ 16:9 cho ngang và 9:16 cho dọc
-            string mirrorFilter = isMirror ? "hflip, " : ""; // Thêm hflip nếu isMirror là true
-                                                             // Tính toán các tham số cho bộ lọc setpts và atempo dựa trên tốc độ
-            string setptsFilter = $"setpts={1 / speed}*PTS";
-            string atempoFilter = speed >= 0.5 && speed <= 2.0 ? $"atempo={speed}" : "";
+            // Điều chỉnh âm thanh trầm (người lớn) hoặc bổng (trẻ con)
+            string audioPitchFilter = "";
+            if (isTreCon)
+            {
+                audioPitchFilter = "asetrate=44100*1.5,atempo=0.6667";
+            }
+            else if (isNguoiLon)
+            {
+                audioPitchFilter = "asetrate=44100*0.8,atempo=1.25";
+            }
 
+            // Xác định tỉ lệ màn hình
+            string scaleFilter = isHorizontal ? "scale=1920:1080" : "scale=1080:1920";
+            string mirrorFilter = isMirror ? "hflip, " : ""; // Thêm hflip nếu cần lật hình
+
+            string setptsFilter = $"setpts={1 / speed}*PTS";
+
+            // Tính toán số lần cần áp dụng atempo
+            int atempoCount = (int)Math.Ceiling(speed / 2.0);
+            double atempoValue = Math.Pow(speed, 1.0 / atempoCount); // Tính giá trị atempo để áp dụng mỗi lần
+            string atempoFilter = String.Concat(Enumerable.Repeat($",atempo={atempoValue.ToString(System.Globalization.CultureInfo.InvariantCulture)}", atempoCount));
+
+            // Đối với mỗi video, thêm vào danh sách đầu vào và áp dụng các bộ lọc
             foreach (var video in mixVideo.listVideo)
             {
                 inputFiles.Append($"-i \"{video.FullPath}\" ");
-                // Thêm điều chỉnh tỉ lệ màn hình vào filter_complex
-                filterComplex.Append($"[{videoIndex}:v:0] {mirrorFilter}{setptsFilter}, {scaleFilter} [scaled{videoIndex}]; ");
+                filterComplex.Append($"[{videoIndex}:v:0]{mirrorFilter}{setptsFilter},{scaleFilter}[v{videoIndex}]; "); // Đã thêm nhãn [v{videoIndex}]
                 videoIndex++;
             }
 
-            // Tạo phần concat trong filter_complex
+            // Ghép nối video
             for (int i = 0; i < videoIndex; i++)
             {
-                filterComplex.Append($"[scaled{i}] ");
+                filterComplex.Append($"[v{i}] "); // Sử dụng nhãn [v{i}] đã thêm ở trên
             }
-            filterComplex.Append($"concat=n={videoIndex}:v=1:a=0 [v]; ");
+            filterComplex.Append($"concat=n={videoIndex}:v=1:a=0[v]; "); // Đầu ra được gắn nhãn là [v]
 
-
-            // Thêm audio vào danh sách input và thiết lập atrim
-            //inputFiles.Append($"-i \"{mixVideo.audioShort.FullPath}\" ");
-            // Kiểm tra xem có audio không và thêm vào nếu có
-            double adjustedSpeed = Math.Max(0.5, Math.Min(speed, 2.0)); // Giữ speed trong khoảng cho phép
+            // Xử lý âm thanh
             if (mixVideo.audioShort != null && !string.IsNullOrEmpty(mixVideo.audioShort.FullPath))
             {
                 inputFiles.Append($"-i \"{mixVideo.audioShort.FullPath}\" ");
-                // Sử dụng bộ lọc aloop để lặp audio, lặp vô hạn (loop=-1)
-                filterComplex.Append($"[{videoIndex}:a:0] aloop=loop=-1:size=2e+09, atempo={adjustedSpeed}, atrim=0:{TotalVideoDuration(mixVideo)} [aout];");
+                // Thêm nhãn [aout] cho đầu ra âm thanh và áp dụng atempoFilter
+                filterComplex.Append($"[{videoIndex}:a:0]aloop=loop=-1:size=2e+09,{audioPitchFilter}{atempoFilter},atrim=duration={TotalVideoDuration(mixVideo, speed)}[aout];");
             }
             else
             {
-                // Điều chỉnh tốc độ cho mỗi luồng âm thanh từ video gốc và sau đó ghép chúng lại
                 for (int i = 0; i < videoIndex; i++)
                 {
-                    // Lặp lại bộ lọc atempo nếu cần thiết để đạt được tốc độ mong muốn
-                    filterComplex.Append($"[{i}:a:0] atempo={adjustedSpeed} [audio{i}]; ");
+                    // Mỗi luồng âm thanh được thêm nhãn [audio{i}] và áp dụng atempoFilter
+                    filterComplex.Append($"[{i}:a:0]{audioPitchFilter}{atempoFilter}[audio{i}]; ");
                 }
 
-                // Ghép các luồng âm thanh đã được điều chỉnh
+                // Sử dụng các nhãn [audio{i}] đã thêm ở trên cho bộ lọc concat
                 for (int i = 0; i < videoIndex; i++)
                 {
-                    filterComplex.Append($"[audio{i}] ");
+                    filterComplex.Append($"[audio{i}] "); // Tham chiếu đến nhãn [audio{i}]
                 }
-                filterComplex.Append($"concat=n={videoIndex}:v=0:a=1 [aout];");
+                filterComplex.Append($"concat=n={videoIndex}:v=0:a=1[aout]; "); // Đầu ra được gắn nhãn là [aout]
             }
 
-            string ffmpegArgs = $"{inputFiles} -filter_complex \"{filterComplex}\" -map \"[v]\" -map \"[aout]\" \"{outputFilePath}\\{Guid.NewGuid().ToString()}{mixVideo.name}.mp4\"";
+            // Tạo lệnh ffmpeg và thực thi
+            string ffmpegArgs = $"{inputFiles}-filter_complex \"{filterComplex}\" -map \"[v]\" -map \"[aout]\" \"{outputFilePath}\\{Guid.NewGuid().ToString()}{mixVideo.name}.mp4\"";
 
             using (var process = new Process())
             {
                 process.StartInfo.FileName = ffpath;
                 process.StartInfo.Arguments = ffmpegArgs;
                 process.StartInfo.UseShellExecute = false;
+                process.StartInfo.RedirectStandardOutput = true;
                 process.StartInfo.RedirectStandardError = true;
                 process.StartInfo.CreateNoWindow = true;
-                process.Start();
+                process.EnableRaisingEvents = true;
 
-                string stderr = process.StandardError.ReadToEnd();
-               await process.WaitForExitAsync();
+                process.OutputDataReceived += (sender, args) => UpdateUI(args.Data);
+                process.ErrorDataReceived += (sender, args) => UpdateUI(args.Data);
+
+                process.Start();
+                process.BeginOutputReadLine();
+                process.BeginErrorReadLine();
+                await process.WaitForExitAsync();
+            }
+            }
+            catch (Exception ex)
+            {
+                throw;
             }
         }
-        public static async Task ExportAudiosFromVideosAsync(string sourceVideoPathFolder, string outputFolderPath, bool isTreCon, bool isNguoiLon, bool isNormal)
+        
+        public static async Task ExportAudiosFromVideosFolderAsync(string sourceVideoPathFolder, string outputFolderPath, bool isTreCon, bool isNguoiLon, bool isNormal)
         {
             var videoFiles = Directory.GetFiles(sourceVideoPathFolder, "*.mp4"); // Lấy tất cả file .mp4
             var ffpath = Path.Combine(Application.StartupPath, "amazingtech.exe");
             foreach (var videoFile in videoFiles)
             {
-                string outputFileName = Path.GetFileNameWithoutExtension(videoFile) + ".mp3"; // Tên file output
+                string outputFileName = Path.GetFileNameWithoutExtension(videoFile) + Guid.NewGuid().ToString() + ".mp3"; // Tên file output
                 string outputFilePath = Path.Combine(outputFolderPath, outputFileName);
 
                 // Xác định tần số mẫu dựa vào giọng đọc
@@ -273,16 +321,49 @@ namespace Moli_app.Common
                 }
             }
         }
+        public static async Task ExportAudiosFromVideosAsync(string sourceVideoPath, string outputFolderPath, bool isTreCon, bool isNguoiLon, bool isNormal)
+        {
+            var ffpath = Path.Combine(Application.StartupPath, "amazingtech.exe");
+            string outputFileName = Path.GetFileNameWithoutExtension(sourceVideoPath) + Guid.NewGuid().ToString() + ".mp3"; // Tên file output
+            string outputFilePath = Path.Combine(outputFolderPath, outputFileName);
+
+            // Xác định tần số mẫu dựa vào giọng đọc
+            string audioFilter = "";
+            if (!isNormal)
+            {
+                audioFilter = isTreCon ? "asetrate=44100*1.5,atempo=0.6667" : (isNguoiLon ? "asetrate=44100*0.8,atempo=1.25" : "");
+            }
+
+            string ffmpegArgs = $"-i \"{sourceVideoPath}\" -vn -af \"{audioFilter}\" \"{outputFilePath}\"";
+
+            using (var process = new Process())
+            {
+                process.StartInfo.FileName = ffpath;
+                process.StartInfo.Arguments = ffmpegArgs;
+                process.StartInfo.UseShellExecute = false;
+                process.StartInfo.RedirectStandardError = true;
+                process.StartInfo.CreateNoWindow = true;
+                process.Start();
+
+                string stderr = process.StandardError.ReadToEnd();
+                await process.WaitForExitAsync();
+            }
+        }
 
         // Hàm để tính tổng thời gian của các video
-        public static double TotalVideoDuration(MixVideo mixVideo)
+        public static double TotalVideoDuration(MixVideo mixVideo, double speed=1.0)
         {
             TimeSpan totalDuration = new TimeSpan();
             foreach (var video in mixVideo.listVideo)
             {
                 totalDuration += video.Duration;
             }
-            return totalDuration.TotalSeconds;
+
+            // Điều chỉnh tổng thời lượng dựa trên tốc độ phát lại
+            // Lưu ý: Đảm bảo speed không bằng 0 để tránh lỗi chia cho 0
+            double adjustedDuration = speed > 0 ? totalDuration.TotalSeconds / speed : totalDuration.TotalSeconds;
+
+            return adjustedDuration;
         }
 
         public List<string> AddLogo(string VideoPath = "", string LogoPath = "")

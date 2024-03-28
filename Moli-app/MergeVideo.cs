@@ -11,6 +11,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static System.Net.Mime.MediaTypeNames;
 using static System.Windows.Forms.DataFormats;
 
 namespace Moli_app
@@ -23,6 +24,7 @@ namespace Moli_app
         public MergeVideo()
         {
             InitializeComponent();
+            this.StartPosition = FormStartPosition.CenterScreen;
             var a = LogoModels.Scale;
             trackbarSpeed.ValueChanged += trackbarSpeed_ValueChanged;
         }
@@ -174,7 +176,8 @@ namespace Moli_app
                 isHorizontal = true;
             }
             btnMergeVideo.Enabled = false;
-            var totalVideoOut = int.Parse(txtNumOfVideo.Text);
+
+
             bool isMirror = cbMirror.Checked;
 
             double speed = 1.0; // Giá trị mặc định
@@ -186,13 +189,22 @@ namespace Moli_app
             }
 
 
-            TimeSpan duration;
+            TimeSpan duration = new TimeSpan();
             try
             {
-                duration = TimeSpan.Parse(txtDurationVideo.Text);
+                bool isTreCon = rbVideoVoiceHigh.Checked;
+                bool isNguoiLon = rbVideoVoiceLow.Checked;
+                bool isFullDuration = false;
+                var totalVideoOut = VideoShorts.Count();
+                if (!cbFullInputVideo.Checked)
+                {
+                    totalVideoOut = int.Parse(txtNumOfVideo.Text);
+                    duration = TimeSpan.Parse(txtDurationVideo.Text);
+                }
                 var isAudio = cbIncludeAudio.Checked;
+                var isRandom = !cbFullInputVideo.Checked;
                 // Parse thành công, 'duration' giờ chứa giá trị TimeSpan tương ứng
-                var listMix = Util.MixVideoUtil(VideoShorts, AudioShorts, totalVideoOut, duration, isAudio);
+                var listMix = Util.MixVideoUtil(VideoShorts, AudioShorts, totalVideoOut, duration, isAudio, isRandom, speed);
                 // Kiểm tra để tránh chia cho 0
                 if (listMix.Count() > 0)
                 {
@@ -205,7 +217,7 @@ namespace Moli_app
                 }
                 foreach (var item in listMix)
                 {
-                    Util.MergeVideosWithAudio(item, txtOutputPath.Text, isHorizontal, isMirror, speed);
+                    Util.MergeVideosWithAudio(item, txtOutputPath.Text, isHorizontal, isMirror, UpdateUI, speed, isTreCon, isNguoiLon);
                     gbMergeVideo.PerformStep();
                 }
             }
@@ -218,6 +230,36 @@ namespace Moli_app
             gbMergeVideo.Visible = false;
             gbMergeVideo.Value = 0;
             gbMergeVideo.Step = 0;
+        }
+        public void UpdateUI(string message)
+        {
+            if (this.InvokeRequired)
+            {
+                this.Invoke(new Action(() => rtxMessageProcess.Text = message.Contains("ffmpeg") ? "" : (message + Environment.NewLine)));
+            }
+            else
+            {
+                rtxMessageProcess.Text = message.Contains("ffmpeg") ? "" : (message + Environment.NewLine);
+            }
+
+            // Cập nhật UI ở đây, ví dụ:
+            //rtb.AppendText(message + Environment.NewLine);
+        }
+        private void cbFullInputVideo_CheckedChanged(object sender, EventArgs e)
+        {
+            // Kiểm tra trạng thái của checkbox
+            if (cbFullInputVideo.Checked)
+            {
+                // Nếu checkbox được chọn, disable textbox
+                txtDurationVideo.Enabled = false;
+                txtNumOfVideo.Enabled = false;
+            }
+            else
+            {
+                // Nếu checkbox không được chọn, enable textbox
+                txtDurationVideo.Enabled = true;
+                txtNumOfVideo.Enabled = true;
+            }
         }
         private void trackbarSpeed_ValueChanged(object sender, EventArgs e)
         {
@@ -254,7 +296,7 @@ namespace Moli_app
                 // Nếu control chứa các control khác (ví dụ: Panel, GroupBox,...), kiểm tra chúng một cách đệ quy
                 if (c.HasChildren)
                 {
-                    DisableAllButtons(c);
+                    DisableAllButtons(c, enablebutton);
                 }
             }
         }
@@ -285,26 +327,74 @@ namespace Moli_app
         private async void btnExportAudio_Click(object sender, EventArgs e)
         {
             DisableAllButtons(this, false);
-            if (!VideoShorts.Any())
-            {
-                DisableAllButtons(this, true);
-
-                MessageBox.Show("Vui lòng chọn nguồn phát Videos");
-                return;
-            }
-            else if (txtOutputPath.Text == "")
+            if (txtPathOutputExportAudio.Text == "")
             {
                 DisableAllButtons(this, true);
 
                 MessageBox.Show("Vui lòng chọn đường dẫn xuất video");
                 return;
             }
-            var sourceVideoPathFolder = txtSourceVideoMerge.Text;
+            else if (txtVideoToAudio.Text == "")
+            {
+                DisableAllButtons(this, true);
+
+                MessageBox.Show("Vui lòng chọn đường dẫn video muốn tách âm");
+                return;
+            }
+            var sourceVideoPath = txtVideoToAudio.Text;
             var isTrecon = rbHighAudio.Checked;
             var isNguoilon = rbLowAudio.Checked;
             var isNormal = rbDefaultAudio.Checked;
-            await Util.ExportAudiosFromVideosAsync(sourceVideoPathFolder, txtOutputPath.Text, isTrecon, isNguoilon, isNormal);
+            await Util.ExportAudiosFromVideosFolderAsync(sourceVideoPath, txtOutputPath.Text, isTrecon, isNguoilon, isNormal);
             DisableAllButtons(this, true);
+        }
+
+        private void label3_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void txtNumOfVideo_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btnPathVideoToAudio_Click(object sender, EventArgs e)
+        {
+            using (var ofd = new OpenFileDialog())
+            {
+                // Thiết lập filter để chỉ hiển thị các file video
+                ofd.Filter = "Video Files|*.mp4;*.avi;*.mov;*.mkv";
+
+                DialogResult result = ofd.ShowDialog();
+
+                if (result == DialogResult.OK && !string.IsNullOrWhiteSpace(ofd.FileName))
+                {
+                    string selectedFilePath = ofd.FileName;
+                    // Sử dụng đường dẫn file đã chọn ở đây
+                    // Ví dụ: Hiển thị đường dẫn file trong một TextBox
+                    txtVideoToAudio.Text = selectedFilePath;
+                }
+            }
+        }
+
+        private void btnExportAudioPath_Click(object sender, EventArgs e)
+        {
+            using (var fbd = new FolderBrowserDialog())
+            {
+                // Dialog box description
+                fbd.Description = "Select a destination folder";
+
+                // Show the dialog
+                DialogResult result = fbd.ShowDialog();
+
+                if (result == DialogResult.OK && !string.IsNullOrWhiteSpace(fbd.SelectedPath))
+                {
+                    string selectedFolderPath = fbd.SelectedPath;
+                    // Display the selected folder path in a TextBox
+                    txtPathOutputExportAudio.Text = selectedFolderPath;
+                }
+            }
         }
     }
 
