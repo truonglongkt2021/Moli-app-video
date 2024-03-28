@@ -368,11 +368,7 @@ namespace Moli_app
                 }
 
                 // Sử dụng thông tin từ sceneChanges để cắt video
-                var hflip = "";
-                if (cbMirror.Checked)
-                {
-                    hflip = "hflip,";
-                }
+               
                 foreach (var scene in sceneChanges)
                 {
                     if (scene.end - scene.start <= TimeSpan.FromMilliseconds(1500))
@@ -380,7 +376,7 @@ namespace Moli_app
                         continue;
                     }
                     string cutCommand = $" -ss {scene.start} -to {scene.end} -i \"{videoSourcePath}\" -vf " +
-                        $"\"{hflip}eq=brightness=0.06:contrast=1.5\" -an \"{outputDir}\\output_{Guid.NewGuid().ToString()}.mp4\"";
+                        $" -an \"{outputDir}\\output_{Guid.NewGuid().ToString()}.mp4\"";
                     rtbResult.AppendText("\n");
                     rtbResult.AppendText(cutCommand);
                     Process cutProcess = new Process

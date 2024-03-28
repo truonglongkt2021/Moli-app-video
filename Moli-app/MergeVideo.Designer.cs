@@ -61,9 +61,20 @@
             this.tìmVideoShortToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.táchVideoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ghépVideoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.lbResultTrackSpeed = new System.Windows.Forms.Label();
+            this.label7 = new System.Windows.Forms.Label();
+            this.trackbarSpeed = new System.Windows.Forms.TrackBar();
+            this.rbDefaultAudio = new System.Windows.Forms.RadioButton();
+            this.rbLowAudio = new System.Windows.Forms.RadioButton();
+            this.rbHighAudio = new System.Windows.Forms.RadioButton();
+            this.cbMirror = new System.Windows.Forms.CheckBox();
+            this.btnExportAudio = new System.Windows.Forms.Button();
+            this.txtOutputSpeed = new System.Windows.Forms.TextBox();
+            this.cbIncludeAudio = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.dgvListOutput)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvAudioList)).BeginInit();
             this.menuStrip1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.trackbarSpeed)).BeginInit();
             this.SuspendLayout();
             // 
             // lbtotalDurationVideo
@@ -132,7 +143,7 @@
             // 
             // btnMergeVideo
             // 
-            this.btnMergeVideo.Location = new System.Drawing.Point(853, 195);
+            this.btnMergeVideo.Location = new System.Drawing.Point(853, 233);
             this.btnMergeVideo.Name = "btnMergeVideo";
             this.btnMergeVideo.Size = new System.Drawing.Size(374, 31);
             this.btnMergeVideo.TabIndex = 27;
@@ -259,7 +270,7 @@
             // btnSplitVideo
             // 
             this.btnSplitVideo.BackColor = System.Drawing.SystemColors.Highlight;
-            this.btnSplitVideo.Location = new System.Drawing.Point(853, 232);
+            this.btnSplitVideo.Location = new System.Drawing.Point(853, 328);
             this.btnSplitVideo.Name = "btnSplitVideo";
             this.btnSplitVideo.Size = new System.Drawing.Size(374, 53);
             this.btnSplitVideo.TabIndex = 43;
@@ -348,27 +359,142 @@
             // tìmVideoShortToolStripMenuItem
             // 
             this.tìmVideoShortToolStripMenuItem.Name = "tìmVideoShortToolStripMenuItem";
-            this.tìmVideoShortToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.tìmVideoShortToolStripMenuItem.Size = new System.Drawing.Size(158, 22);
             this.tìmVideoShortToolStripMenuItem.Text = "Tìm Video Short";
             this.tìmVideoShortToolStripMenuItem.Click += new System.EventHandler(this.tìmVideoShortToolStripMenuItem_Click);
             // 
             // táchVideoToolStripMenuItem
             // 
             this.táchVideoToolStripMenuItem.Name = "táchVideoToolStripMenuItem";
-            this.táchVideoToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.táchVideoToolStripMenuItem.Size = new System.Drawing.Size(158, 22);
             this.táchVideoToolStripMenuItem.Text = "Tách Video";
             // 
             // ghépVideoToolStripMenuItem
             // 
             this.ghépVideoToolStripMenuItem.Name = "ghépVideoToolStripMenuItem";
-            this.ghépVideoToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.ghépVideoToolStripMenuItem.Size = new System.Drawing.Size(158, 22);
             this.ghépVideoToolStripMenuItem.Text = "Ghép Video";
+            // 
+            // lbResultTrackSpeed
+            // 
+            this.lbResultTrackSpeed.AutoSize = true;
+            this.lbResultTrackSpeed.Location = new System.Drawing.Point(1062, 195);
+            this.lbResultTrackSpeed.Name = "lbResultTrackSpeed";
+            this.lbResultTrackSpeed.Size = new System.Drawing.Size(28, 15);
+            this.lbResultTrackSpeed.TabIndex = 58;
+            this.lbResultTrackSpeed.Text = "1.0x";
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(855, 195);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(43, 15);
+            this.label7.TabIndex = 57;
+            this.label7.Text = "Tốc độ";
+            // 
+            // trackbarSpeed
+            // 
+            this.trackbarSpeed.LargeChange = 1;
+            this.trackbarSpeed.Location = new System.Drawing.Point(904, 182);
+            this.trackbarSpeed.Maximum = 20;
+            this.trackbarSpeed.Minimum = 9;
+            this.trackbarSpeed.Name = "trackbarSpeed";
+            this.trackbarSpeed.Size = new System.Drawing.Size(104, 45);
+            this.trackbarSpeed.TabIndex = 56;
+            this.trackbarSpeed.Value = 10;
+            // 
+            // rbDefaultAudio
+            // 
+            this.rbDefaultAudio.AutoSize = true;
+            this.rbDefaultAudio.Checked = true;
+            this.rbDefaultAudio.Location = new System.Drawing.Point(238, 349);
+            this.rbDefaultAudio.Name = "rbDefaultAudio";
+            this.rbDefaultAudio.Size = new System.Drawing.Size(106, 19);
+            this.rbDefaultAudio.TabIndex = 55;
+            this.rbDefaultAudio.TabStop = true;
+            this.rbDefaultAudio.Text = "Không thay đổi";
+            this.rbDefaultAudio.UseVisualStyleBackColor = true;
+            // 
+            // rbLowAudio
+            // 
+            this.rbLowAudio.AutoSize = true;
+            this.rbLowAudio.Location = new System.Drawing.Point(128, 349);
+            this.rbLowAudio.Name = "rbLowAudio";
+            this.rbLowAudio.Size = new System.Drawing.Size(104, 19);
+            this.rbLowAudio.TabIndex = 54;
+            this.rbLowAudio.Text = "Giọng Lớn tuổi";
+            this.rbLowAudio.UseVisualStyleBackColor = true;
+            // 
+            // rbHighAudio
+            // 
+            this.rbHighAudio.AutoSize = true;
+            this.rbHighAudio.Location = new System.Drawing.Point(25, 349);
+            this.rbHighAudio.Name = "rbHighAudio";
+            this.rbHighAudio.Size = new System.Drawing.Size(97, 19);
+            this.rbHighAudio.TabIndex = 53;
+            this.rbHighAudio.Text = "Giọng trẻ con";
+            this.rbHighAudio.UseVisualStyleBackColor = true;
+            // 
+            // cbMirror
+            // 
+            this.cbMirror.AutoSize = true;
+            this.cbMirror.Checked = true;
+            this.cbMirror.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.cbMirror.Location = new System.Drawing.Point(1114, 158);
+            this.cbMirror.Name = "cbMirror";
+            this.cbMirror.Size = new System.Drawing.Size(113, 19);
+            this.cbMirror.TabIndex = 52;
+            this.cbMirror.Text = "Hiệu ứng gương";
+            this.cbMirror.UseVisualStyleBackColor = true;
+            // 
+            // btnExportAudio
+            // 
+            this.btnExportAudio.BackColor = System.Drawing.SystemColors.GradientActiveCaption;
+            this.btnExportAudio.Location = new System.Drawing.Point(545, 334);
+            this.btnExportAudio.Name = "btnExportAudio";
+            this.btnExportAudio.Size = new System.Drawing.Size(140, 47);
+            this.btnExportAudio.TabIndex = 60;
+            this.btnExportAudio.Text = "Tách audio";
+            this.btnExportAudio.UseVisualStyleBackColor = false;
+            this.btnExportAudio.Click += new System.EventHandler(this.btnExportAudio_Click);
+            // 
+            // txtOutputSpeed
+            // 
+            this.txtOutputSpeed.Location = new System.Drawing.Point(1004, 187);
+            this.txtOutputSpeed.Name = "txtOutputSpeed";
+            this.txtOutputSpeed.Size = new System.Drawing.Size(46, 23);
+            this.txtOutputSpeed.TabIndex = 61;
+            this.txtOutputSpeed.Text = "1.0";
+            this.txtOutputSpeed.TextChanged += new System.EventHandler(this.txtOutputSpeed_TextChanged);
+            // 
+            // cbIncludeAudio
+            // 
+            this.cbIncludeAudio.AutoSize = true;
+            this.cbIncludeAudio.Checked = true;
+            this.cbIncludeAudio.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.cbIncludeAudio.Location = new System.Drawing.Point(1114, 189);
+            this.cbIncludeAudio.Name = "cbIncludeAudio";
+            this.cbIncludeAudio.Size = new System.Drawing.Size(85, 19);
+            this.cbIncludeAudio.TabIndex = 62;
+            this.cbIncludeAudio.Text = "Ghép Nhạc";
+            this.cbIncludeAudio.UseVisualStyleBackColor = true;
             // 
             // MergeVideo
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1239, 393);
+            this.Controls.Add(this.cbIncludeAudio);
+            this.Controls.Add(this.txtOutputSpeed);
+            this.Controls.Add(this.btnExportAudio);
+            this.Controls.Add(this.lbResultTrackSpeed);
+            this.Controls.Add(this.label7);
+            this.Controls.Add(this.trackbarSpeed);
+            this.Controls.Add(this.rbDefaultAudio);
+            this.Controls.Add(this.rbLowAudio);
+            this.Controls.Add(this.rbHighAudio);
+            this.Controls.Add(this.cbMirror);
             this.Controls.Add(this.gbMergeVideo);
             this.Controls.Add(this.rbHorizontal);
             this.Controls.Add(this.rbVertical);
@@ -405,6 +531,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.dgvAudioList)).EndInit();
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.trackbarSpeed)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -446,5 +573,15 @@
         private System.Windows.Forms.ToolStripMenuItem tìmVideoShortToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem táchVideoToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem ghépVideoToolStripMenuItem;
+        private System.Windows.Forms.Label lbResultTrackSpeed;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.TrackBar trackbarSpeed;
+        private System.Windows.Forms.RadioButton rbDefaultAudio;
+        private System.Windows.Forms.RadioButton rbLowAudio;
+        private System.Windows.Forms.RadioButton rbHighAudio;
+        private System.Windows.Forms.CheckBox cbMirror;
+        private System.Windows.Forms.Button btnExportAudio;
+        private System.Windows.Forms.TextBox txtOutputSpeed;
+        private System.Windows.Forms.CheckBox cbIncludeAudio;
     }
 }

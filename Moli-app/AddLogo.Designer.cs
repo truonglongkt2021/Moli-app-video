@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AddLogo));
             this.pbDemoAddLogo = new System.Windows.Forms.PictureBox();
             this.bannerTextProvider1 = new Syncfusion.Windows.Forms.BannerTextProvider(this.components);
             this.trackBar1 = new System.Windows.Forms.TrackBar();
@@ -42,7 +43,6 @@
             this.rbPosLT = new System.Windows.Forms.RadioButton();
             this.lb22 = new System.Windows.Forms.Label();
             this.tbarScale = new System.Windows.Forms.TrackBar();
-            this.pbLogoPreview = new System.Windows.Forms.PictureBox();
             this.btnBack = new System.Windows.Forms.Button();
             this.btnSelectLogo = new System.Windows.Forms.Button();
             this.NumScale = new System.Windows.Forms.NumericUpDown();
@@ -54,16 +54,34 @@
             this.btnPlay = new System.Windows.Forms.Button();
             this.btnPause = new System.Windows.Forms.Button();
             this.vlcPlayer = new LibVLCSharp.WinForms.VideoView();
+            this.lbEndTime = new System.Windows.Forms.Label();
+            this.lbCurTime = new System.Windows.Forms.Label();
+            this.btnStop = new System.Windows.Forms.Button();
+            this.volumeTrack = new System.Windows.Forms.TrackBar();
+            this.label2 = new System.Windows.Forms.Label();
+            this.pbLogoPreview = new System.Windows.Forms.PictureBox();
+            this.Audio = new System.Windows.Forms.GroupBox();
+            this.tbAudio = new System.Windows.Forms.TrackBar();
+            this.btnStopAudio = new System.Windows.Forms.Button();
+            this.btnPauseAudio = new System.Windows.Forms.Button();
+            this.btnPlayAudio = new System.Windows.Forms.Button();
+            this.btnPathAudio = new System.Windows.Forms.Button();
+            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.label3 = new System.Windows.Forms.Label();
+            this.bannerTextProvider2 = new Syncfusion.Windows.Forms.BannerTextProvider(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.pbDemoAddLogo)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).BeginInit();
             this.gbPos.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.tbarScale)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pbLogoPreview)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.NumScale)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbLogoOvelay)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.tbarY)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.tbarX)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.vlcPlayer)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.volumeTrack)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbLogoPreview)).BeginInit();
+            this.Audio.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.tbAudio)).BeginInit();
             this.SuspendLayout();
             // 
             // pbDemoAddLogo
@@ -77,7 +95,7 @@
             // 
             // trackBar1
             // 
-            this.trackBar1.Location = new System.Drawing.Point(265, 378);
+            this.trackBar1.Location = new System.Drawing.Point(270, 561);
             this.trackBar1.Maximum = 1000;
             this.trackBar1.Name = "trackBar1";
             this.trackBar1.Size = new System.Drawing.Size(523, 45);
@@ -85,7 +103,7 @@
             // 
             // txtLogoPath
             // 
-            this.txtLogoPath.Location = new System.Drawing.Point(530, 36);
+            this.txtLogoPath.Location = new System.Drawing.Point(918, 27);
             this.txtLogoPath.Name = "txtLogoPath";
             this.txtLogoPath.Size = new System.Drawing.Size(206, 23);
             this.txtLogoPath.TabIndex = 4;
@@ -93,7 +111,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(530, 18);
+            this.label1.Location = new System.Drawing.Point(918, 9);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(63, 15);
             this.label1.TabIndex = 5;
@@ -101,7 +119,7 @@
             // 
             // btnAddLogo2
             // 
-            this.btnAddLogo2.Location = new System.Drawing.Point(742, 36);
+            this.btnAddLogo2.Location = new System.Drawing.Point(1130, 27);
             this.btnAddLogo2.Name = "btnAddLogo2";
             this.btnAddLogo2.Size = new System.Drawing.Size(46, 23);
             this.btnAddLogo2.TabIndex = 12;
@@ -115,7 +133,7 @@
             this.gbPos.Controls.Add(this.rbPosLB);
             this.gbPos.Controls.Add(this.rbPosRT);
             this.gbPos.Controls.Add(this.rbPosLT);
-            this.gbPos.Location = new System.Drawing.Point(536, 272);
+            this.gbPos.Location = new System.Drawing.Point(924, 289);
             this.gbPos.Name = "gbPos";
             this.gbPos.Size = new System.Drawing.Size(252, 100);
             this.gbPos.TabIndex = 13;
@@ -171,7 +189,7 @@
             // lb22
             // 
             this.lb22.AutoSize = true;
-            this.lb22.Location = new System.Drawing.Point(530, 71);
+            this.lb22.Location = new System.Drawing.Point(918, 62);
             this.lb22.Name = "lb22";
             this.lb22.Size = new System.Drawing.Size(64, 15);
             this.lb22.TabIndex = 14;
@@ -179,7 +197,7 @@
             // 
             // tbarScale
             // 
-            this.tbarScale.Location = new System.Drawing.Point(530, 89);
+            this.tbarScale.Location = new System.Drawing.Point(918, 80);
             this.tbarScale.Maximum = 100;
             this.tbarScale.Minimum = 10;
             this.tbarScale.Name = "tbarScale";
@@ -188,18 +206,9 @@
             this.tbarScale.Value = 50;
             this.tbarScale.Scroll += new System.EventHandler(this.tbarScale_Scroll);
             // 
-            // pbLogoPreview
-            // 
-            this.pbLogoPreview.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.pbLogoPreview.Location = new System.Drawing.Point(608, 191);
-            this.pbLogoPreview.Name = "pbLogoPreview";
-            this.pbLogoPreview.Size = new System.Drawing.Size(103, 75);
-            this.pbLogoPreview.TabIndex = 16;
-            this.pbLogoPreview.TabStop = false;
-            // 
             // btnBack
             // 
-            this.btnBack.Location = new System.Drawing.Point(701, 415);
+            this.btnBack.Location = new System.Drawing.Point(706, 598);
             this.btnBack.Name = "btnBack";
             this.btnBack.Size = new System.Drawing.Size(75, 23);
             this.btnBack.TabIndex = 17;
@@ -209,7 +218,7 @@
             // 
             // btnSelectLogo
             // 
-            this.btnSelectLogo.Location = new System.Drawing.Point(620, 415);
+            this.btnSelectLogo.Location = new System.Drawing.Point(625, 598);
             this.btnSelectLogo.Name = "btnSelectLogo";
             this.btnSelectLogo.Size = new System.Drawing.Size(75, 23);
             this.btnSelectLogo.TabIndex = 18;
@@ -219,7 +228,7 @@
             // 
             // NumScale
             // 
-            this.NumScale.Location = new System.Drawing.Point(711, 71);
+            this.NumScale.Location = new System.Drawing.Point(1099, 62);
             this.NumScale.Minimum = new decimal(new int[] {
             10,
             0,
@@ -239,6 +248,7 @@
             // 
             this.pbLogoOvelay.BackColor = System.Drawing.Color.Transparent;
             this.pbLogoOvelay.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+            this.pbLogoOvelay.Image = ((System.Drawing.Image)(resources.GetObject("pbLogoOvelay.Image")));
             this.pbLogoOvelay.Location = new System.Drawing.Point(25, 18);
             this.pbLogoOvelay.MinimumSize = new System.Drawing.Size(30, 30);
             this.pbLogoOvelay.Name = "pbLogoOvelay";
@@ -248,7 +258,7 @@
             // 
             // tbarY
             // 
-            this.tbarY.Location = new System.Drawing.Point(659, 140);
+            this.tbarY.Location = new System.Drawing.Point(1047, 131);
             this.tbarY.Maximum = 500;
             this.tbarY.Minimum = 12;
             this.tbarY.Name = "tbarY";
@@ -260,7 +270,7 @@
             // 
             // tbarX
             // 
-            this.tbarX.Location = new System.Drawing.Point(536, 140);
+            this.tbarX.Location = new System.Drawing.Point(924, 131);
             this.tbarX.Maximum = 500;
             this.tbarX.Minimum = 12;
             this.tbarX.Name = "tbarX";
@@ -273,7 +283,7 @@
             // lbx
             // 
             this.lbx.AutoSize = true;
-            this.lbx.Location = new System.Drawing.Point(536, 119);
+            this.lbx.Location = new System.Drawing.Point(924, 110);
             this.lbx.Name = "lbx";
             this.lbx.Size = new System.Drawing.Size(41, 15);
             this.lbx.TabIndex = 24;
@@ -282,7 +292,7 @@
             // lby
             // 
             this.lby.AutoSize = true;
-            this.lby.Location = new System.Drawing.Point(669, 119);
+            this.lby.Location = new System.Drawing.Point(1057, 110);
             this.lby.Name = "lby";
             this.lby.Size = new System.Drawing.Size(42, 15);
             this.lby.TabIndex = 25;
@@ -290,37 +300,178 @@
             // 
             // btnPlay
             // 
-            this.btnPlay.Location = new System.Drawing.Point(275, 349);
+            this.btnPlay.Location = new System.Drawing.Point(279, 598);
             this.btnPlay.Name = "btnPlay";
-            this.btnPlay.Size = new System.Drawing.Size(52, 23);
+            this.btnPlay.Size = new System.Drawing.Size(43, 23);
             this.btnPlay.TabIndex = 26;
             this.btnPlay.Text = "Play";
             this.btnPlay.UseVisualStyleBackColor = true;
+            this.btnPlay.Click += new System.EventHandler(this.btnPlay_Click);
             // 
             // btnPause
             // 
-            this.btnPause.Location = new System.Drawing.Point(333, 349);
+            this.btnPause.Location = new System.Drawing.Point(328, 598);
             this.btnPause.Name = "btnPause";
             this.btnPause.Size = new System.Drawing.Size(50, 23);
             this.btnPause.TabIndex = 27;
             this.btnPause.Text = "Pause";
             this.btnPause.UseVisualStyleBackColor = true;
+            this.btnPause.Click += new System.EventHandler(this.btnPause_Click);
             // 
             // vlcPlayer
             // 
             this.vlcPlayer.BackColor = System.Drawing.Color.Black;
-            this.vlcPlayer.Location = new System.Drawing.Point(12, 12);
+            this.vlcPlayer.Location = new System.Drawing.Point(274, 110);
             this.vlcPlayer.MediaPlayer = null;
             this.vlcPlayer.Name = "vlcPlayer";
             this.vlcPlayer.Size = new System.Drawing.Size(241, 360);
             this.vlcPlayer.TabIndex = 28;
             this.vlcPlayer.Text = "videoView1";
             // 
+            // lbEndTime
+            // 
+            this.lbEndTime.AutoSize = true;
+            this.lbEndTime.Location = new System.Drawing.Point(739, 543);
+            this.lbEndTime.Name = "lbEndTime";
+            this.lbEndTime.Size = new System.Drawing.Size(49, 15);
+            this.lbEndTime.TabIndex = 29;
+            this.lbEndTime.Text = "00:00:00";
+            // 
+            // lbCurTime
+            // 
+            this.lbCurTime.AutoSize = true;
+            this.lbCurTime.Location = new System.Drawing.Point(279, 540);
+            this.lbCurTime.Name = "lbCurTime";
+            this.lbCurTime.Size = new System.Drawing.Size(34, 15);
+            this.lbCurTime.TabIndex = 30;
+            this.lbCurTime.Text = "00:00";
+            // 
+            // btnStop
+            // 
+            this.btnStop.Location = new System.Drawing.Point(384, 598);
+            this.btnStop.Name = "btnStop";
+            this.btnStop.Size = new System.Drawing.Size(54, 23);
+            this.btnStop.TabIndex = 31;
+            this.btnStop.Text = "Stop";
+            this.btnStop.UseVisualStyleBackColor = true;
+            this.btnStop.Click += new System.EventHandler(this.btnStop_Click);
+            // 
+            // volumeTrack
+            // 
+            this.volumeTrack.Location = new System.Drawing.Point(808, 561);
+            this.volumeTrack.Maximum = 100;
+            this.volumeTrack.Name = "volumeTrack";
+            this.volumeTrack.Size = new System.Drawing.Size(196, 45);
+            this.volumeTrack.TabIndex = 32;
+            this.volumeTrack.Value = 100;
+            this.volumeTrack.Scroll += new System.EventHandler(this.volumeTrackBar2_Scroll);
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(813, 543);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(47, 15);
+            this.label2.TabIndex = 33;
+            this.label2.Text = "Volume";
+            // 
+            // pbLogoPreview
+            // 
+            this.pbLogoPreview.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+            this.pbLogoPreview.Location = new System.Drawing.Point(996, 182);
+            this.pbLogoPreview.Name = "pbLogoPreview";
+            this.pbLogoPreview.Size = new System.Drawing.Size(103, 75);
+            this.pbLogoPreview.TabIndex = 16;
+            this.pbLogoPreview.TabStop = false;
+            // 
+            // Audio
+            // 
+            this.Audio.Controls.Add(this.tbAudio);
+            this.Audio.Controls.Add(this.btnStopAudio);
+            this.Audio.Controls.Add(this.btnPauseAudio);
+            this.Audio.Controls.Add(this.btnPlayAudio);
+            this.Audio.Controls.Add(this.btnPathAudio);
+            this.Audio.Controls.Add(this.textBox1);
+            this.Audio.Controls.Add(this.label3);
+            this.Audio.Location = new System.Drawing.Point(274, 12);
+            this.Audio.Name = "Audio";
+            this.Audio.Size = new System.Drawing.Size(638, 209);
+            this.Audio.TabIndex = 34;
+            this.Audio.TabStop = false;
+            this.Audio.Text = "Audio";
+            // 
+            // tbAudio
+            // 
+            this.tbAudio.Location = new System.Drawing.Point(255, 50);
+            this.tbAudio.Maximum = 100;
+            this.tbAudio.Name = "tbAudio";
+            this.tbAudio.Size = new System.Drawing.Size(186, 45);
+            this.tbAudio.TabIndex = 6;
+            this.tbAudio.Value = 100;
+            // 
+            // btnStopAudio
+            // 
+            this.btnStopAudio.Location = new System.Drawing.Point(174, 50);
+            this.btnStopAudio.Name = "btnStopAudio";
+            this.btnStopAudio.Size = new System.Drawing.Size(75, 23);
+            this.btnStopAudio.TabIndex = 5;
+            this.btnStopAudio.Text = "Stop";
+            this.btnStopAudio.UseVisualStyleBackColor = true;
+            // 
+            // btnPauseAudio
+            // 
+            this.btnPauseAudio.Location = new System.Drawing.Point(93, 50);
+            this.btnPauseAudio.Name = "btnPauseAudio";
+            this.btnPauseAudio.Size = new System.Drawing.Size(75, 23);
+            this.btnPauseAudio.TabIndex = 4;
+            this.btnPauseAudio.Text = "Pause";
+            this.btnPauseAudio.UseVisualStyleBackColor = true;
+            // 
+            // btnPlayAudio
+            // 
+            this.btnPlayAudio.Location = new System.Drawing.Point(12, 50);
+            this.btnPlayAudio.Name = "btnPlayAudio";
+            this.btnPlayAudio.Size = new System.Drawing.Size(75, 23);
+            this.btnPlayAudio.TabIndex = 3;
+            this.btnPlayAudio.Text = "Play";
+            this.btnPlayAudio.UseVisualStyleBackColor = true;
+            // 
+            // btnPathAudio
+            // 
+            this.btnPathAudio.Location = new System.Drawing.Point(557, 19);
+            this.btnPathAudio.Name = "btnPathAudio";
+            this.btnPathAudio.Size = new System.Drawing.Size(75, 23);
+            this.btnPathAudio.TabIndex = 2;
+            this.btnPathAudio.Text = "Chọn";
+            this.btnPathAudio.UseVisualStyleBackColor = true;
+            // 
+            // textBox1
+            // 
+            this.textBox1.Location = new System.Drawing.Point(93, 20);
+            this.textBox1.Name = "textBox1";
+            this.textBox1.Size = new System.Drawing.Size(443, 23);
+            this.textBox1.TabIndex = 1;
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(6, 23);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(81, 15);
+            this.label3.TabIndex = 0;
+            this.label3.Text = "File Âm thanh";
+            // 
             // AddLogo
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.ClientSize = new System.Drawing.Size(1194, 638);
+            this.Controls.Add(this.Audio);
+            this.Controls.Add(this.label2);
+            this.Controls.Add(this.volumeTrack);
+            this.Controls.Add(this.btnStop);
+            this.Controls.Add(this.lbCurTime);
+            this.Controls.Add(this.lbEndTime);
             this.Controls.Add(this.vlcPlayer);
             this.Controls.Add(this.btnPause);
             this.Controls.Add(this.btnPlay);
@@ -348,12 +499,16 @@
             this.gbPos.ResumeLayout(false);
             this.gbPos.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.tbarScale)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pbLogoPreview)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.NumScale)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbLogoOvelay)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.tbarY)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.tbarX)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.vlcPlayer)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.volumeTrack)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbLogoPreview)).EndInit();
+            this.Audio.ResumeLayout(false);
+            this.Audio.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.tbAudio)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -374,7 +529,6 @@
         private System.Windows.Forms.RadioButton rbPosRB;
         private System.Windows.Forms.Label lb22;
         private System.Windows.Forms.TrackBar tbarScale;
-        private System.Windows.Forms.PictureBox pbLogoPreview;
         private System.Windows.Forms.Button btnBack;
         private System.Windows.Forms.Button btnSelectLogo;
         private System.Windows.Forms.NumericUpDown NumScale;
@@ -386,5 +540,20 @@
         private System.Windows.Forms.Button btnPlay;
         private System.Windows.Forms.Button btnPause;
         private LibVLCSharp.WinForms.VideoView vlcPlayer;
+        private System.Windows.Forms.Label lbEndTime;
+        private System.Windows.Forms.Label lbCurTime;
+        private System.Windows.Forms.Button btnStop;
+        private System.Windows.Forms.TrackBar volumeTrack;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.PictureBox pbLogoPreview;
+        private System.Windows.Forms.GroupBox Audio;
+        private System.Windows.Forms.TrackBar tbAudio;
+        private System.Windows.Forms.Button btnStopAudio;
+        private System.Windows.Forms.Button btnPauseAudio;
+        private System.Windows.Forms.Button btnPlayAudio;
+        private System.Windows.Forms.Button btnPathAudio;
+        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.Label label3;
+        private Syncfusion.Windows.Forms.BannerTextProvider bannerTextProvider2;
     }
 }

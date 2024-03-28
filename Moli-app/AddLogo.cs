@@ -1,5 +1,4 @@
 ﻿using LibVLCSharp.Shared;
-using LibVLCSharp.WinForms;
 using Moli_app.Common;
 using System;
 using System.Collections.Generic;
@@ -18,7 +17,10 @@ namespace Moli_app
     public partial class AddLogo : Form
     {
         LogoModelsV2 _LogoModelV2 = new LogoModelsV2();
-        LibVLC _libVLC;
+         LibVLC _libVLC = new LibVLC();
+        long videolength = 0;
+        // Khởi tạo Timer
+        Timer updateTimer = new Timer();
         public AddLogo(LogoModelsV2 logoModelV2)
         {
             InitializeComponent();
@@ -41,17 +43,55 @@ namespace Moli_app
             //pbDemoAddLogo.Size = newSize;
 
             //pbDemoAddLogo.Show();
-            _libVLC = new LibVLC();
-            vlcPlayer.MediaPlayer = new MediaPlayer(_libVLC);
-            vlcPlayer.MediaPlayer.Play(new Media(_libVLC, logoModelV2.ImagePath, FromType.FromPath));
-            // Phần còn lại của code
-        }
+            // Tạo đối tượng Media với URL
+            // Khởi tạo LibVLC nếu chưa được khởi tạo
+            if (_libVLC == null)
+            {
+                _libVLC = new LibVLC();
+            }
 
+            // Tạo MediaPlayer mới nếu chưa có
+            if (vlcPlayer.MediaPlayer == null)
+            {
+                vlcPlayer.MediaPlayer = new LibVLCSharp.Shared.MediaPlayer(_libVLC);
+            }
+
+            // Tạo và gán đối tượng Media cho MediaPlayer, sử dụng FromPath cho tệp cục bộ
+            Media videoMedia = new Media(_libVLC, logoModelV2.ImagePath, FromType.FromPath);
+            vlcPlayer.MediaPlayer.Media = videoMedia;
+            UpdateVideoLength();
+            // Cài đặt và đăng ký sự kiện timer
+            updateTimer.Interval = 1000; // Cập nhật mỗi giây
+            updateTimer.Tick += UpdateTimer_Tick;
+            vlcPlayer.MediaPlayer.LengthChanged += MediaPlayer_LengthChanged;
+            InitializevolumeTrack(); // Khởi tạo TrackBar âm lượng
+        }
+        private void MediaPlayer_LengthChanged(object sender, LibVLCSharp.Shared.MediaPlayerLengthChangedEventArgs e)
+        {
+            this.Invoke((MethodInvoker)delegate
+            {
+                // Cập nhật thời lượng video khi thông tin này sẵn có
+                videolength = e.Length;
+                lbEndTime.Text = TimeSpan.FromMilliseconds(videolength).ToString(@"hh\:mm\:ss");
+            });
+        }
+        private void UpdateTimer_Tick(object sender, EventArgs e)
+        {
+            UpdateCurrentTime();
+        }
         private void nSliderControl1_ValueChanged(Nevron.Nov.Dom.NValueChangeEventArgs arg)
         {
             //nSliderControl1.Value;
         }
-
+        // Hàm cập nhật thời gian hiện tại trên lbCurTime
+        void UpdateCurrentTime()
+        {
+            if (vlcPlayer.MediaPlayer.IsPlaying)
+            {
+                var currentTime = vlcPlayer.MediaPlayer.Time; // Lấy thời gian hiện tại tính bằng mili giây
+                lbCurTime.Text = TimeSpan.FromMilliseconds(currentTime).ToString(@"hh\:mm\:ss");
+            }
+        }
         private void radioButton1_CheckedChanged(object sender, EventArgs e)
         {
             var buttons = gbPos.Controls.OfType<RadioButton>()
@@ -166,7 +206,68 @@ namespace Moli_app
             _LogoModelV2.PosY = tbarY.Value;
             pbLogoOvelay.Refresh();
         }
-       
-        
+        private void btnStop_Click(object sender, EventArgs e)
+        {
+            vlcPlayer.MediaPlayer.Stop(); // Dừng video
+            updateTimer.Stop(); // Dừng cập nhật thời gian
+
+            // Tùy chọn: Đặt lại nhãn thời gian về 0 hoặc trạng thái mặc định
+            lbCurTime.Text = "00:00:00";
+        }
+        private void btnResume_Click(object sender, EventArgs e)
+        {
+            if (!vlcPlayer.MediaPlayer.IsPlaying)
+            {
+                vlcPlayer.MediaPlayer.Play(); // Tiếp tục phát video
+                updateTimer.Start(); // Bắt đầu cập nhật thời gian lại
+            }
+        }
+        private void btnPlay_Click(object sender, EventArgs e)
+        {
+            UpdateVideoLength();
+            vlcPlayer.MediaPlayer.Play(); // Bắt đầu phát video
+            updateTimer.Start(); // Bắt đầu timer để cập nhật lbCurTime
+        }
+        void PauseVideo()
+        {
+            if (vlcPlayer.MediaPlayer.IsPlaying)
+            {
+                vlcPlayer.MediaPlayer.Pause();
+            }
+        }
+        void StopVideo()
+        {
+            vlcPlayer.MediaPlayer.Stop();
+        }
+        void UpdateVideoLength()
+        {
+            var videoLength = vlcPlayer.MediaPlayer.Length; // Lấy thời lượng tổng cộng tính bằng mili giây
+            lbEndTime.Text = TimeSpan.FromMilliseconds(videoLength).ToString(@"hh\:mm\:ss");
+        }
+
+        private void btnPause_Click(object sender, EventArgs e)
+        {
+            PauseVideo();
+        }
+
+        private void InitializevolumeTrack()
+        {
+            volumeTrack.Minimum = 0;
+            volumeTrack.Maximum = 100; // Giả sử âm lượng từ 0 đến 100
+            volumeTrack.TickFrequency = 5; // Đánh dấu mỗi 5 đơn vị
+            volumeTrack.LargeChange = 10;
+            volumeTrack.SmallChange = 1;
+            volumeTrack.Value = 100; // Giá trị âm lượng mặc định
+            volumeTrack.Scroll += volumeTrackBar2_Scroll; // Đăng ký sự kiện khi TrackBar thay đổi giá trị
+        }
+
+        private void volumeTrackBar2_Scroll(object sender, EventArgs e)
+        {
+            if (vlcPlayer.MediaPlayer != null)
+            {
+                // Đặt âm lượng. Lưu ý rằng giá trị âm lượng trong LibVLCSharp được tỷ lệ từ 0 đến 100
+                vlcPlayer.MediaPlayer.Volume = volumeTrack.Value;
+            }
+        }
     }
 }
