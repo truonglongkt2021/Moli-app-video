@@ -266,17 +266,7 @@ namespace Moli_app
 
         private void btnBack_Click(object sender, EventArgs e)
         {
-            // Create an instance of FormABC
-            tiktok formABC = new tiktok();
-
-            // Hide the current form
-            this.Hide();
-
-            // Show FormABC
-            formABC.Show();
-
-            // Optional: Close the current form when FormABC is closed
-            formABC.FormClosed += (s, args) => this.Close();
+            this.Close();
         }
 
         private void rtbResult_TextChanged(object sender, EventArgs e)

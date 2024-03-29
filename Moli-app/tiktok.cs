@@ -118,14 +118,14 @@ namespace Moli_app
             try
             {
                 var ag = $"-i \"{videoSourcePath}\" -filter:v \"mpdecimate,setpts=N/FRAME_RATE/TB,select='gt(scene,0.4)',showinfo -f null -";
-                rtxError.AppendText(ag);
+                rtxError.AppendText(Guid.NewGuid().ToString());
                 using (var writer = new StreamWriter(outputFileName))
                 {
                     var ffmpeg = new Process();
                     try
                     {
                         ffmpeg.StartInfo.FileName = Path_FFMPEG;
-                        ffmpeg.StartInfo.Arguments = $"-i \"{videoSourcePath}\" -filter:v \"mpdecimate,setpts=N/FRAME_RATE/TB,select='gt(scene,0.4)',showinfo -f null -";
+                        ffmpeg.StartInfo.Arguments = ag;
                         ffmpeg.StartInfo.UseShellExecute = false;
                         ffmpeg.StartInfo.RedirectStandardError = true;
                         ffmpeg.StartInfo.CreateNoWindow = true;
@@ -200,8 +200,9 @@ namespace Moli_app
                     }    
                     string cutCommand = $" -ss {scene.start} -to {scene.end} -i \"{videoSourcePath}\" -c copy {outputDir}\\output_" +
                         $"{Guid.NewGuid().ToString()}.mp4";
-                   rtbResultProcess.AppendText("\n");
-                   rtbResultProcess.AppendText(cutCommand);
+                   //rtbResultProcess.AppendText("\n");
+                   //rtbResultProcess.AppendText(cutCommand);
+                   rtbResultProcess.AppendText(Guid.NewGuid().ToString());
                     Process cutProcess = new Process
                     {
                         StartInfo = new ProcessStartInfo
@@ -257,18 +258,7 @@ namespace Moli_app
 
         private void btnMergeForm_Click(object sender, EventArgs e)
         {
-            LogoModels.Scale = 3;
-            // Create an instance of FormABC
-            MergeVideo formABC = new MergeVideo();
-
-            // Hide the current form
-            this.Hide();
-
-            // Show FormABC
-            formABC.Show();
-
-            // Optional: Close the current form when FormABC is closed
-            formABC.FormClosed += (s, args) => this.Close();
+            this.Close();
         }
 
         private void btnSearchYoutubeShort_Click(object sender, EventArgs e)
