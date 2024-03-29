@@ -26,6 +26,13 @@ namespace Moli_app
             InitializeComponent();
             // Đặt vị trí xuất hiện của form ở chính giữa màn hình
             this.StartPosition = FormStartPosition.CenterScreen;
+            // Cố định kích thước Form
+            this.FormBorderStyle = FormBorderStyle.FixedSingle; // Hoặc FixedDialog, Fixed3D
+            this.MaximizeBox = false; // Ngăn không cho phóng to Form
+
+            // Cố định kích thước bằng cách đặt giới hạn kích thước tối thiểu và tối đa
+            this.MinimumSize = this.Size; // Hoặc thiết lập một giá trị cụ thể
+            this.MaximumSize = this.Size; // Giữ giá trị giống nhau để cố định kích thước
             dgvListyoutube.Columns.Clear();
 
             dgvListyoutube.Columns.Add("Title", "Title");
