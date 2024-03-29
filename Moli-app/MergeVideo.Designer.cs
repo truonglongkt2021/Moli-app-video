@@ -81,7 +81,20 @@
             this.txtVideoToAudio = new System.Windows.Forms.TextBox();
             this.label9 = new System.Windows.Forms.Label();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
+            this.groupBox6 = new System.Windows.Forms.GroupBox();
+            this.label18 = new System.Windows.Forms.Label();
+            this.trackTransparent = new System.Windows.Forms.TrackBar();
+            this.rbWhiteTranparent = new System.Windows.Forms.RadioButton();
+            this.rbBaseColor = new System.Windows.Forms.RadioButton();
+            this.label17 = new System.Windows.Forms.Label();
+            this.trackSize = new System.Windows.Forms.TrackBar();
+            this.btnAddLogo = new System.Windows.Forms.Button();
+            this.btnPathAddLogo = new System.Windows.Forms.Button();
+            this.txtPathVideoAddLogo = new System.Windows.Forms.TextBox();
+            this.label16 = new System.Windows.Forms.Label();
+            this.pbLogo = new System.Windows.Forms.PictureBox();
             this.gbPositionLogo = new System.Windows.Forms.GroupBox();
+            this.cbPosition = new System.Windows.Forms.ComboBox();
             this.btnSelectLogoPath = new System.Windows.Forms.Button();
             this.txtPathLogo = new System.Windows.Forms.TextBox();
             this.label12 = new System.Windows.Forms.Label();
@@ -96,7 +109,6 @@
             this.btnPathIntroVideo = new System.Windows.Forms.Button();
             this.btnPathVideoOutTro = new System.Windows.Forms.Button();
             this.btnMergeIntroOuttro = new System.Windows.Forms.Button();
-            this.button1 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dgvListOutput)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvAudioList)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackbarSpeed)).BeginInit();
@@ -107,6 +119,11 @@
             this.groupBox3.SuspendLayout();
             this.groupBox4.SuspendLayout();
             this.groupBox5.SuspendLayout();
+            this.groupBox6.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.trackTransparent)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trackSize)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbLogo)).BeginInit();
+            this.gbPositionLogo.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numOfPress)).BeginInit();
             this.SuspendLayout();
             // 
@@ -633,41 +650,184 @@
             // 
             // groupBox5
             // 
-            this.groupBox5.Controls.Add(this.button1);
+            this.groupBox5.Controls.Add(this.groupBox6);
+            this.groupBox5.Controls.Add(this.btnAddLogo);
+            this.groupBox5.Controls.Add(this.btnPathAddLogo);
+            this.groupBox5.Controls.Add(this.txtPathVideoAddLogo);
+            this.groupBox5.Controls.Add(this.label16);
+            this.groupBox5.Controls.Add(this.pbLogo);
             this.groupBox5.Controls.Add(this.gbPositionLogo);
             this.groupBox5.Controls.Add(this.btnSelectLogoPath);
             this.groupBox5.Controls.Add(this.txtPathLogo);
             this.groupBox5.Controls.Add(this.label12);
             this.groupBox5.Location = new System.Drawing.Point(19, 380);
             this.groupBox5.Name = "groupBox5";
-            this.groupBox5.Size = new System.Drawing.Size(581, 254);
+            this.groupBox5.Size = new System.Drawing.Size(581, 290);
             this.groupBox5.TabIndex = 73;
             this.groupBox5.TabStop = false;
             this.groupBox5.Text = "Xử lý Logo";
             // 
+            // groupBox6
+            // 
+            this.groupBox6.Controls.Add(this.label18);
+            this.groupBox6.Controls.Add(this.trackTransparent);
+            this.groupBox6.Controls.Add(this.rbWhiteTranparent);
+            this.groupBox6.Controls.Add(this.rbBaseColor);
+            this.groupBox6.Controls.Add(this.label17);
+            this.groupBox6.Controls.Add(this.trackSize);
+            this.groupBox6.Location = new System.Drawing.Point(6, 137);
+            this.groupBox6.Name = "groupBox6";
+            this.groupBox6.Size = new System.Drawing.Size(338, 100);
+            this.groupBox6.TabIndex = 9;
+            this.groupBox6.TabStop = false;
+            this.groupBox6.Text = "Màu và kích thước";
+            // 
+            // label18
+            // 
+            this.label18.AutoSize = true;
+            this.label18.Location = new System.Drawing.Point(191, 18);
+            this.label18.Name = "label18";
+            this.label18.Size = new System.Drawing.Size(80, 15);
+            this.label18.TabIndex = 5;
+            this.label18.Text = "Độ trong suốt";
+            // 
+            // trackTransparent
+            // 
+            this.trackTransparent.Location = new System.Drawing.Point(191, 30);
+            this.trackTransparent.Maximum = 100;
+            this.trackTransparent.Name = "trackTransparent";
+            this.trackTransparent.Size = new System.Drawing.Size(141, 45);
+            this.trackTransparent.TabIndex = 4;
+            this.trackTransparent.Value = 100;
+            // 
+            // rbWhiteTranparent
+            // 
+            this.rbWhiteTranparent.AutoSize = true;
+            this.rbWhiteTranparent.Location = new System.Drawing.Point(205, 73);
+            this.rbWhiteTranparent.Name = "rbWhiteTranparent";
+            this.rbWhiteTranparent.Size = new System.Drawing.Size(81, 19);
+            this.rbWhiteTranparent.TabIndex = 3;
+            this.rbWhiteTranparent.Text = "Màu Trắng";
+            this.rbWhiteTranparent.UseVisualStyleBackColor = true;
+            // 
+            // rbBaseColor
+            // 
+            this.rbBaseColor.AutoSize = true;
+            this.rbBaseColor.Checked = true;
+            this.rbBaseColor.Location = new System.Drawing.Point(113, 73);
+            this.rbBaseColor.Name = "rbBaseColor";
+            this.rbBaseColor.Size = new System.Drawing.Size(72, 19);
+            this.rbBaseColor.TabIndex = 2;
+            this.rbBaseColor.TabStop = true;
+            this.rbBaseColor.Text = "Màu gốc";
+            this.rbBaseColor.UseVisualStyleBackColor = true;
+            // 
+            // label17
+            // 
+            this.label17.AutoSize = true;
+            this.label17.Location = new System.Drawing.Point(11, 18);
+            this.label17.Name = "label17";
+            this.label17.Size = new System.Drawing.Size(64, 15);
+            this.label17.TabIndex = 1;
+            this.label17.Text = "Kích thước";
+            // 
+            // trackSize
+            // 
+            this.trackSize.Location = new System.Drawing.Point(6, 30);
+            this.trackSize.Maximum = 100;
+            this.trackSize.Name = "trackSize";
+            this.trackSize.Size = new System.Drawing.Size(152, 45);
+            this.trackSize.TabIndex = 0;
+            this.trackSize.Value = 100;
+            // 
+            // btnAddLogo
+            // 
+            this.btnAddLogo.BackColor = System.Drawing.SystemColors.AppWorkspace;
+            this.btnAddLogo.Location = new System.Drawing.Point(6, 243);
+            this.btnAddLogo.Name = "btnAddLogo";
+            this.btnAddLogo.Size = new System.Drawing.Size(338, 36);
+            this.btnAddLogo.TabIndex = 8;
+            this.btnAddLogo.Text = "Gắn Logo";
+            this.btnAddLogo.UseVisualStyleBackColor = false;
+            this.btnAddLogo.Click += new System.EventHandler(this.btnAddLogo_Click);
+            // 
+            // btnPathAddLogo
+            // 
+            this.btnPathAddLogo.Location = new System.Drawing.Point(500, 49);
+            this.btnPathAddLogo.Name = "btnPathAddLogo";
+            this.btnPathAddLogo.Size = new System.Drawing.Size(75, 23);
+            this.btnPathAddLogo.TabIndex = 7;
+            this.btnPathAddLogo.Text = "Chọn";
+            this.btnPathAddLogo.UseVisualStyleBackColor = true;
+            this.btnPathAddLogo.Click += new System.EventHandler(this.btnPathAddLogo_Click);
+            // 
+            // txtPathVideoAddLogo
+            // 
+            this.txtPathVideoAddLogo.Location = new System.Drawing.Point(318, 49);
+            this.txtPathVideoAddLogo.Name = "txtPathVideoAddLogo";
+            this.txtPathVideoAddLogo.Size = new System.Drawing.Size(176, 23);
+            this.txtPathVideoAddLogo.TabIndex = 6;
+            // 
+            // label16
+            // 
+            this.label16.AutoSize = true;
+            this.label16.Location = new System.Drawing.Point(318, 28);
+            this.label16.Name = "label16";
+            this.label16.Size = new System.Drawing.Size(86, 15);
+            this.label16.TabIndex = 5;
+            this.label16.Text = "Thư mục video";
+            // 
+            // pbLogo
+            // 
+            this.pbLogo.Location = new System.Drawing.Point(375, 99);
+            this.pbLogo.Name = "pbLogo";
+            this.pbLogo.Size = new System.Drawing.Size(160, 160);
+            this.pbLogo.TabIndex = 4;
+            this.pbLogo.TabStop = false;
+            // 
             // gbPositionLogo
             // 
-            this.gbPositionLogo.Location = new System.Drawing.Point(6, 54);
+            this.gbPositionLogo.Controls.Add(this.cbPosition);
+            this.gbPositionLogo.Location = new System.Drawing.Point(6, 77);
             this.gbPositionLogo.Name = "gbPositionLogo";
-            this.gbPositionLogo.Size = new System.Drawing.Size(306, 100);
+            this.gbPositionLogo.Size = new System.Drawing.Size(338, 56);
             this.gbPositionLogo.TabIndex = 3;
             this.gbPositionLogo.TabStop = false;
             this.gbPositionLogo.Text = "Vị trí đặt";
             // 
+            // cbPosition
+            // 
+            this.cbPosition.FormattingEnabled = true;
+            this.cbPosition.Items.AddRange(new object[] {
+            "Trên bên trái",
+            "Giữa bên trái",
+            "Dưới bên trái",
+            "Giữa ở trên",
+            "Trung tâm",
+            "Dưới ở giữa",
+            "Trên bên phải",
+            "Giữa bên phải",
+            "Dưới bên phải"});
+            this.cbPosition.Location = new System.Drawing.Point(6, 22);
+            this.cbPosition.Name = "cbPosition";
+            this.cbPosition.Size = new System.Drawing.Size(326, 23);
+            this.cbPosition.TabIndex = 0;
+            // 
             // btnSelectLogoPath
             // 
-            this.btnSelectLogoPath.Location = new System.Drawing.Point(237, 25);
+            this.btnSelectLogoPath.Location = new System.Drawing.Point(237, 48);
             this.btnSelectLogoPath.Name = "btnSelectLogoPath";
             this.btnSelectLogoPath.Size = new System.Drawing.Size(75, 23);
             this.btnSelectLogoPath.TabIndex = 2;
             this.btnSelectLogoPath.Text = "Chọn";
             this.btnSelectLogoPath.UseVisualStyleBackColor = true;
+            this.btnSelectLogoPath.Click += new System.EventHandler(this.btnSelectLogoPath_Click);
             // 
             // txtPathLogo
             // 
-            this.txtPathLogo.Location = new System.Drawing.Point(67, 25);
+            this.txtPathLogo.Location = new System.Drawing.Point(6, 48);
             this.txtPathLogo.Name = "txtPathLogo";
-            this.txtPathLogo.Size = new System.Drawing.Size(164, 23);
+            this.txtPathLogo.Size = new System.Drawing.Size(225, 23);
             this.txtPathLogo.TabIndex = 1;
             // 
             // label12
@@ -793,21 +953,11 @@
             this.btnMergeIntroOuttro.UseVisualStyleBackColor = false;
             this.btnMergeIntroOuttro.Click += new System.EventHandler(this.btnMergeIntroOuttro_Click);
             // 
-            // button1
-            // 
-            this.button1.Location = new System.Drawing.Point(357, 121);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 4;
-            this.button1.Text = "button1";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
-            // 
             // MergeVideo
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1014, 706);
+            this.ClientSize = new System.Drawing.Size(1014, 681);
             this.Controls.Add(this.btnMergeIntroOuttro);
             this.Controls.Add(this.btnPathVideoOutTro);
             this.Controls.Add(this.btnPathIntroVideo);
@@ -870,6 +1020,12 @@
             this.groupBox4.PerformLayout();
             this.groupBox5.ResumeLayout(false);
             this.groupBox5.PerformLayout();
+            this.groupBox6.ResumeLayout(false);
+            this.groupBox6.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.trackTransparent)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trackSize)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbLogo)).EndInit();
+            this.gbPositionLogo.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.numOfPress)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -946,6 +1102,18 @@
         private System.Windows.Forms.Button btnPathIntroVideo;
         private System.Windows.Forms.Button btnPathVideoOutTro;
         private System.Windows.Forms.Button btnMergeIntroOuttro;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.PictureBox pbLogo;
+        private System.Windows.Forms.Button btnPathAddLogo;
+        private System.Windows.Forms.TextBox txtPathVideoAddLogo;
+        private System.Windows.Forms.Label label16;
+        private System.Windows.Forms.Button btnAddLogo;
+        private System.Windows.Forms.GroupBox groupBox6;
+        private System.Windows.Forms.Label label18;
+        private System.Windows.Forms.TrackBar trackTransparent;
+        private System.Windows.Forms.RadioButton rbWhiteTranparent;
+        private System.Windows.Forms.RadioButton rbBaseColor;
+        private System.Windows.Forms.Label label17;
+        private System.Windows.Forms.TrackBar trackSize;
+        private System.Windows.Forms.ComboBox cbPosition;
     }
 }

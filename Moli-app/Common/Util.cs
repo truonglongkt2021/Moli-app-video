@@ -9,6 +9,7 @@ using System.Diagnostics;
 using MediaInfo;
 using Microsoft.Extensions.Logging;
 using System.Text.RegularExpressions;
+using System.Globalization;
 
 namespace Moli_app.Common
 {
@@ -515,13 +516,13 @@ namespace Moli_app.Common
             string outputFilePath = Path.Combine(outputFolderPath, outputFileName);
 
             // Xác định tần số mẫu dựa vào giọng đọc
-            string audioFilter = "";
+            string audioFilter = "-acodec libmp3lame -ab 192k";
             if (!isNormal)
             {
-                audioFilter = isTreCon ? "asetrate=44100*1.5,atempo=0.6667" : (isNguoiLon ? "asetrate=44100*0.8,atempo=1.25" : "");
+                audioFilter = isTreCon ? $"-af \"asetrate=44100*1.5,atempo=0.6667\"" : (isNguoiLon ? $"-af \"asetrate=44100*0.8,atempo=1.25\"" : "");
             }
 
-            string ffmpegArgs = $"-i \"{sourceVideoPath}\" -vn -af \"{audioFilter}\" \"{outputFilePath}\"";
+            string ffmpegArgs = $"-i \"{sourceVideoPath}\" -vn {audioFilter} \"{outputFilePath}\"";
 
             using (var process = new Process())
             {
@@ -698,6 +699,23 @@ namespace Moli_app.Common
                 $"Exit code    : \n" +
                 $"Elapsed time :");
             eventHandled.TrySetResult(true);
+        }
+
+        public static string RemoveDiacritics(string text)
+        {
+            var normalizedString = text.Normalize(NormalizationForm.FormD);
+            var stringBuilder = new StringBuilder();
+
+            foreach (var c in normalizedString)
+            {
+                var unicodeCategory = CharUnicodeInfo.GetUnicodeCategory(c);
+                if (unicodeCategory != UnicodeCategory.NonSpacingMark)
+                {
+                    stringBuilder.Append(c);
+                }
+            }
+
+            return stringBuilder.ToString().Normalize(NormalizationForm.FormC);
         }
 
     }

@@ -6,6 +6,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Diagnostics;
 using System.Drawing;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -33,7 +34,9 @@ namespace Moli_app
             {
                 HeaderText = "Thumbnail",
                 ImageLayout = DataGridViewImageCellLayout.Zoom,
-                Name = "Thumbnail" // Đặt tên cho cột để có thể tham chiếu đến nó sau này
+                Name = "Thumbnail", // Đặt tên cho cột để có thể tham chiếu đến nó sau này
+                Width = 150, // Thiết lập chiều rộng cho cột, bạn có thể thay đổi giá trị này theo yêu cầu
+                MinimumWidth = 100 // Đặt chiều rộng tối thiểu cho cột để đảm bảo nó không bị quá nhỏ
             };
             dgvListyoutube.Columns.Add(thumbnailColumn);
 
@@ -78,37 +81,59 @@ namespace Moli_app
         private async void btnSearchYoutube_Click(object sender, EventArgs e)
         {
             DisableAllButtons(this, false);
-
-            var isShort = false;
-            if (cbShortVideo.Checked)
+            var fromdate = "";
+            var todate = "";
+            try
             {
-                isShort = true;
+
+                if (!String.IsNullOrEmpty(txtFromDate.Text))
+                {
+                    fromdate = DateTime.ParseExact(txtFromDate.Text, "yyyyMMdd", CultureInfo.InvariantCulture).ToString("yyyyMMdd");
+                }
+                if (!String.IsNullOrEmpty(txtToDate.Text))
+                {
+                    todate = DateTime.ParseExact(txtToDate.Text, "yyyyMMdd", CultureInfo.InvariantCulture).ToString("yyyyMMdd");
+                }
             }
-            string searchKeyword = txtKeyword.Text; // Lấy từ khóa từ textbox
+            catch (Exception)
+            {
+
+                MessageBox.Show("Ngày tháng năm không đúng Định dạng yyyyMMdd (ví dụ 29/03/2024 => 20240329)");
+            }
+            var isShort = cbShortVideo.Checked;
+            string searchKeyword = Util.RemoveDiacritics(txtKeyword.Text); // Lấy từ khóa từ textbox
             string searchchannelName = txtKeyword.Text; // Lấy từ khóa từ textbox
-            string countryCode = txtCountry.Text;
-            string numVideo = txtNumVideo.Text;
+            string countryCode = !string.IsNullOrEmpty(txtCountry.Text) ? $"--geo-bypass-country {txtCountry.Text}" : "";
+            string numVideo = string.IsNullOrEmpty(txtNumVideo.Text) ? "10" : txtNumVideo.Text;
             var youtubedl = Path.Combine(Application.StartupPath, "yt-dlp.exe");
-
-            if (countryCode=="")
-            {
-                countryCode = "VN";
-            }
 
             // Tạo danh sách VideoYoutubeShort để chứa kết quả
             var videosList = new List<VideoYoutubeShort>();
 
             var youtubeDl = new Process();
-            //var args = $" 'https://www.youtube.com/@YoutubeNetFlex/shorts' --get-id --get-title --skip-download --dump-single-json";
-            var argsKeyword = $"ytsearch{numVideo}:{searchKeyword} --match-title \"#shorts\" --geo-bypass-country {countryCode} --skip-download --max-downloads {numVideo}  --dump-single-json";
+            var argsKeyword = cbShortVideo.Checked ? $"\"https://www.youtube.com/results?search_query={searchKeyword}\" --match-filter \"duration <= 60\" --get-id --skip-download --max-downloads {numVideo} --dump-single-json"
+                                                   : $"\"https://www.youtube.com/results?search_query={searchKeyword}\" --get-id --skip-download --max-downloads {numVideo} --dump-single-json";
+
+
             if (cbISChannelName.Checked)
             {
-                argsKeyword = $"\"https://www.youtube.com/@{searchchannelName}/shorts\" --get-id --skip-download  --max-downloads {numVideo}  --dump-single-json";
+                argsKeyword = cbShortVideo.Checked ? $"\"https://www.youtube.com/@{searchchannelName}/shorts\" --get-id --skip-download --max-downloads {numVideo} --dump-single-json"
+                                                   : $"\"https://www.youtube.com/@{searchchannelName}\" --get-id --skip-download --max-downloads {numVideo} --dump-single-json";
             }
+            //if (!string.IsNullOrEmpty(fromdate))
+            //{
+            //    argsKeyword += $" --dateafter {fromdate}";
+            //}
+
+            //if (!string.IsNullOrEmpty(todate))
+            //{
+            //    argsKeyword += $" --datebefore {todate}";
+            //}
+
             try
             {
-                youtubeDl.StartInfo.FileName = youtubedl; // Đảm bảo yt-dlp có thể được gọi từ dòng lệnh
-                youtubeDl.StartInfo.Arguments = argsKeyword;
+                youtubeDl.StartInfo.FileName = youtubedl;
+                youtubeDl.StartInfo.Arguments = $"{countryCode} {argsKeyword}";
                 youtubeDl.StartInfo.UseShellExecute = false;
                 youtubeDl.StartInfo.RedirectStandardOutput = true;
                 youtubeDl.StartInfo.CreateNoWindow = true;
@@ -118,6 +143,7 @@ namespace Moli_app
                 // Đọc dữ liệu JSON từ đầu ra chuẩn
                 string output = await youtubeDl.StandardOutput.ReadToEndAsync();
                 await youtubeDl.WaitForExitAsync();
+
                 // Loại bỏ dữ liệu không mong muốn ở cuối chuỗi, nếu có
                 // Ví dụ: loại bỏ dòng "null" hoặc bất kỳ ký tự không cần thiết nào ở cuối
                 string trimmedOutput = output.TrimEnd(new char[] { ' ', '\n', '\r', '\0' });
@@ -139,40 +165,41 @@ namespace Moli_app
                             Name = item,
                             Title = item,
                             ImageUrl = $"https://i.ytimg.com/vi_webp/{item}/1.webp",
-                            VideoUrl = $"https://www.youtube.com/shorts/{item}",
+                            VideoUrl = cbShortVideo.Checked ? $"https://www.youtube.com/shorts/{item}" : $"https://www.youtube.com/watch?v={item}",
                             Duration = item // Giả sử bạn đã thêm thuộc tính Duration vào lớp VideoYoutubeShort
                         });
                     }
                 }
                 else
                 {
-                    videodata = JsonConvert.DeserializeObject<dynamic>(trimmedOutput)["entries"];
-                foreach (var video in videodata)
-                {
-                    videosList.Add(new VideoYoutubeShort
+                    videodata = trimmedOutput.Split("\n");
+                    foreach (var item in videodata)
                     {
-                        Name = video.uploader,
-                        Title = video.title,
-                        ImageUrl = video.thumbnail,
-                        VideoUrl = $"https://www.youtube.com/shorts/{video.id}",
-                        Duration = video.duration // Giả sử bạn đã thêm thuộc tính Duration vào lớp VideoYoutubeShort
-                    });
-                }
+                        videosList.Add(new VideoYoutubeShort
+                        {
+                            Name = item,
+                            Title = item,
+                            ImageUrl = $"https://i.ytimg.com/vi_webp/{item}/1.webp",
+                            VideoUrl = cbShortVideo.Checked ? $"https://www.youtube.com/shorts/{item}" : $"https://www.youtube.com/watch?v={item}",
+                            Duration = item // Giả sử bạn đã thêm thuộc tính Duration vào lớp VideoYoutubeShort
+                        });
+                    }
                 }
             }
             catch (Exception ex)
             {
                 Console.WriteLine("An error occurred: " + ex.Message);
+                DisableAllButtons(this, true);
             }
             finally
             {
                 youtubeDl.Close();
                 youtubeDl.Dispose();
-            DisableAllButtons(this, false);
+                DisableAllButtons(this, true);
             }
+
             listYoutubeShort = videosList;
             DisplayVideosInDataGridView(videosList);
-
             // Sử dụng videosList tại đây, ví dụ: hiển thị lên giao diện người dùng
         }
 
@@ -263,28 +290,18 @@ namespace Moli_app
             DisableAllButtons(this, true);
         }
 
-
+        private void textBox1_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            // Kiểm tra xem ký tự được nhập có phải là số hoặc phím điều khiển (như Backspace) không
+            if (!char.IsDigit(e.KeyChar) && !char.IsControl(e.KeyChar))
+            {
+                e.Handled = true; // Ngăn không cho ký tự đó được nhập vào TextBox
+            }
+        }
 
         private void SearchVideoShort_Load(object sender, EventArgs e)
         {
 
-        }
-
-        
-
-        private void button1_Click(object sender, EventArgs e)
-        {
-            // Create an instance of FormABC
-            tiktok formABC = new tiktok();
-
-            // Hide the current form
-            this.Hide();
-
-            // Show FormABC
-            formABC.Show();
-
-            // Optional: Close the current form when FormABC is closed
-            formABC.FormClosed += (s, args) => this.Close();
         }
 
         private void btnBack_Click(object sender, EventArgs e)

@@ -16,6 +16,8 @@ namespace Moli_app
         public canvaform()
         {
             InitializeComponent();
+            Util.KillAllFFMPEG();
+            this.StartPosition = FormStartPosition.CenterScreen;
         }
 
         private void btnSearchYoutube_Click(object sender, EventArgs e)
