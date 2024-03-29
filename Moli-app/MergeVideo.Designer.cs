@@ -96,6 +96,7 @@
             this.btnPathIntroVideo = new System.Windows.Forms.Button();
             this.btnPathVideoOutTro = new System.Windows.Forms.Button();
             this.btnMergeIntroOuttro = new System.Windows.Forms.Button();
+            this.button1 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dgvListOutput)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvAudioList)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackbarSpeed)).BeginInit();
@@ -632,6 +633,7 @@
             // 
             // groupBox5
             // 
+            this.groupBox5.Controls.Add(this.button1);
             this.groupBox5.Controls.Add(this.gbPositionLogo);
             this.groupBox5.Controls.Add(this.btnSelectLogoPath);
             this.groupBox5.Controls.Add(this.txtPathLogo);
@@ -791,6 +793,16 @@
             this.btnMergeIntroOuttro.UseVisualStyleBackColor = false;
             this.btnMergeIntroOuttro.Click += new System.EventHandler(this.btnMergeIntroOuttro_Click);
             // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(357, 121);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.TabIndex = 4;
+            this.button1.Text = "button1";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
             // MergeVideo
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -934,5 +946,6 @@
         private System.Windows.Forms.Button btnPathIntroVideo;
         private System.Windows.Forms.Button btnPathVideoOutTro;
         private System.Windows.Forms.Button btnMergeIntroOuttro;
+        private System.Windows.Forms.Button button1;
     }
 }

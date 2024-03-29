@@ -518,20 +518,114 @@ namespace Moli_app
                     vid.Duration = Dura;
                     VideoShorts.Add(vid);
                     listVideo.listVideo.Add(vid);
-
-                    // Gắn outtro nếu có
-                    if (!string.IsNullOrEmpty(txtPathOuttro.Text))
+                    try
                     {
-                        var outroVideo = new VideoShort
+
+
+                        // Gắn outtro nếu có
+                        if (!string.IsNullOrEmpty(txtPathOuttro.Text))
                         {
-                            FullPath = txtPathOuttro.Text,
-                            FileName = "_11111_" + Path.GetFileName(txtPathOuttro.Text), // Lấy tên file
-                            Duration = Util.GetMediaDurationWithFFmpeg(txtPathOuttro.Text) // Giả sử bạn có phương thức này để lấy thời lượng
+                            var outroVideo = new VideoShort
+                            {
+                                FullPath = txtPathOuttro.Text,
+                                FileName = "_11111_" + Path.GetFileName(txtPathOuttro.Text), // Lấy tên file
+                                Duration = Util.GetMediaDurationWithFFmpeg(txtPathOuttro.Text) // Giả sử bạn có phương thức này để lấy thời lượng
+                            };
+
+                            // Thêm outroVideo vào cuối danh sách
+                            listVideo.listVideo.Add(outroVideo);
+                            outtro = true;
+                        }
+                        ListMixVideo.Add(listVideo);
+                    }
+                    catch (Exception)
+                    {
+
+                        continue;
+                    }
+                }
+                //txtOutputPath.Text tạo thư mục OutputWithIntro trong 
+                string outputDirectory = Path.Combine(txtOutputPath.Text, "OutputWithIntro");
+
+                // Kiểm tra xem thư mục đã tồn tại hay chưa
+                if (!Directory.Exists(outputDirectory))
+                {
+                    // Tạo thư mục mới nếu nó chưa tồn tại
+                    Directory.CreateDirectory(outputDirectory);
+                }
+                var isHorizontal = false;
+                if (rbHorizontal.Checked)
+                {
+                    isHorizontal= true;
+                }
+                // Giả sử bạn đã định nghĩa SemaphoreSlim ở cấp lớp hoặc cấp phương thức
+                SemaphoreSlim semaphore = new SemaphoreSlim((int)numOfPress.Value); // Cho phép tối đa 3 thread đồng thời
+                foreach (var item in ListMixVideo)
+                {
+
+                    // Chờ một slot trống từ semaphore
+                    await semaphore.WaitAsync();
+
+                    Task.Run(async () =>
+                    {
+                        try
+                        {
+                            await Util.MergeVideoIntroOutro(item, outputDirectory, UpdateUI,
+                                                            DoneProcess, isHorizontal);
+                        }
+                        catch (Exception ex)
+                        {
+                            // Xử lý lỗi ở đây
+                            Console.WriteLine(ex.Message);
+                        }
+                        finally
+                        {
+                            // Đảm bảo luôn giải phóng semaphore, ngay cả khi có lỗi
+                            semaphore.Release();
+                        }
+                    });
+                }
+            }
+
+
+
+        }
+
+        private async void button1_Click(object sender, EventArgs e)
+        {
+            rtbResultMessage.Text = "";
+            rtxMessageProcess.Text = "";
+            var ListMixVideo = new List<MixVideo>();
+            var intro = false;
+            var outtro = false;
+
+            if (!string.IsNullOrEmpty(txtOutputPath.Text))
+            {
+                // Get all video files in the selected folder
+                var videoFiles = Directory.EnumerateFiles(txtOutputPath.Text, "*.*", SearchOption.TopDirectoryOnly)
+                 .Where(s => s.EndsWith(".mp4", StringComparison.OrdinalIgnoreCase)
+                             || s.EndsWith(".avi", StringComparison.OrdinalIgnoreCase)
+                             || s.EndsWith(".mov", StringComparison.OrdinalIgnoreCase)
+                             || s.EndsWith(".mkv", StringComparison.OrdinalIgnoreCase)).ToList();
+
+                // Prepare the DataGridView to display the files
+                // Populate the DataGridView with video files
+                foreach (string file in videoFiles)
+                {
+                    var listVideo = new MixVideo();
+                    // Gắn intro nếu có
+                    if (!string.IsNullOrEmpty(txtPathIntro.Text))
+                    {
+                        var introVideo = new VideoShort
+                        {
+                            FullPath = txtPathIntro.Text,
+                            FileName = "_11111_" + Path.GetFileName(txtPathIntro.Text), // Lấy tên file
+                            Duration = Util.GetMediaDurationWithFFmpeg(txtPathIntro.Text) // Giả sử bạn có phương thức này để lấy thời lượng
                         };
 
-                        // Thêm outroVideo vào cuối danh sách
-                        listVideo.listVideo.Add(outroVideo);
-                        outtro = true;
+                        // Chèn introVideo vào đầu danh sách
+                        listVideo.listVideo.Add(introVideo);
+                        intro = true;
                     }
                     ListMixVideo.Add(listVideo);
                 }
@@ -573,9 +667,6 @@ namespace Moli_app
                     });
                 }
             }
-
-
-
         }
     }
 

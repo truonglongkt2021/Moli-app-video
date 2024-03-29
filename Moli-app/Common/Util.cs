@@ -214,7 +214,11 @@ namespace Moli_app.Common
                 }
 
                 // Xác định tỉ lệ màn hình
-                string scaleFilter = isHorizontal ? "scale=1920:1080" : "scale=1080:1920";
+                // Xác định tỉ lệ màn hình và áp dụng setsar=1 để đặt Sample Aspect Ratio về 1:1
+                string scaleFilter = isHorizontal ?
+                                     "scale=1920:1080:force_original_aspect_ratio=increase,crop=1920:1080,setsar=1" : // Màn hình ngang
+                                     "scale=1080:1920:force_original_aspect_ratio=increase,crop=1080:1920,setsar=1";  // Màn hình dọc
+
                 string mirrorFilter = isMirror ? "hflip, " : ""; // Thêm hflip nếu cần lật hình
 
                 string setptsFilter = $"setpts={1 / speed}*PTS";
@@ -290,7 +294,65 @@ namespace Moli_app.Common
                 throw;
             }
         }
-        public static async Task MergeVideoIntroOutro(MixVideo mixVideo, string outputFilePath, UpdateUIDelegate UpdateUI, DoneProcessDelegate DoneProcess)
+        public static async Task MergeVideoIntroOutro(MixVideo mixVideo, string outputFilePath, UpdateUIDelegate UpdateUI, DoneProcessDelegate DoneProcess, bool isHorizontal = false)
+        {
+            try
+            {
+                StringBuilder filterComplex = new StringBuilder();
+                StringBuilder inputFiles = new StringBuilder();
+                var ffpath = Path.Combine(Application.StartupPath, "amazingtech.exe"); // Đảm bảo rằng bạn đã sử dụng "ffmpeg.exe"
+                int videoIndex = 0;
+
+                // Định nghĩa scaleFilter dựa trên isHorizontal
+                string scaleFilter = isHorizontal ?
+                                     "scale=1920:1080:force_original_aspect_ratio=increase,crop=1920:1080,setsar=1" :
+                                     "scale=1080:1920:force_original_aspect_ratio=increase,crop=1080:1920,setsar=1";
+
+                // Thêm mỗi video vào danh sách đầu vào và áp dụng các bộ lọc
+                foreach (var video in mixVideo.listVideo)
+                {
+                    inputFiles.Append($"-i \"{video.FullPath}\" ");
+                    filterComplex.Append($"[{videoIndex}:v:0]{scaleFilter}[v{videoIndex}]; "); // Sử dụng scaleFilter đã định nghĩa
+                    filterComplex.Append($"[{videoIndex}:a:0]aformat=sample_fmts=fltp:sample_rates=44100:channel_layouts=stereo[a{videoIndex}]; ");
+                    videoIndex++;
+                }
+
+                // Xây dựng phần concat của filter_complex
+                for (int i = 0; i < videoIndex; i++)
+                {
+                    filterComplex.Append($"[v{i}][a{i}] ");
+                }
+                filterComplex.Append($"concat=n={videoIndex}:v=1:a=1[v][a]");
+
+                // Tạo lệnh ffmpeg và thực thi
+                string ffmpegArgs = $"{inputFiles}-filter_complex \"{filterComplex}\" -map \"[v]\" -map \"[a]\" \"{outputFilePath}\\merged_{Guid.NewGuid().ToString()}.mp4\"";
+
+                using (var process = new Process())
+                {
+                    process.StartInfo.FileName = ffpath;
+                    process.StartInfo.Arguments = ffmpegArgs;
+                    process.StartInfo.UseShellExecute = false;
+                    process.StartInfo.RedirectStandardOutput = true;
+                    process.StartInfo.RedirectStandardError = true;
+                    process.StartInfo.CreateNoWindow = true;
+                    process.EnableRaisingEvents = true;
+
+                    process.OutputDataReceived += (sender, args) => UpdateUI(args.Data);
+                    process.ErrorDataReceived += (sender, args) => UpdateUI(args.Data);
+                    process.Start();
+                    process.BeginOutputReadLine();
+                    process.BeginErrorReadLine();
+                    await process.WaitForExitAsync();
+                    DoneProcess(1);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Lỗi khi ghép video: {ex.Message}");
+                return;
+            }
+        }
+        public static async Task ConvertVideo(MixVideo mixVideo, string outputFilePath, UpdateUIDelegate UpdateUI, DoneProcessDelegate DoneProcess)
         {
             try
             {
@@ -334,7 +396,7 @@ namespace Moli_app.Common
                 // Tạo lệnh ffmpeg và thực thi
                 string ffmpegArgs = $"{inputFiles}-filter_complex \"{filterComplex}\" -map \"[v]\" -map \"[a]\" \"{outputFilePath}\\intro_outtro_{Guid.NewGuid().ToString()}.mp4\"";
 
-                using ( var process = new Process())
+                using (var process = new Process())
                 {
                     process.StartInfo.FileName = ffpath;
                     process.StartInfo.Arguments = ffmpegArgs;
