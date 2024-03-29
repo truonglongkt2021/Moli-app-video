@@ -476,6 +476,7 @@ namespace Moli_app
 
         private async void btnMergeIntroOuttro_Click(object sender, EventArgs e)
         {
+            DisableAllButtons(this, false);
             rtbResultMessage.Text = "";
             rtxMessageProcess.Text = "";
             var ListMixVideo = new List<MixVideo>();
@@ -540,7 +541,6 @@ namespace Moli_app
                     }
                     catch (Exception)
                     {
-
                         continue;
                     }
                 }
@@ -560,6 +560,8 @@ namespace Moli_app
                 }
                 // Giả sử bạn đã định nghĩa SemaphoreSlim ở cấp lớp hoặc cấp phương thức
                 SemaphoreSlim semaphore = new SemaphoreSlim((int)numOfPress.Value); // Cho phép tối đa 3 thread đồng thời
+                count = ListMixVideo.Count;
+
                 foreach (var item in ListMixVideo)
                 {
 

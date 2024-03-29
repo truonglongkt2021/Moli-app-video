@@ -109,7 +109,7 @@ namespace Moli_app.Common
                 }
                 else
                 {
-                    throw new Exception("Không thể phân tích thời lượng từ FFmpeg.");
+                    return new TimeSpan(0, 0, 0, 0, 0);
                 }
             }
         }

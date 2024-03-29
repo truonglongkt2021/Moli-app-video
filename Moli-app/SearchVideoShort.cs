@@ -77,12 +77,13 @@ namespace Moli_app
         }
         private async void btnSearchYoutube_Click(object sender, EventArgs e)
         {
+            DisableAllButtons(this, false);
+
             var isShort = false;
             if (cbShortVideo.Checked)
             {
                 isShort = true;
             }
-            btnSearchYoutube.Enabled = false;
             string searchKeyword = txtKeyword.Text; // Lấy từ khóa từ textbox
             string searchchannelName = txtKeyword.Text; // Lấy từ khóa từ textbox
             string countryCode = txtCountry.Text;
@@ -167,10 +168,11 @@ namespace Moli_app
             {
                 youtubeDl.Close();
                 youtubeDl.Dispose();
-                btnSearchYoutube.Enabled = true;
+            DisableAllButtons(this, false);
             }
             listYoutubeShort = videosList;
             DisplayVideosInDataGridView(videosList);
+
             // Sử dụng videosList tại đây, ví dụ: hiển thị lên giao diện người dùng
         }
 
@@ -195,9 +197,26 @@ namespace Moli_app
                 }
             }
         }
+        private void DisableAllButtons(Control parent, bool enablebutton = false)
+        {
+            foreach (Control c in parent.Controls)
+            {
+                // Nếu control là Button, vô hiệu hóa nó
+                if (c is Button)
+                {
+                    ((Button)c).Enabled = enablebutton;
+                }
 
+                // Nếu control chứa các control khác (ví dụ: Panel, GroupBox,...), kiểm tra chúng một cách đệ quy
+                if (c.HasChildren)
+                {
+                    DisableAllButtons(c, enablebutton);
+                }
+            }
+        }
         private async void btnDownload_Click(object sender, EventArgs e)
         {
+            DisableAllButtons(this, false);
             rtbResult.Text = "";
             int count = 0;
             btnDownload.Enabled = false;
@@ -241,12 +260,11 @@ namespace Moli_app
                 }
                 rtbResult.Text = "Đã tải " + count.ToString() + "/" + listYoutubeShort.Count().ToString();
             }
-            btnDownload.Enabled = true;
-
+            DisableAllButtons(this, true);
         }
 
-        
-     
+
+
         private void SearchVideoShort_Load(object sender, EventArgs e)
         {
 

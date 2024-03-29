@@ -13,6 +13,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+using Button = System.Windows.Forms.Button;
 
 namespace Moli_app
 {
@@ -67,10 +68,28 @@ namespace Moli_app
                 }
             }
         }
+        private void DisableAllButtons(Control parent, bool enablebutton = false)
+        {
+            foreach (Control c in parent.Controls)
+            {
+                // Nếu control là Button, vô hiệu hóa nó
+                if (c is Button)
+                {
+                    ((Button)c).Enabled = enablebutton;
+                }
 
+                // Nếu control chứa các control khác (ví dụ: Panel, GroupBox,...), kiểm tra chúng một cách đệ quy
+                if (c.HasChildren)
+                {
+                    DisableAllButtons(c, enablebutton);
+                }
+            }
+        }
         private async void btnSplitScense_ClickAsync(object sender, EventArgs e)
         {
-            if(txtSourceVideoPath.Text=="")
+            DisableAllButtons(this, false);
+
+            if (txtSourceVideoPath.Text=="")
             {
                 MessageBox.Show("Vui lòng chọn đường dẫn Video");
                 return;
@@ -80,8 +99,6 @@ namespace Moli_app
                 MessageBox.Show("Vui lòng chọn đường dẫn tách Video");
                 return;
             }    
-            btnSplitScense.Enabled = false;
-            btnMergeForm.Enabled = false;
             var ffpath = Path.Combine(Application.StartupPath, "amazingtech.exe");
             string videoSourcePath = txtSourceVideoPath.Text;
             //string command = $"-i \"{videoSourcePath}\" -vf blackdetect=d=0.1:pix_th=0.1 -f rawvideo -y NUL";
@@ -89,9 +106,7 @@ namespace Moli_app
             bool success = await processV3(ffpath, videoSourcePath);
             if (success)
             {
-                btnSplitScense.Enabled = true;
-                btnMergeForm.Enabled = true;
-
+                DisableAllButtons(this, true);
             }
 
         }
