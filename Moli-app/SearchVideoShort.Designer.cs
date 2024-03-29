@@ -43,6 +43,7 @@
             this.btnSelectPathDownload = new System.Windows.Forms.Button();
             this.rtbResult = new System.Windows.Forms.RichTextBox();
             this.cbISChannelName = new System.Windows.Forms.CheckBox();
+            this.cbShortVideo = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.dgvListyoutube)).BeginInit();
             this.SuspendLayout();
             // 
@@ -57,12 +58,13 @@
             // 
             // btnSearchYoutube
             // 
+            this.btnSearchYoutube.BackColor = System.Drawing.SystemColors.ActiveCaption;
             this.btnSearchYoutube.Location = new System.Drawing.Point(12, 123);
             this.btnSearchYoutube.Name = "btnSearchYoutube";
             this.btnSearchYoutube.Size = new System.Drawing.Size(405, 33);
             this.btnSearchYoutube.TabIndex = 1;
             this.btnSearchYoutube.Text = "Tìm Kiếm";
-            this.btnSearchYoutube.UseVisualStyleBackColor = true;
+            this.btnSearchYoutube.UseVisualStyleBackColor = false;
             this.btnSearchYoutube.Click += new System.EventHandler(this.btnSearchYoutube_Click);
             // 
             // txtKeyword
@@ -180,11 +182,22 @@
             this.cbISChannelName.Text = "Từ Khóa là Tên Kênh";
             this.cbISChannelName.UseVisualStyleBackColor = true;
             // 
+            // cbShortVideo
+            // 
+            this.cbShortVideo.AutoSize = true;
+            this.cbShortVideo.Location = new System.Drawing.Point(166, 64);
+            this.cbShortVideo.Name = "cbShortVideo";
+            this.cbShortVideo.Size = new System.Drawing.Size(110, 19);
+            this.cbShortVideo.TabIndex = 23;
+            this.cbShortVideo.Text = "Tìm Short Video";
+            this.cbShortVideo.UseVisualStyleBackColor = true;
+            // 
             // SearchVideoShort
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(436, 484);
+            this.Controls.Add(this.cbShortVideo);
             this.Controls.Add(this.cbISChannelName);
             this.Controls.Add(this.rtbResult);
             this.Controls.Add(this.btnSelectPathDownload);
@@ -226,5 +239,6 @@
         private System.Windows.Forms.Button btnSelectPathDownload;
         private System.Windows.Forms.RichTextBox rtbResult;
         private System.Windows.Forms.CheckBox cbISChannelName;
+        private System.Windows.Forms.CheckBox cbShortVideo;
     }
 }

@@ -118,7 +118,8 @@ namespace Moli_app
             try
             {
                 var ag = $"-i \"{videoSourcePath}\" -filter:v \"mpdecimate,setpts=N/FRAME_RATE/TB,select='gt(scene,0.4)',showinfo -f null -";
-                rtxError.AppendText(Guid.NewGuid().ToString());
+                //rtxError.AppendText(Guid.NewGuid().ToString());
+                rtxError.AppendText(ag);
                 using (var writer = new StreamWriter(outputFileName))
                 {
                     var ffmpeg = new Process();

@@ -77,6 +77,11 @@ namespace Moli_app
         }
         private async void btnSearchYoutube_Click(object sender, EventArgs e)
         {
+            var isShort = false;
+            if (cbShortVideo.Checked)
+            {
+                isShort = true;
+            }
             btnSearchYoutube.Enabled = false;
             string searchKeyword = txtKeyword.Text; // Lấy từ khóa từ textbox
             string searchchannelName = txtKeyword.Text; // Lấy từ khóa từ textbox

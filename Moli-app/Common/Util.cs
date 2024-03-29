@@ -206,18 +206,20 @@ namespace Moli_app.Common
                 string audioPitchFilter = "";
                 if (isTreCon)
                 {
-                    audioPitchFilter = "asetrate=44100*1.5,atempo=0.6667";
+                    audioPitchFilter = ",asetrate=44100*1.5,atempo=0.6667";
                 }
                 else if (isNguoiLon)
                 {
-                    audioPitchFilter = "asetrate=44100*0.8,atempo=1.25";
+                    audioPitchFilter = ",asetrate=44100*0.8,atempo=1.25";
                 }
 
                 // Xác định tỉ lệ màn hình
                 // Xác định tỉ lệ màn hình và áp dụng setsar=1 để đặt Sample Aspect Ratio về 1:1
                 string scaleFilter = isHorizontal ?
-                                     "scale=1920:1080:force_original_aspect_ratio=increase,crop=1920:1080,setsar=1" : // Màn hình ngang
-                                     "scale=1080:1920:force_original_aspect_ratio=increase,crop=1080:1920,setsar=1";  // Màn hình dọc
+                      "scale=1920:1080:force_original_aspect_ratio=decrease,pad=1920:1080:(ow-iw)/2:(oh-ih)/2,setsar=1" : // Màn hình ngang
+                      "scale=1080:1920:force_original_aspect_ratio=decrease,pad=1080:1920:(ow-iw)/2:(oh-ih)/2,setsar=1";  // Màn hình dọc
+                //"scale=1920:1080:force_original_aspect_ratio=increase,crop=1920:1080,setsar=1" : // Màn hình ngang
+                //                     "scale=1080:1920:force_original_aspect_ratio=increase,crop=1080:1920,setsar=1";  // Màn hình dọc
 
                 string mirrorFilter = isMirror ? "hflip, " : ""; // Thêm hflip nếu cần lật hình
 
@@ -248,7 +250,7 @@ namespace Moli_app.Common
                 {
                     inputFiles.Append($"-i \"{mixVideo.audioShort.FullPath}\" ");
                     // Thêm nhãn [aout] cho đầu ra âm thanh và áp dụng atempoFilter
-                    filterComplex.Append($"[{videoIndex}:a:0]aloop=loop=-1:size=2e+09,{audioPitchFilter}{atempoFilter},atrim=duration={TotalVideoDuration(mixVideo, speed)}[aout];");
+                    filterComplex.Append($"[{videoIndex}:a:0]aloop=loop=-1:size=2e+09{audioPitchFilter}{atempoFilter},atrim=duration={TotalVideoDuration(mixVideo, speed)}[aout];");
                 }
                 else
                 {
@@ -291,7 +293,7 @@ namespace Moli_app.Common
             }
             catch (Exception ex)
             {
-                throw;
+                DoneProcess(1);
             }
         }
         public static async Task MergeVideoIntroOutro(MixVideo mixVideo, string outputFilePath, UpdateUIDelegate UpdateUI, DoneProcessDelegate DoneProcess, bool isHorizontal = false)
