@@ -50,5 +50,13 @@ namespace Moli_app
             // Show FormABC
             formABC.Show();
         }
+
+        private void btnActive_Click(object sender, EventArgs e)
+        {
+            // Create an instance of FormABC
+            activeForm formABC = new activeForm();
+            // Show FormABC
+            formABC.Show();
+        }
     }
 }

@@ -75,6 +75,7 @@
             this.btnActive.TabIndex = 3;
             this.btnActive.Text = "Nhập Mã Code Active";
             this.btnActive.UseVisualStyleBackColor = true;
+            this.btnActive.Click += new System.EventHandler(this.btnActive_Click);
             // 
             // canvaform
             // 

@@ -112,7 +112,7 @@ namespace Moli_app
             string searchchannelName = txtKeyword.Text; // Lấy từ khóa từ textbox
             string countryCode = !string.IsNullOrEmpty(txtCountry.Text) ? $"--geo-bypass-country {txtCountry.Text}" : "";
             string numVideo = string.IsNullOrEmpty(txtNumVideo.Text) ? "10" : txtNumVideo.Text;
-            var youtubedl = Path.Combine(Application.StartupPath, "yt-dlp.exe");
+            var youtubedl = Path.Combine(Application.StartupPath, "amazing-youtube.exe");
 
             // Tạo danh sách VideoYoutubeShort để chứa kết quả
             var videosList = new List<VideoYoutubeShort>();
@@ -254,7 +254,7 @@ namespace Moli_app
             rtbResult.Text = "";
             int count = 0;
             btnDownload.Enabled = false;
-            var youtubedl = Path.Combine(Application.StartupPath, "yt-dlp.exe");
+            var youtubedl = Path.Combine(Application.StartupPath, "amazing-youtube.exe");
             var pathOutPut = txtPathDownload.Text;
             foreach (var video in listYoutubeShort)
             {
@@ -263,8 +263,8 @@ namespace Moli_app
                 {
                     using (Process youtubeDlProcess = new Process())
                     {
-                        // Thiết lập Process để gọi yt-dlp
-                        youtubeDlProcess.StartInfo.FileName = youtubedl; // Hoặc đường dẫn đầy đủ tới yt-dlp nếu không có trong PATH
+                        // Thiết lập Process để gọi amazing-youtube
+                        youtubeDlProcess.StartInfo.FileName = youtubedl; // Hoặc đường dẫn đầy đủ tới amazing-youtube nếu không có trong PATH
                         youtubeDlProcess.StartInfo.Arguments = $"{video.VideoUrl} -o \"{pathOutPut}\\{txtKeyword.Text}_{Guid.NewGuid().ToString()}.%(ext)s\""; // Định dạng tên file được lưu
                         youtubeDlProcess.StartInfo.UseShellExecute = false;
                         youtubeDlProcess.StartInfo.RedirectStandardOutput = true;

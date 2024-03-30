@@ -9,6 +9,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="amazing-youtube.exe" />
+    <None Remove="amazingtech.exe" />
     <None Remove="Common\Util.cs~RF13b1ef5.TMP" />
     <None Remove="Common\Util.cs~RF1676a02.TMP" />
   </ItemGroup>
@@ -33,7 +35,18 @@
     <PackageReference Include="NevronOpenVision" Version="22.6.29.12" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="Syncfusion.Core.WinForms" Version="19.3.0.44" />
+    <PackageReference Include="System.Management" Version="5.0.0" />
+    <PackageReference Include="System.Security.Cryptography.Cng" Version="5.0.0" />
     <PackageReference Include="VideoLAN.LibVLC.Windows" Version="3.0.20" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="amazing-youtube.exe">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="amazingtech.exe">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
   </ItemGroup>
 
   <ItemGroup>
