@@ -50,7 +50,6 @@ namespace Moli_app
                 ActivationResponse returnModel = await ApiHelper.CheckActivate();
                 if (!returnModel.IsActive)
                 {
-                    MessageBox.Show("Product Key không chính xác");
                     DisableAllButtons(this, true);
                     return;
                 }
@@ -119,33 +118,14 @@ namespace Moli_app
             lbProductKey.Text = productKey;
             lbMinute.Text = ReturnModel.NumberMin.ToString() + " Phút";
             lbUsed.Text = ReturnModel.NumberUsed.ToString() + " Phút";
+            Program.MinuteRemain = ReturnModel.NumberMin - ReturnModel.NumberUsed;
+            Program.MinuteUsed= ReturnModel.NumberUsed;
             DisableAllButtons(this, true);
         }
 
         private async void btnBack_Click(object sender, EventArgs e)
         {
-            DisableAllButtons(this, false);
-            var obj = await ApiHelper.CheckActivate();
-            if (obj != null)
-            {
-                obj.NumberMin = 100;
-                Program.MinuteUsed = obj.NumberMin;
-                Program.MinuteRemain = obj.NumberMin - obj.NumberUsed;
-                if (Program.MinuteRemain <= 0)
-                {
-                    MessageBox.Show("Bạn đã đạt giới hạn số phút được tạo, Hãy dùng Product Key mới");
-                    DisableAllButtons(this, true);
-                    return;
-                }
-                else
-                {
-                    // Create an instance of FormABC
-                    canvaform formABC = new canvaform();
-                    // Show FormABC
-                    formABC.Show();
-                    this.Close();
-                }
-            }
+            this.Close();
         }
     }
 }

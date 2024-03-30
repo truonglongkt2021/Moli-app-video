@@ -120,6 +120,11 @@ namespace Moli_app.Common
                     {
                         var responseString = await response.Content.ReadAsStringAsync();
                         var activationResponse = JsonConvert.DeserializeObject<ActivationResponse>(responseString);
+                        if (activationResponse != null)
+                        {
+                            Program.MinuteUsed = activationResponse.NumberUsed;
+                            Program.MinuteRemain = activationResponse.NumberMin - activationResponse.NumberUsed;
+                        }
                         return activationResponse; // Trả về đối tượng đã được parse
                     }
                     else
