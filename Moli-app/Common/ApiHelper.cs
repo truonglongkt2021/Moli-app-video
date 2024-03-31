@@ -1,14 +1,18 @@
 ﻿using System;
+using System.Net;
 using System.Net.Http;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using Newtonsoft.Json; // Sử dụng Json.NET để serialize dữ liệu
 
 namespace Moli_app.Common
 {
     public static class ApiHelper
     {
+        private static string _APIURL = "https://avid.amazingtech.cc/api";
+        private static string _PRIVATEKEY = "881e4380-299e-4165-9bc9-4409f52b676f";
         public static async Task<string> PostDataAsync(string url, string productKey)
         {
             var (macAddress, hardDriveSerial, pcName) = SystemInfoHelper.GetSystemInfo();
@@ -46,8 +50,7 @@ namespace Moli_app.Common
         {
             var (macAddress, hardDriveSerial, pcName) = SystemInfoHelper.GetSystemInfo();
             var productKey = SystemInfoHelper.getProductKey(); // Giả sử bạn đã có hàm GetProductKey()
-            var url = "http://your-api-url/check"; // Thay đổi url phù hợp với API endpoint của bạn
-            var privateKey = "881e4380-299e-4165-9bc9-4409f52b676f";
+            var url = _APIURL+"/subvid/getsub"; // Thay đổi url phù hợp với API endpoint của bạn
 
             var data = new
             {
@@ -58,54 +61,7 @@ namespace Moli_app.Common
             };
 
             var json = JsonConvert.SerializeObject(data);
-            var hashMac = CreateHmacSha256Signature(json, privateKey);
-
-            using (var client = new HttpClient())
-            {
-                json = JsonConvert.SerializeObject(new { data = data, Hash = hashMac });
-                var content = new StringContent(json, Encoding.UTF8, "application/json");
-
-                try
-                {
-                    var response = await client.PostAsync(url, content);
-
-                    if (response.IsSuccessStatusCode)
-                    {
-                        var responseString = await response.Content.ReadAsStringAsync();
-                        var activationResponse = JsonConvert.DeserializeObject<ActivationResponse>(responseString);
-                        return activationResponse; // Trả về đối tượng đã được parse
-                    }
-                    else
-                    {
-                        // Xử lý trường hợp response không thành công
-                        return new ActivationResponse { IsActive = false };
-                    }
-                }
-                catch (Exception ex)
-                {
-                    // Xử lý lỗi
-                    return new ActivationResponse { IsActive = false }; // Hoặc bạn có thể thêm thông tin lỗi vào model nếu cần
-                }
-            }
-        }
-        public static async Task<ActivationResponse> UsedMinute(int minuteUsed)
-        {
-            var (macAddress, hardDriveSerial, pcName) = SystemInfoHelper.GetSystemInfo();
-            var productKey = SystemInfoHelper.getProductKey(); // Giả sử bạn đã có hàm GetProductKey()
-            var url = "http://your-api-url/check"; // Thay đổi url phù hợp với API endpoint của bạn
-            var privateKey = "881e4380-299e-4165-9bc9-4409f52b676f";
-
-            var data = new
-            {
-                ProductKey = productKey,
-                PCName = pcName,
-                MacAddress = macAddress,
-                HardDriveSerial = hardDriveSerial,
-                MinuteUsed = minuteUsed,
-            };
-
-            var json = JsonConvert.SerializeObject(data);
-            var hashMac = CreateHmacSha256Signature(json, privateKey);
+            var hashMac = CreateHmacSha256Signature(json, _PRIVATEKEY);
 
             using (var client = new HttpClient())
             {
@@ -122,9 +78,61 @@ namespace Moli_app.Common
                         var activationResponse = JsonConvert.DeserializeObject<ActivationResponse>(responseString);
                         if (activationResponse != null)
                         {
-                            Program.MinuteUsed = activationResponse.NumberUsed;
-                            Program.MinuteRemain = activationResponse.NumberMin - activationResponse.NumberUsed;
+                        Program.MinuteUsed = activationResponse.NumberUsed;
+                        Program.MinuteRemain = activationResponse.NumberMin - activationResponse.NumberUsed;
+                        return activationResponse; // Trả về đối tượng đã được parse
                         }
+                        else
+                        {
+                            Program.MinuteUsed = 0;
+                            Program.MinuteRemain = 0;
+                            return new ActivationResponse { IsActive = false };
+                        }
+                    }
+                    else
+                    {
+                        // Xử lý trường hợp response không thành công
+                        return new ActivationResponse { IsActive = false };
+                    }
+                }
+                catch (Exception ex)
+                {
+                    // Xử lý lỗi
+                    return new ActivationResponse { IsActive = false }; // Hoặc bạn có thể thêm thông tin lỗi vào model nếu cần
+                }
+            }
+        }
+        public static async Task<ActivationResponse> CreateUser(string FullName,string PhoneNumber, string email)
+        {
+            var (macAddress, hardDriveSerial, pcName) = SystemInfoHelper.GetSystemInfo();
+            var url = _APIURL+"/subvid"; // Thay đổi url phù hợp với API endpoint của bạn
+
+            var data = new
+            {
+                FullName = FullName,
+                PhoneNumber = PhoneNumber,
+                email= email,
+                PCName = pcName,
+                MacAddress = macAddress,
+                HardDriveSerial = hardDriveSerial
+            };
+
+            var json = JsonConvert.SerializeObject(data);
+            var hashMac = CreateHmacSha256Signature(json, _PRIVATEKEY);
+
+            using (var client = new HttpClient())
+            {
+                json = JsonConvert.SerializeObject(new { data = data, Hash = hashMac });
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+                try
+                {
+                    var response = await client.PostAsync(url, content);
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                        var responseString = await response.Content.ReadAsStringAsync();
+                        var activationResponse = JsonConvert.DeserializeObject<ActivationResponse>(responseString);
                         return activationResponse; // Trả về đối tượng đã được parse
                     }
                     else
@@ -140,6 +148,102 @@ namespace Moli_app.Common
                 }
             }
         }
+        public static async Task<ActivationResponse> ReCreateProductKey(string email)
+        {
+            var (macAddress, hardDriveSerial, pcName) = SystemInfoHelper.GetSystemInfo();
+            var url = _APIURL+"/subvid/reproductkey"; // Thay đổi url phù hợp với API endpoint của bạn
+            DateTimeOffset now = DateTimeOffset.Now;
+            long unixTimestamp = now.ToUnixTimeSeconds();
+            var data = new
+            {
+                email= email,
+                PCName = pcName,
+                MacAddress = macAddress,
+                HardDriveSerial = hardDriveSerial,
+                TimeStamp = unixTimestamp.ToString()
+            };
+
+            var json = JsonConvert.SerializeObject(data);
+            var hashMac = CreateHmacSha256Signature(json, _PRIVATEKEY);
+
+            using (var client = new HttpClient())
+            {
+                json = JsonConvert.SerializeObject(new { data = data, Hash = hashMac });
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+                try
+                {
+                    var response = await client.PostAsync(url, content);
+
+                    if (response.StatusCode == HttpStatusCode.OK)
+                    {
+                        var responseString = await response.Content.ReadAsStringAsync();
+                        var activationResponse = JsonConvert.DeserializeObject<ActivationResponse>(responseString);
+                        return new ActivationResponse { IsActive = true }; ; // Trả về đối tượng đã được parse
+                    }
+                    else
+                    {
+                        // Xử lý trường hợp response không thành công
+                        return new ActivationResponse { IsActive = false };
+                    }
+                }
+                catch (Exception ex)
+                {
+                    // Xử lý lỗi
+                    return new ActivationResponse { IsActive = false }; // Hoặc bạn có thể thêm thông tin lỗi vào model nếu cần
+                }
+            }
+        }
+        public static async Task<ActivationResponse> SecondUsed(double secondUsed)
+        {
+            var (macAddress, hardDriveSerial, pcName) = SystemInfoHelper.GetSystemInfo();
+            var url = _APIURL+"/subvid/minuteused";  //Thay đổi url phù hợp với API endpoint của bạn
+            DateTimeOffset now = DateTimeOffset.Now;
+            var productKey = SystemInfoHelper.getProductKey(); // Giả sử bạn đã có hàm GetProductKey()
+
+            var data = new
+            {
+                productKey = productKey,
+                secondUsed = secondUsed,
+                PCName = pcName,
+                MacAddress = macAddress,
+                HardDriveSerial = hardDriveSerial,
+            };
+
+            var json = JsonConvert.SerializeObject(data);
+            var hashMac = CreateHmacSha256Signature(json, _PRIVATEKEY);
+
+            using (var client = new HttpClient())
+            {
+                json = JsonConvert.SerializeObject(new { data = data, Hash = hashMac });
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+                try
+                {
+                    var response = await client.PostAsync(url, content);
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                        var responseString = await response.Content.ReadAsStringAsync();
+                        var activationResponse = JsonConvert.DeserializeObject<ActivationResponse>(responseString);
+                        Program.MinuteUsed = activationResponse.NumberUsed;
+                        Program.MinuteRemain = activationResponse.NumberMin - activationResponse.NumberUsed;
+                        return activationResponse; // Trả về đối tượng đã được parse
+                    }
+                    else
+                    {
+                        // Xử lý trường hợp response không thành công
+                        return new ActivationResponse { IsActive = false };
+                    }
+                }
+                catch (Exception ex)
+                {
+                    // Xử lý lỗi
+                    return new ActivationResponse { IsActive = false }; // Hoặc bạn có thể thêm thông tin lỗi vào model nếu cần
+                }
+            }
+        }
+        
         public static string CreateHmacSha256Signature(string data, string key)
         {
             using (var hmac = new HMACSHA256(Encoding.UTF8.GetBytes(key)))

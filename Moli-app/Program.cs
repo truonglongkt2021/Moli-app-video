@@ -16,7 +16,7 @@ namespace Moli_app
         ///  The main entry point for the application.
         /// </summary>
         [STAThread]
-        static async Task Main()
+        static void Main()
         {
             Application.SetHighDpiMode(HighDpiMode.SystemAware);
             Application.EnableVisualStyles();
@@ -24,7 +24,7 @@ namespace Moli_app
 
             // Khởi tạo canvaform trước và giữ nó như MainForm
 
-            var obj = await ApiHelper.CheckActivate();
+            var obj = ApiHelper.CheckActivate().GetAwaiter().GetResult(); ;
             if (obj != null)
             {
                 MinuteUsed = obj.NumberMin;

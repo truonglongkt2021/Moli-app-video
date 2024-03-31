@@ -1,10 +1,13 @@
-﻿using Moli_app.Common;
+﻿using MediaInfo;
+using Moli_app.Common;
+using Nevron.Nov.IO;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Diagnostics;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -14,7 +17,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using static System.Net.Mime.MediaTypeNames;
 using static System.Windows.Forms.DataFormats;
-
+using MediaInfoLib = MediaInfo;
 namespace Moli_app
 {
 
@@ -57,7 +60,6 @@ namespace Moli_app
         private void btnSelectVideoMerge_Click(object sender, EventArgs e)
         {
             var timers = new TimeSpan();
-            var util = new Util();
             using (var fbd = new FolderBrowserDialog())
             {
                 // Dialog box description
@@ -215,6 +217,20 @@ namespace Moli_app
                 var isRandom = !cbFullInputVideo.Checked;
                 // Parse thành công, 'duration' giờ chứa giá trị TimeSpan tương ứng
                 var listMix = Util.MixVideoUtil(VideoShorts, AudioShorts, totalVideoOut, duration, isAudio, isRandom, speed);
+                // Tính tổng thời lượng của tất cả các video trong tất cả các MixVideo
+
+
+                TimeSpan totalDuration = listMix
+                    .SelectMany(mix => mix.listVideo) // Chuyển đổi listMix thành một sequence của tất cả các VideoShort
+                    .Aggregate(TimeSpan.Zero, (total, video) => total + video.Duration); // Tính tổng thời lượng
+                var checkSecond = await UpdateSecond(totalDuration.TotalSeconds);
+                if (!checkSecond)
+                {
+                    MessageBox.Show("Bạn không đủ số phút để làm tiếp, vui lòng mua thêm gói");
+                    return;
+                }
+
+
                 //dem so video can được tạo
                 count = listMix.Count();
                 // Giả sử bạn đã định nghĩa SemaphoreSlim ở cấp lớp hoặc cấp phương thức
@@ -387,6 +403,24 @@ namespace Moli_app
                 MessageBox.Show("Vui lòng chọn đường dẫn video muốn tách âm");
                 return;
             }
+
+            try
+            {
+
+                double totalDuration = GetVideoDuration(txtVideoToAudio.Text); // Tính tổng thời lượng
+                var checkSecond = await UpdateSecond(totalDuration);
+                if (!checkSecond)
+                {
+                    MessageBox.Show("Bạn không đủ số phút để làm tiếp, vui lòng mua thêm gói");
+                    return;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Có lỗi trong lúc tính tổng thời gian, vui lòng chọn lại danh sách video");
+                return;
+            }
+
             var sourceVideoPath = txtVideoToAudio.Text;
             var isTrecon = rbHighAudio.Checked;
             var isNguoilon = rbLowAudio.Checked;
@@ -567,6 +601,17 @@ namespace Moli_app
                         continue;
                     }
                 }
+
+                TimeSpan totalDuration = ListMixVideo
+                    .SelectMany(mix => mix.listVideo) // Chuyển đổi listMix thành một sequence của tất cả các VideoShort
+                    .Aggregate(TimeSpan.Zero, (total, video) => total + video.Duration); // Tính tổng thời lượng
+                var checkSecond = await UpdateSecond(totalDuration.TotalSeconds);
+                if (!checkSecond)
+                {
+                    MessageBox.Show("Bạn không đủ số phút để làm tiếp, vui lòng mua thêm gói");
+                    return;
+                }
+
                 //txtOutputPath.Text tạo thư mục OutputWithIntro trong 
                 string outputDirectory = Path.Combine(txtOutputPath.Text, "OutputWithIntro");
 
@@ -769,6 +814,23 @@ namespace Moli_app
             string[] videoFiles = Directory.GetFiles(txtPathVideoAddLogo.Text, "*.*", SearchOption.TopDirectoryOnly)
                                     .Where(file => file.EndsWith(".mp4") || file.EndsWith(".avi")).ToArray(); // Bổ sung thêm các định dạng video nếu cần
             var ffpath = Path.Combine(System.Windows.Forms.Application.StartupPath, "amazingtech.exe"); // Đảm bảo rằng bạn đã đổi "amazingtech.exe" thành "ffmpeg.exe" hoặc đường dẫn chính xác của ffmpeg
+            try
+            {
+
+                double totalDuration = GetTotalDurationForList(videoFiles.ToList()); // Tính tổng thời lượng
+                var checkSecond = await UpdateSecond(totalDuration);
+                if (!checkSecond)
+                {
+                    MessageBox.Show("Bạn không đủ số phút để làm tiếp, vui lòng mua thêm gói");
+                    return;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Có lỗi trong lúc tính tổng thời gian, vui lòng chọn lại danh sách video");
+                return;
+            }
+
             foreach (string videoFile in videoFiles)
             {
                 //string outputFilePath = Path.Combine(outputPath, Path.GetFileName(videoFile));
@@ -786,7 +848,8 @@ namespace Moli_app
                 ffmpegProcess.StartInfo.RedirectStandardError = true; // Chuyển hướng đầu ra lỗi
                 ffmpegProcess.StartInfo.CreateNoWindow = true;
 
-                ffmpegProcess.OutputDataReceived += (s, ev) => {
+                ffmpegProcess.OutputDataReceived += (s, ev) =>
+                {
                     if (!String.IsNullOrEmpty(ev.Data))
                     {
                         //rtbResultMessage.Invoke(new Action(() => rtbResultMessage.AppendText(ev.Data + Environment.NewLine)));
@@ -794,10 +857,11 @@ namespace Moli_app
                     }
                 };
 
-                ffmpegProcess.ErrorDataReceived += (s, ev) => {
+                ffmpegProcess.ErrorDataReceived += (s, ev) =>
+                {
                     if (!String.IsNullOrEmpty(ev.Data))
                     {
-                        rtbResultMessage.Invoke(new Action(() => rtbResultMessage.AppendText("Error: "+Guid.NewGuid().ToString())));
+                        rtbResultMessage.Invoke(new Action(() => rtbResultMessage.AppendText("Error: " + Guid.NewGuid().ToString())));
                     }
                 };
 
@@ -806,7 +870,7 @@ namespace Moli_app
                 ffmpegProcess.BeginErrorReadLine();
                 await ffmpegProcess.WaitForExitAsync();
             }
-            
+
             DisableAllButtons(this, true);
             MessageBox.Show("Hoàn tất gắn logo vào tất cả video.");
         }
@@ -866,6 +930,58 @@ namespace Moli_app
                     return "main_w-overlay_w-10:main_h-overlay_h-10";
                 default:
                     return "10:10"; // Mặc định là trên bên trái nếu không khớp với lựa chọn nào
+            }
+        }
+        public static double GetTotalDurationForList(List<string> list)
+        {
+            double totalDuration = 0;
+
+            foreach (string filePath in list)
+            {
+                // Gọi GetVideoDuration cho mỗi đường dẫn trong list và cộng dồn vào totalDuration
+                totalDuration += GetVideoDuration(filePath);
+            }
+
+            return totalDuration; // Trả về tổng thời gian tính bằng giây của tất cả các video trong list
+        }
+
+        public static double GetVideoDuration(string filePath)
+        {
+            using (var mediaInfo = new MediaInfoLib.MediaInfo())
+            {
+                mediaInfo.Open(filePath);
+
+                // Lấy thời lượng video tính bằng milliseconds
+                var durationString = mediaInfo.Get(StreamKind.Video, 0, "Duration");
+
+                // Chuyển đổi thời lượng từ string sang double và sau đó sang TimeSpan
+                if (double.TryParse(durationString, out double duration))
+                {
+                    return TimeSpan.FromMilliseconds(duration).TotalSeconds;
+                }
+            }
+
+            return 0;
+        }
+        private static async Task<bool> UpdateSecond(double second)
+        {
+            try
+            {
+
+                var obj = await ApiHelper.SecondUsed(second);
+                if (obj.IsActive)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            catch (Exception)
+            {
+
+                return false;
             }
         }
     }

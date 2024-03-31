@@ -59,8 +59,9 @@ namespace Moli_app
             }
             else
             {
+                formToOpen.Show();
                 // Hiển thị thông báo nếu điều kiện không được thỏa mãn
-                MessageBox.Show("Bạn đã đạt giới hạn số phút được tạo, hãy dùng Product Key mới.");
+                //MessageBox.Show("Bạn đã đạt giới hạn số phút được tạo, hãy dùng Product Key mới.");
             }
         }
 

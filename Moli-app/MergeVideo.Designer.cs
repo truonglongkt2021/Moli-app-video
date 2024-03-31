@@ -109,6 +109,7 @@
             this.btnPathIntroVideo = new System.Windows.Forms.Button();
             this.btnPathVideoOutTro = new System.Windows.Forms.Button();
             this.btnMergeIntroOuttro = new System.Windows.Forms.Button();
+            this.lbPreview = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dgvListOutput)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvAudioList)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackbarSpeed)).BeginInit();
@@ -650,6 +651,7 @@
             // 
             // groupBox5
             // 
+            this.groupBox5.Controls.Add(this.lbPreview);
             this.groupBox5.Controls.Add(this.groupBox6);
             this.groupBox5.Controls.Add(this.btnAddLogo);
             this.groupBox5.Controls.Add(this.btnPathAddLogo);
@@ -779,7 +781,7 @@
             // 
             // pbLogo
             // 
-            this.pbLogo.Location = new System.Drawing.Point(375, 99);
+            this.pbLogo.Location = new System.Drawing.Point(375, 87);
             this.pbLogo.Name = "pbLogo";
             this.pbLogo.Size = new System.Drawing.Size(160, 160);
             this.pbLogo.TabIndex = 4;
@@ -953,6 +955,17 @@
             this.btnMergeIntroOuttro.UseVisualStyleBackColor = false;
             this.btnMergeIntroOuttro.Click += new System.EventHandler(this.btnMergeIntroOuttro_Click);
             // 
+            // lbPreview
+            // 
+            this.lbPreview.AutoSize = true;
+            this.lbPreview.Font = new System.Drawing.Font("Segoe UI", 9F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point);
+            this.lbPreview.ForeColor = System.Drawing.SystemColors.HotTrack;
+            this.lbPreview.Location = new System.Drawing.Point(430, 254);
+            this.lbPreview.Name = "lbPreview";
+            this.lbPreview.Size = new System.Drawing.Size(53, 15);
+            this.lbPreview.TabIndex = 10;
+            this.lbPreview.Text = "Preview";
+            // 
             // MergeVideo
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -1115,5 +1128,6 @@
         private System.Windows.Forms.Label label17;
         private System.Windows.Forms.TrackBar trackSize;
         private System.Windows.Forms.ComboBox cbPosition;
+        private System.Windows.Forms.Label lbPreview;
     }
 }

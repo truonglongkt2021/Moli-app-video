@@ -195,7 +195,7 @@ namespace Moli_app
             }
             catch (Exception ex)
             {
-                Console.WriteLine("An error occurred: " + ex.Message);
+                MessageBox.Show("An error occurred: " + ex.Message);
                 DisableAllButtons(this, true);
             }
             finally
