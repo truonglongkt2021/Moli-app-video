@@ -17,6 +17,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using static System.Net.Mime.MediaTypeNames;
 using static System.Windows.Forms.DataFormats;
+using Image = System.Drawing.Image;
 using MediaInfoLib = MediaInfo;
 namespace Moli_app
 {
@@ -59,6 +60,7 @@ namespace Moli_app
 
         private void btnSelectVideoMerge_Click(object sender, EventArgs e)
         {
+            VideoShorts = new List<VideoShort>();
             var timers = new TimeSpan();
             using (var fbd = new FolderBrowserDialog())
             {
@@ -108,6 +110,7 @@ namespace Moli_app
 
         private void btnSelectSourceAudio_Click(object sender, EventArgs e)
         {
+            AudioShorts = new List<AudioShort>();
             var timers = new TimeSpan();
 
             using (var fbd = new FolderBrowserDialog())
@@ -166,6 +169,7 @@ namespace Moli_app
                 DisableAllButtons(this, true);
 
                 MessageBox.Show("Vui lòng chọn nguồn phát Videos");
+
                 return;
             }
             else if (!AudioShorts.Any())
@@ -199,8 +203,23 @@ namespace Moli_app
                 MessageBox.Show("Giá trị tốc độ không hợp lệ. Sử dụng giá trị mặc định 1.0x.");
                 speed = 1.0;
             }
+            var isAddLogo = false;
+            if (cbIsAddLogo.Checked)
+            {
+                if (String.IsNullOrEmpty(txtPathLogo.Text))
+                {
+                    MessageBox.Show("Vui lòng chọn đường dẫn logo");
+                    DisableAllButtons(this, true);
+                    return;
+                }
 
+                isAddLogo = true;
+            }
+            string logoPath = txtPathLogo.Text;
 
+            var trackbarSize = trackSize.Value;
+            var trackbarTrans = trackTransparent.Value;
+            var position = cbPosition.SelectedItem.ToString(); // Lấy vị trí được chọn từ ComboBox
             TimeSpan duration = new TimeSpan();
             try
             {
@@ -227,6 +246,7 @@ namespace Moli_app
                 if (!checkSecond)
                 {
                     MessageBox.Show("Bạn không đủ số phút để làm tiếp, vui lòng mua thêm gói");
+                    DisableAllButtons(this, true);
                     return;
                 }
 
@@ -236,14 +256,14 @@ namespace Moli_app
                 // Giả sử bạn đã định nghĩa SemaphoreSlim ở cấp lớp hoặc cấp phương thức
                 SemaphoreSlim semaphore = new SemaphoreSlim((int)numOfPress.Value); // Cho phép tối đa 3 thread đồng thời
                 bool intro = false;
-                bool outTro = false;
+                
                 foreach (var item in listMix)
                 {
 
                     // Chờ một slot trống từ semaphore
                     await semaphore.WaitAsync();
 
-                    Task.Run(async () =>
+                    _ = Task.Run(async () =>
                     {
                         try
                         {
@@ -253,11 +273,13 @@ namespace Moli_app
                         catch (Exception ex)
                         {
                             // Xử lý lỗi ở đây
+                            DisableAllButtons(this, true);
                             Console.WriteLine(ex.Message);
                         }
                         finally
                         {
                             // Đảm bảo luôn giải phóng semaphore, ngay cả khi có lỗi
+                            DisableAllButtons(this, true);
                             semaphore.Release();
                         }
                     });
@@ -265,6 +287,7 @@ namespace Moli_app
             }
             catch (Exception ex)
             {
+                DisableAllButtons(this, true);
                 Console.WriteLine(ex.Message);
             }
         }
@@ -295,16 +318,21 @@ namespace Moli_app
         }
         public void DoneProcess(int i)
         {
-            count = count - i;
-            rtbResultMessage.AppendText("1 Video đã Hoàn tất" + Environment.NewLine);
-            if (count == 0)
+            if (this.InvokeRequired)
             {
-                rtbResultMessage.AppendText("Tất cả video đã hoàn tất" + Environment.NewLine);
-                DisableAllButtons(this, true);
-                rtbResultMessage.SelectionStart = rtbResultMessage.Text.Length;
-
-                // Cuộn đến caret, đảm bảo văn bản mới thêm được hiển thị
-                rtbResultMessage.ScrollToCaret();
+                this.Invoke(new Action<int>(DoneProcess), i);
+            }
+            else
+            {
+                count -= i;
+                rtbResultMessage.AppendText("1 Video đã Hoàn tất" + Environment.NewLine);
+                if (count == 0)
+                {
+                    rtbResultMessage.AppendText("Tất cả video đã hoàn tất" + Environment.NewLine);
+                    DisableAllButtons(this, true);
+                    rtbResultMessage.SelectionStart = rtbResultMessage.Text.Length;
+                    rtbResultMessage.ScrollToCaret(); // Cuộn đến caret để đảm bảo văn bản mới được hiển thị
+                }
             }
         }
         private void cbFullInputVideo_CheckedChanged(object sender, EventArgs e)
@@ -789,11 +817,13 @@ namespace Moli_app
             if (String.IsNullOrEmpty(txtPathLogo.Text))
             {
                 MessageBox.Show("Vui lòng chọn đường dẫn logo");
+                DisableAllButtons(this, true);
                 return;
             }
             if (String.IsNullOrEmpty(txtPathVideoAddLogo.Text))
             {
                 MessageBox.Show("Vui lòng chọn đường dẫn output");
+                DisableAllButtons(this, true);
                 return;
             }
 
@@ -808,7 +838,6 @@ namespace Moli_app
 
             var trackbarSize = trackSize.Value;
             var trackbarTrans = trackTransparent.Value;
-            bool whitecolor = rbWhiteTranparent.Checked;
             var position = cbPosition.SelectedItem.ToString(); // Lấy vị trí được chọn từ ComboBox
             // Tìm tất cả các tệp video trong thư mục pathOutPut
             string[] videoFiles = Directory.GetFiles(txtPathVideoAddLogo.Text, "*.*", SearchOption.TopDirectoryOnly)
@@ -821,12 +850,14 @@ namespace Moli_app
                 var checkSecond = await UpdateSecond(totalDuration);
                 if (!checkSecond)
                 {
+                    DisableAllButtons(this, true);
                     MessageBox.Show("Bạn không đủ số phút để làm tiếp, vui lòng mua thêm gói");
                     return;
                 }
             }
             catch (Exception ex)
             {
+                DisableAllButtons(this, true);
                 MessageBox.Show("Có lỗi trong lúc tính tổng thời gian, vui lòng chọn lại danh sách video");
                 return;
             }
@@ -836,8 +867,8 @@ namespace Moli_app
                 //string outputFilePath = Path.Combine(outputPath, Path.GetFileName(videoFile));
 
                 // Xây dựng câu lệnh ffmpeg
-                string ffmpegCmd = BuildFfmpegCommand(logoPath, videoFile, outputPath, trackbarSize, trackbarTrans
-                                                        , whitecolor, position);
+                var (ffmpegCmd, previewImagePath) = BuildFfmpegCommand(logoPath, videoFile, outputPath, trackbarSize, trackbarTrans
+                                                        , position, false);
 
                 // Thực thi ffmpeg để gắn logo vào video
                 Process ffmpegProcess = new Process();
@@ -875,36 +906,37 @@ namespace Moli_app
             MessageBox.Show("Hoàn tất gắn logo vào tất cả video.");
         }
 
-        private string BuildFfmpegCommand(string logoPath, string videoPath, string outputPath, int size, int transparency, bool whiteColor, string position)
+        private (string command, string previewImagePath) BuildFfmpegCommand(string logoPath, string videoPath, string outputPath, int size, int transparency, string position, bool isPreview = false)
         {
-            // Tính toán tỉ lệ kích thước
-            float sizeFactor = size / 100.0f; // Chuyển đổi giá trị phần trăm thành tỉ lệ
-
-            // Tính toán tỉ lệ độ trong suốt
-            float alphaFactor = transparency / 100.0f; // Chuyển đổi giá trị phần trăm thành tỉ lệ, 1 là hoàn toàn không trong suốt
+            // Tính toán tỉ lệ kích thước và độ trong suốt
+            float sizeFactor = size / 100.0f;
+            float alphaFactor = transparency / 100.0f;
 
             // Xác định vị trí của logo
             string overlayPosition = GetOverlayPosition(position);
 
-            // Chuẩn bị bộ lọc để điều chỉnh kích thước và độ trong suốt của logo
+            // Chuẩn bị bộ lọc logo
             string logoFilter = $"[1:v]scale=iw*{sizeFactor}:-1,format=rgba";
+            logoFilter += $",colorchannelmixer=aa={alphaFactor}";
 
-            // Nếu whiteColor = true, thêm bộ lọc để làm cho logo trở nên trắng
-            // Sử dụng 'colorkey' để loại bỏ màu nền và 'colorchannelmixer' để điều chỉnh độ trong suốt
-            if (whiteColor)
+            string filterComplex = $"{logoFilter}[logo];[0:v][logo]overlay={overlayPosition}";
+
+            if (isPreview)
             {
-                logoFilter += $",colorkey=0x000000:0.1:0.1,colorchannelmixer=aa={alphaFactor}";
+                // Chỉ xử lý một frame, tại thời điểm 00:00:01
+                string previewOutputPath = isPreview ? $"{outputPath}\\preview_{Guid.NewGuid().ToString()}.jpg" : null;
+                //string previewOutputPath = $"{outputPath}\\preview_{Guid.NewGuid().ToString()}.jpg"; // Lưu dưới dạng ảnh
+                //string ffmpegCommand = $"-ss 00:00:01 -i \"{videoPath}\" -i \"{logoPath}\" -filter_complex \"{filterComplex}\" -vframes 1  -update 1 \"{previewOutputPath}\"";
+                string ffmpegCommand = $"-ss 00:00:01 -i \"{videoPath}\" -i \"{logoPath}\" -filter_complex \"{filterComplex}\" -vframes 1  -update 1 \"{previewOutputPath}\"";
+                return (ffmpegCommand, previewOutputPath);
             }
             else
             {
-                logoFilter += $",colorchannelmixer=aa={alphaFactor}";
+                // Xử lý toàn bộ video
+                string videoOutputPath = $"{outputPath}\\logo_{Guid.NewGuid().ToString()}.mp4";
+                string ffmpegCommand = $"-i \"{videoPath}\" -i \"{logoPath}\" -filter_complex \"{filterComplex}\" -codec:a copy \"{videoOutputPath}\"";
+                return (ffmpegCommand, videoOutputPath);
             }
-
-            // Hoàn thiện chuỗi filter_complex với bộ lọc logo và overlay
-            string filterComplex = $"{logoFilter}[logo];[0:v][logo]overlay={overlayPosition}";
-
-            // Trả về câu lệnh ffmpeg
-            return $"-i \"{videoPath}\" -i \"{logoPath}\" -filter_complex \"{filterComplex}\" -codec:a copy \"{outputPath}\\logo_{Guid.NewGuid().ToString()}.mp4\"";
         }
         private string GetOverlayPosition(string position)
         {
@@ -983,6 +1015,113 @@ namespace Moli_app
 
                 return false;
             }
+        }
+
+        private async void lbPreview_Click(object sender, EventArgs e)
+        {
+            DisableAllButtons(this, false);
+            if (String.IsNullOrEmpty(txtPathVideoAddLogo.Text))
+            {
+                MessageBox.Show("Vui lòng chọn đường dẫn video");
+                return;
+            }
+
+            // Chọn một video ngẫu nhiên từ thư mục
+            string[] videoFiles = Directory.GetFiles(txtPathVideoAddLogo.Text, "*.*", SearchOption.TopDirectoryOnly)
+                                        .Where(file => file.EndsWith(".mp4") || file.EndsWith(".avi")).ToArray();
+
+            if (videoFiles.Length == 0)
+            {
+                MessageBox.Show("Không tìm thấy video trong thư mục");
+                return;
+            }
+
+            Random rnd = new Random();
+            int index = rnd.Next(videoFiles.Length);
+            string selectedVideo = videoFiles[index];
+            // Đảm bảo logoPath, size, transparency, whiteColor, và position được lấy từ giao diện người dùng
+            string logoPath = txtPathLogo.Text; // Giả sử bạn có các control tương ứng
+            int size = trackSize.Value; // Và các control khác...
+            int transparency = trackTransparent.Value;
+            string position = cbPosition.SelectedItem.ToString();
+            var ffpath = Path.Combine(System.Windows.Forms.Application.StartupPath, "amazingtech.exe"); // Đảm bảo rằng bạn đã đổi "amazingtech.exe" thành "ffmpeg.exe" hoặc đường dẫn chính xác của ffmpeg
+            string outputPath = Path.GetDirectoryName(selectedVideo); // Hoặc bất kỳ đường dẫn nào bạn muốn lưu ảnh xem trước
+
+            var (ffmpegCommand, previewImagePath) = BuildFfmpegCommand(logoPath, selectedVideo, outputPath, size, transparency, position, true);
+
+            Process ffmpegProcess = new Process();
+            ffmpegProcess.StartInfo.FileName = ffpath;
+            ffmpegProcess.StartInfo.Arguments = ffmpegCommand;
+            ffmpegProcess.StartInfo.UseShellExecute = false;
+            ffmpegProcess.StartInfo.CreateNoWindow = true;
+            ffmpegProcess.StartInfo.RedirectStandardOutput = true;
+            ffmpegProcess.StartInfo.RedirectStandardError = true;
+
+            // Chú ý đây là cách bắt đầu một quá trình một cách bất đồng bộ
+            ffmpegProcess.Start();
+
+            // Đọc đầu ra chuẩn và đầu ra lỗi
+            await Task.Run(() =>
+            {
+                while (!ffmpegProcess.StandardOutput.EndOfStream)
+                {
+                    string line = ffmpegProcess.StandardOutput.ReadLine();
+                    // Cập nhật RichTextBox từ tiểu luồng
+                    rtxMessageProcess.Invoke(new Action(() =>
+                    {
+                        rtxMessageProcess.AppendText(line + Environment.NewLine);
+                    }));
+                }
+
+                while (!ffmpegProcess.StandardError.EndOfStream)
+                {
+                    string line = ffmpegProcess.StandardError.ReadLine();
+                    // Cập nhật RichTextBox từ tiểu luồng
+                    rtxMessageProcess.Invoke(new Action(() =>
+                    {
+                        rtxMessageProcess.AppendText(line + Environment.NewLine);
+                    }));
+                }
+            });
+
+            // Đợi cho đến khi FFmpeg hoàn thành và giải phóng tài nguyên
+            ffmpegProcess.WaitForExit();
+            ffmpegProcess.Close();
+            // Hiển thị ảnh xem trước
+            if (File.Exists(previewImagePath))
+            {
+                ShowPreviewImage(previewImagePath); // Sử dụng hàm hiển thị ảnh mà bạn đã viết trước đó
+            }
+            else
+            {
+                MessageBox.Show("Không thể tạo ảnh xem trước");
+            }
+            DisableAllButtons(this, true);
+        }
+        private void ShowPreviewImage(string imagePath)
+        {
+            // Tạo một đối tượng Image từ đường dẫn tệp
+            Image image = Image.FromFile(imagePath);
+
+            // Tính toán chiều cao mới dựa trên tỉ lệ của chiều ngang mới là 400px
+            int newWidth = 400;
+            float ratio = (float)image.Height / image.Width;
+            int newHeight = (int)(newWidth * ratio);
+
+            // Tạo một PictureBox mới và thiết lập Image và SizeMode
+            PictureBox pictureBox = new PictureBox();
+            pictureBox.Image = image;
+            pictureBox.Width = newWidth;
+            pictureBox.Height = newHeight;
+            pictureBox.SizeMode = PictureBoxSizeMode.StretchImage; // Sử dụng StretchImage để tự động điều chỉnh kích thước hình ảnh
+
+            // Tạo một Form mới để hiển thị PictureBox
+            Form previewForm = new Form();
+            previewForm.AutoSize = true;
+            previewForm.Controls.Add(pictureBox);
+
+            // Hiển thị Form chứa ảnh xem trước
+            previewForm.ShowDialog();
         }
     }
 

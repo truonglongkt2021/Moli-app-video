@@ -11,7 +11,7 @@ namespace Moli_app.Common
 {
     public static class ApiHelper
     {
-        private static string _APIURL = "https://avid.amazingtech.cc/api";
+        private static string _APIURL = "https://api-avid.amazingtech.vn/api";
         private static string _PRIVATEKEY = "881e4380-299e-4165-9bc9-4409f52b676f";
         public static async Task<string> PostDataAsync(string url, string productKey)
         {
@@ -78,8 +78,8 @@ namespace Moli_app.Common
                         var activationResponse = JsonConvert.DeserializeObject<ActivationResponse>(responseString);
                         if (activationResponse != null)
                         {
-                        Program.MinuteUsed = activationResponse.NumberUsed;
-                        Program.MinuteRemain = activationResponse.NumberMin - activationResponse.NumberUsed;
+                        Program.MinuteUsed = (int)activationResponse.NumberUsed;
+                        Program.MinuteRemain = (int)(activationResponse.NumberMin - activationResponse.NumberUsed);
                         return activationResponse; // Trả về đối tượng đã được parse
                         }
                         else
@@ -197,14 +197,14 @@ namespace Moli_app.Common
         public static async Task<ActivationResponse> SecondUsed(double secondUsed)
         {
             var (macAddress, hardDriveSerial, pcName) = SystemInfoHelper.GetSystemInfo();
-            var url = _APIURL+"/subvid/minuteused";  //Thay đổi url phù hợp với API endpoint của bạn
+            var url = _APIURL+ "/subvid/minuteUsed";  //Thay đổi url phù hợp với API endpoint của bạn
             DateTimeOffset now = DateTimeOffset.Now;
             var productKey = SystemInfoHelper.getProductKey(); // Giả sử bạn đã có hàm GetProductKey()
 
             var data = new
             {
-                productKey = productKey,
-                secondUsed = secondUsed,
+                ProductKey = productKey,
+                SecondUsed = secondUsed,
                 PCName = pcName,
                 MacAddress = macAddress,
                 HardDriveSerial = hardDriveSerial,
@@ -260,9 +260,11 @@ namespace Moli_app.Common
             IsActive = false;
             NumberMin = 0;
             NumberUsed = 0;
+            Message= string.Empty;
         }
         public bool IsActive { get; set; }
-        public int NumberMin { get; set; }
-        public int NumberUsed { get; set; }
+        public double NumberMin { get; set; }
+        public double NumberUsed { get; set; }
+        public string Message { get; set; }
     }
 }

@@ -9,9 +9,9 @@ namespace Moli_app
 {
     internal static class Program
     {
-        public static int MinuteRemain = 0;
+        public static double MinuteRemain = 0;
         public static canvaform MainForm { get; set; }
-        public static int MinuteUsed = 0;
+        public static double MinuteUsed = 0;
         /// <summary>
         ///  The main entry point for the application.
         /// </summary>
