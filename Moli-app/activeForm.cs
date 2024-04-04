@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Net.Http;
@@ -275,7 +276,6 @@ namespace Moli_app
             lbtentaikhoan.Text = modUser.tenTaiKhoan;
             lbtenNganHang.Text = modUser.tenNganHang;
             lbSotaikhoan.Text = modUser.soTaiKhoan;
-            lbZaloSupport.Text = modUser.soDienThoai;
             lbEmailSupport.Text = modUser.email;
             if (!modUser.IsActive)
             {
@@ -371,8 +371,19 @@ namespace Moli_app
             lbtentaikhoan.Text = modUser.tenTaiKhoan;
             lbtenNganHang.Text = modUser.tenNganHang;
             lbSotaikhoan.Text = modUser.soTaiKhoan;
-            lbZaloSupport.Text = modUser.soDienThoai;
             lbEmailSupport.Text = modUser.email;
+        }
+
+        private void llTelegram_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            // Mở URL trong trình duyệt mặc định
+            //System.Diagnostics.Process.Start("https://t.me/avidsupport");
+            var psi = new ProcessStartInfo
+            {
+                FileName = "https://t.me/avidsupport",
+                UseShellExecute = true
+            };
+            Process.Start(psi);
         }
     }
 }

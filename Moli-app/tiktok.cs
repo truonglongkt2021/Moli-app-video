@@ -106,7 +106,7 @@ namespace Moli_app
                 MessageBox.Show("Vui lòng chọn đường dẫn tách Video");
                 return;
             }    
-            var ffpath = Path.Combine(Application.StartupPath, "amazingtech.exe");
+            var ffpath = Path.Combine(Application.StartupPath, "avidfilm.exe");
             string videoSourcePath = txtSourceVideoPath.Text;
             //string command = $"-i \"{videoSourcePath}\" -vf blackdetect=d=0.1:pix_th=0.1 -f rawvideo -y NUL";
 
@@ -317,7 +317,7 @@ namespace Moli_app
                 string outputPath = Application.StartupPath + Guid.NewGuid().ToString() + "_Image.png";
                 using (var ffmpeg = new Process())
                 {
-                    ffmpeg.StartInfo.FileName = Application.StartupPath + "amazingtech.exe";
+                    ffmpeg.StartInfo.FileName = Application.StartupPath + "avidfilm.exe";
                     ffmpeg.StartInfo.Arguments = rtbResultProcess.Text = " -i \"" + videoPath + "\" -ss 10 -frames:v 1 \"" + outputPath + "\"";
                     ffmpeg.StartInfo.UseShellExecute = false;
                     ffmpeg.StartInfo.RedirectStandardError = true;

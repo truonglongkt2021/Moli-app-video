@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SearchVideoShort));
             this.label1 = new System.Windows.Forms.Label();
             this.btnSearchYoutube = new System.Windows.Forms.Button();
             this.txtKeyword = new System.Windows.Forms.TextBox();
@@ -272,6 +273,7 @@
             this.Controls.Add(this.btnSearchYoutube);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.label2);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "SearchVideoShort";
             this.Text = "SearchVideoShort";
             this.Load += new System.EventHandler(this.SearchVideoShort_Load);

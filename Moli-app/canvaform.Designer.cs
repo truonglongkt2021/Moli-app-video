@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(canvaform));
             this.btnSearchYoutube = new System.Windows.Forms.Button();
             this.btnSplitVideo = new System.Windows.Forms.Button();
             this.btnMergeVideo = new System.Windows.Forms.Button();
@@ -100,6 +101,7 @@
             this.Controls.Add(this.btnMergeVideo);
             this.Controls.Add(this.btnSplitVideo);
             this.Controls.Add(this.btnSearchYoutube);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "canvaform";
             this.Text = "Amazing Editor Video";
             this.ResumeLayout(false);

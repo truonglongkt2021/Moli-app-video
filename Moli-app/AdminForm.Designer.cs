@@ -57,16 +57,28 @@
             this.txtPriceAdd = new System.Windows.Forms.TextBox();
             this.txtEmailAdd = new System.Windows.Forms.TextBox();
             this.txtKeyAdd = new System.Windows.Forms.TextBox();
+            this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.btnCheckIncome = new System.Windows.Forms.Button();
+            this.txtpinCodeCHeck = new System.Windows.Forms.TextBox();
+            this.label13 = new System.Windows.Forms.Label();
+            this.lbTotalIncome = new System.Windows.Forms.Label();
+            this.label11 = new System.Windows.Forms.Label();
+            this.label12 = new System.Windows.Forms.Label();
+            this.label14 = new System.Windows.Forms.Label();
+            this.lbHoTenIncome = new System.Windows.Forms.Label();
+            this.lbSoDienThoaiIncome = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.tabPage2.SuspendLayout();
+            this.tabPage3.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabControl1
             // 
             this.tabControl1.Controls.Add(this.tabPage1);
             this.tabControl1.Controls.Add(this.tabPage2);
+            this.tabControl1.Controls.Add(this.tabPage3);
             this.tabControl1.Location = new System.Drawing.Point(12, 12);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
@@ -336,6 +348,106 @@
             this.txtKeyAdd.Size = new System.Drawing.Size(327, 23);
             this.txtKeyAdd.TabIndex = 0;
             // 
+            // tabPage3
+            // 
+            this.tabPage3.Controls.Add(this.lbSoDienThoaiIncome);
+            this.tabPage3.Controls.Add(this.lbHoTenIncome);
+            this.tabPage3.Controls.Add(this.label14);
+            this.tabPage3.Controls.Add(this.label12);
+            this.tabPage3.Controls.Add(this.btnCheckIncome);
+            this.tabPage3.Controls.Add(this.txtpinCodeCHeck);
+            this.tabPage3.Controls.Add(this.label13);
+            this.tabPage3.Controls.Add(this.lbTotalIncome);
+            this.tabPage3.Controls.Add(this.label11);
+            this.tabPage3.Location = new System.Drawing.Point(4, 24);
+            this.tabPage3.Name = "tabPage3";
+            this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage3.Size = new System.Drawing.Size(558, 308);
+            this.tabPage3.TabIndex = 2;
+            this.tabPage3.Text = "Thống Kê";
+            this.tabPage3.UseVisualStyleBackColor = true;
+            this.tabPage3.Click += new System.EventHandler(this.tabPage3_Click);
+            // 
+            // btnCheckIncome
+            // 
+            this.btnCheckIncome.Location = new System.Drawing.Point(298, 16);
+            this.btnCheckIncome.Name = "btnCheckIncome";
+            this.btnCheckIncome.Size = new System.Drawing.Size(75, 23);
+            this.btnCheckIncome.TabIndex = 4;
+            this.btnCheckIncome.Text = "Check";
+            this.btnCheckIncome.UseVisualStyleBackColor = true;
+            this.btnCheckIncome.Click += new System.EventHandler(this.btnCheckIncome_Click);
+            // 
+            // txtpinCodeCHeck
+            // 
+            this.txtpinCodeCHeck.Location = new System.Drawing.Point(99, 16);
+            this.txtpinCodeCHeck.Name = "txtpinCodeCHeck";
+            this.txtpinCodeCHeck.Size = new System.Drawing.Size(182, 23);
+            this.txtpinCodeCHeck.TabIndex = 3;
+            // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.Location = new System.Drawing.Point(17, 19);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(52, 15);
+            this.label13.TabIndex = 2;
+            this.label13.Text = "pinCode";
+            // 
+            // lbTotalIncome
+            // 
+            this.lbTotalIncome.AutoSize = true;
+            this.lbTotalIncome.Location = new System.Drawing.Point(99, 57);
+            this.lbTotalIncome.Name = "lbTotalIncome";
+            this.lbTotalIncome.Size = new System.Drawing.Size(13, 15);
+            this.lbTotalIncome.TabIndex = 1;
+            this.lbTotalIncome.Text = "0";
+            // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Location = new System.Drawing.Point(15, 57);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(85, 15);
+            this.label11.TabIndex = 0;
+            this.label11.Text = "Tổng thu nhập";
+            // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.Location = new System.Drawing.Point(17, 82);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(44, 15);
+            this.label12.TabIndex = 5;
+            this.label12.Text = "Họ Tên";
+            // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.Location = new System.Drawing.Point(17, 110);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(79, 15);
+            this.label14.TabIndex = 6;
+            this.label14.Text = "Số Điện Thoại";
+            // 
+            // lbHoTenIncome
+            // 
+            this.lbHoTenIncome.AutoSize = true;
+            this.lbHoTenIncome.Location = new System.Drawing.Point(100, 84);
+            this.lbHoTenIncome.Name = "lbHoTenIncome";
+            this.lbHoTenIncome.Size = new System.Drawing.Size(82, 15);
+            this.lbHoTenIncome.TabIndex = 7;
+            this.lbHoTenIncome.Text = "Nguyễn văn A";
+            // 
+            // lbSoDienThoaiIncome
+            // 
+            this.lbSoDienThoaiIncome.AutoSize = true;
+            this.lbSoDienThoaiIncome.Location = new System.Drawing.Point(99, 110);
+            this.lbSoDienThoaiIncome.Name = "lbSoDienThoaiIncome";
+            this.lbSoDienThoaiIncome.Size = new System.Drawing.Size(55, 15);
+            this.lbSoDienThoaiIncome.TabIndex = 8;
+            this.lbSoDienThoaiIncome.Text = "00000000";
+            // 
             // AdminForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -351,6 +463,8 @@
             this.groupBox1.PerformLayout();
             this.tabPage2.ResumeLayout(false);
             this.tabPage2.PerformLayout();
+            this.tabPage3.ResumeLayout(false);
+            this.tabPage3.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -386,5 +500,15 @@
         private System.Windows.Forms.Button btnAddPhut;
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.TextBox txtKeySearch;
+        private System.Windows.Forms.TabPage tabPage3;
+        private System.Windows.Forms.Button btnCheckIncome;
+        private System.Windows.Forms.TextBox txtpinCodeCHeck;
+        private System.Windows.Forms.Label label13;
+        private System.Windows.Forms.Label lbTotalIncome;
+        private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.Label lbSoDienThoaiIncome;
+        private System.Windows.Forms.Label lbHoTenIncome;
+        private System.Windows.Forms.Label label14;
+        private System.Windows.Forms.Label label12;
     }
 }

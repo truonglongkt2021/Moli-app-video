@@ -105,5 +105,25 @@ namespace Moli_app
                 }
             }
         }
+
+        private async void btnCheckIncome_Click(object sender, EventArgs e)
+        {
+            if (txtpinCodeCHeck.Text=="")
+            {
+                MessageBox.Show("Vui lòng nhập pinCode");
+                return;
+            }
+            DisableAllButtons(this, false);
+            var result = await ApiHelper.CheckIncome(txtpinCodeCHeck.Text);
+            lbTotalIncome.Text = $"{result.totalIncome.ToString():#,##0}";
+            lbHoTenIncome.Text = result.fullName;
+            lbSoDienThoaiIncome.Text = result.soDienThoai;
+            DisableAllButtons(this, true) ;
+        }
+
+        private void tabPage3_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }

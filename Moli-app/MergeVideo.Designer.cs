@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MergeVideo));
             this.lbtotalDurationVideo = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
             this.lbTotalVideoSource = new System.Windows.Forms.Label();
@@ -1014,6 +1015,7 @@
             this.Controls.Add(this.btnSelectVideoMerge);
             this.Controls.Add(this.btnMergeVideo);
             this.Controls.Add(this.dgvListOutput);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "MergeVideo";
             this.Text = "MergeVideo";
             ((System.ComponentModel.ISupportInitialize)(this.dgvListOutput)).EndInit();

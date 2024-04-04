@@ -206,6 +206,54 @@ namespace Moli_app.Common
                 }
             }
         }
+        public static async Task<IncomeModel> CheckIncome(string pinCode)
+        {
+            var url = _APIURL + "/binh-minh/totalIncome"; // Thay đổi url phù hợp với API endpoint của bạn
+
+            var data = new
+            {
+                pinCode = pinCode
+            };
+
+            var json = JsonConvert.SerializeObject(data);
+            var hashMac = CreateHmacSha256Signature(json, _PRIVATEKEY);
+
+            using (var client = new HttpClient())
+            {
+                json = JsonConvert.SerializeObject(new { data = data, Hash = hashMac });
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+                try
+                {
+                    var response = await client.PostAsync(url, content);
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                        var responseString = await response.Content.ReadAsStringAsync();
+                        var activationResponse = JsonConvert.DeserializeObject<IncomeModel>(responseString);
+                        if (activationResponse != null)
+                        {
+                            activationResponse.IsActive = true;
+                            return activationResponse; // Trả về đối tượng đã được parse
+                        }
+                        else
+                        {
+                            return new IncomeModel();
+                        }
+                    }
+                    else
+                    {
+                        // Xử lý trường hợp response không thành công
+                        return new IncomeModel();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    // Xử lý lỗi
+                    return new IncomeModel(); // Hoặc bạn có thể thêm thông tin lỗi vào model nếu cần
+                }
+            }
+        }
         public static async Task<bool> Addtrans(string key = "", string email = "", double price = 0, string transid = "")
         {
             var url = _APIURL + "/binh-minh/addtrans"; // Thay đổi url phù hợp với API endpoint của bạn
@@ -495,5 +543,18 @@ namespace Moli_app.Common
         public string Message { get; set; }
         public double NumberMin { get; set; }
         public double NumberUsed { get; set; }
+    }
+    public class IncomeModel
+    {
+        public IncomeModel()
+        {
+            IsActive = false;
+            totalIncome = 0;
+            fullName = soDienThoai = "";
+        }
+        public bool IsActive { get; set; }
+        public double totalIncome { get; set; }
+        public string fullName { get; set; }
+        public string soDienThoai { get; set; }
     }
 }

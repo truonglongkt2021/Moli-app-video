@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(activeForm));
             this.label1 = new System.Windows.Forms.Label();
             this.txtProductKey = new System.Windows.Forms.TextBox();
             this.btnActive = new System.Windows.Forms.Button();
@@ -73,13 +74,12 @@
             this.cbAmount = new System.Windows.Forms.ComboBox();
             this.label9 = new System.Windows.Forms.Label();
             this.tabPage3 = new System.Windows.Forms.TabPage();
-            this.label16 = new System.Windows.Forms.Label();
-            this.label15 = new System.Windows.Forms.Label();
-            this.lbZaloSupport = new System.Windows.Forms.Label();
-            this.lbEmailSupport = new System.Windows.Forms.Label();
-            this.label20 = new System.Windows.Forms.Label();
-            this.txtPinCodeSupport = new System.Windows.Forms.TextBox();
+            this.llTelegram = new System.Windows.Forms.LinkLabel();
             this.btnSupportPincode = new System.Windows.Forms.Button();
+            this.txtPinCodeSupport = new System.Windows.Forms.TextBox();
+            this.label20 = new System.Windows.Forms.Label();
+            this.lbEmailSupport = new System.Windows.Forms.Label();
+            this.label16 = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.tabControl1.SuspendLayout();
@@ -533,13 +533,12 @@
             // 
             // tabPage3
             // 
+            this.tabPage3.Controls.Add(this.llTelegram);
             this.tabPage3.Controls.Add(this.btnSupportPincode);
             this.tabPage3.Controls.Add(this.txtPinCodeSupport);
             this.tabPage3.Controls.Add(this.label20);
             this.tabPage3.Controls.Add(this.lbEmailSupport);
-            this.tabPage3.Controls.Add(this.lbZaloSupport);
             this.tabPage3.Controls.Add(this.label16);
-            this.tabPage3.Controls.Add(this.label15);
             this.tabPage3.Location = new System.Drawing.Point(4, 24);
             this.tabPage3.Name = "tabPage3";
             this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
@@ -548,57 +547,16 @@
             this.tabPage3.Text = "Hỗ trợ kỹ thuật";
             this.tabPage3.UseVisualStyleBackColor = true;
             // 
-            // label16
+            // llTelegram
             // 
-            this.label16.AutoSize = true;
-            this.label16.Location = new System.Drawing.Point(181, 183);
-            this.label16.Name = "label16";
-            this.label16.Size = new System.Drawing.Size(42, 15);
-            this.label16.TabIndex = 1;
-            this.label16.Text = "Email: ";
-            // 
-            // label15
-            // 
-            this.label15.AutoSize = true;
-            this.label15.Location = new System.Drawing.Point(184, 157);
-            this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(39, 15);
-            this.label15.TabIndex = 0;
-            this.label15.Text = "Zalo:  ";
-            // 
-            // lbZaloSupport
-            // 
-            this.lbZaloSupport.AutoSize = true;
-            this.lbZaloSupport.Location = new System.Drawing.Point(229, 157);
-            this.lbZaloSupport.Name = "lbZaloSupport";
-            this.lbZaloSupport.Size = new System.Drawing.Size(70, 15);
-            this.lbZaloSupport.TabIndex = 2;
-            this.lbZaloSupport.Text = "XXXXXXXXX";
-            // 
-            // lbEmailSupport
-            // 
-            this.lbEmailSupport.AutoSize = true;
-            this.lbEmailSupport.Location = new System.Drawing.Point(229, 183);
-            this.lbEmailSupport.Name = "lbEmailSupport";
-            this.lbEmailSupport.Size = new System.Drawing.Size(56, 15);
-            this.lbEmailSupport.TabIndex = 3;
-            this.lbEmailSupport.Text = "XXXXXXX";
-            // 
-            // label20
-            // 
-            this.label20.AutoSize = true;
-            this.label20.Location = new System.Drawing.Point(26, 34);
-            this.label20.Name = "label20";
-            this.label20.Size = new System.Drawing.Size(52, 15);
-            this.label20.TabIndex = 4;
-            this.label20.Text = "PinCode";
-            // 
-            // txtPinCodeSupport
-            // 
-            this.txtPinCodeSupport.Location = new System.Drawing.Point(84, 31);
-            this.txtPinCodeSupport.Name = "txtPinCodeSupport";
-            this.txtPinCodeSupport.Size = new System.Drawing.Size(102, 23);
-            this.txtPinCodeSupport.TabIndex = 5;
+            this.llTelegram.AutoSize = true;
+            this.llTelegram.Location = new System.Drawing.Point(26, 75);
+            this.llTelegram.Name = "llTelegram";
+            this.llTelegram.Size = new System.Drawing.Size(193, 15);
+            this.llTelegram.TabIndex = 7;
+            this.llTelegram.TabStop = true;
+            this.llTelegram.Text = "Telegram: https://t.me/avidsupport";
+            this.llTelegram.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.llTelegram_LinkClicked);
             // 
             // btnSupportPincode
             // 
@@ -610,6 +568,40 @@
             this.btnSupportPincode.UseVisualStyleBackColor = true;
             this.btnSupportPincode.Click += new System.EventHandler(this.btnSupportPincode_Click);
             // 
+            // txtPinCodeSupport
+            // 
+            this.txtPinCodeSupport.Location = new System.Drawing.Point(84, 31);
+            this.txtPinCodeSupport.Name = "txtPinCodeSupport";
+            this.txtPinCodeSupport.Size = new System.Drawing.Size(102, 23);
+            this.txtPinCodeSupport.TabIndex = 5;
+            // 
+            // label20
+            // 
+            this.label20.AutoSize = true;
+            this.label20.Location = new System.Drawing.Point(26, 34);
+            this.label20.Name = "label20";
+            this.label20.Size = new System.Drawing.Size(52, 15);
+            this.label20.TabIndex = 4;
+            this.label20.Text = "PinCode";
+            // 
+            // lbEmailSupport
+            // 
+            this.lbEmailSupport.AutoSize = true;
+            this.lbEmailSupport.Location = new System.Drawing.Point(75, 102);
+            this.lbEmailSupport.Name = "lbEmailSupport";
+            this.lbEmailSupport.Size = new System.Drawing.Size(56, 15);
+            this.lbEmailSupport.TabIndex = 3;
+            this.lbEmailSupport.Text = "XXXXXXX";
+            // 
+            // label16
+            // 
+            this.label16.AutoSize = true;
+            this.label16.Location = new System.Drawing.Point(27, 102);
+            this.label16.Name = "label16";
+            this.label16.Size = new System.Drawing.Size(42, 15);
+            this.label16.TabIndex = 1;
+            this.label16.Text = "Email: ";
+            // 
             // activeForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -617,6 +609,7 @@
             this.ClientSize = new System.Drawing.Size(630, 480);
             this.Controls.Add(this.tabControl1);
             this.Controls.Add(this.btnBack);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "activeForm";
             this.Text = "activeForm";
             this.groupBox1.ResumeLayout(false);
@@ -686,13 +679,12 @@
         private System.Windows.Forms.Label lbtenNganHang;
         private System.Windows.Forms.TabPage tabPage3;
         private System.Windows.Forms.Label label16;
-        private System.Windows.Forms.Label label15;
         private System.Windows.Forms.TextBox txtPinCode;
         private System.Windows.Forms.Label label17;
         private System.Windows.Forms.Button btnSupportPincode;
         private System.Windows.Forms.TextBox txtPinCodeSupport;
         private System.Windows.Forms.Label label20;
         private System.Windows.Forms.Label lbEmailSupport;
-        private System.Windows.Forms.Label lbZaloSupport;
+        private System.Windows.Forms.LinkLabel llTelegram;
     }
 }

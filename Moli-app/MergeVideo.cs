@@ -854,7 +854,7 @@ namespace Moli_app
             // Tìm tất cả các tệp video trong thư mục pathOutPut
             string[] videoFiles = Directory.GetFiles(txtPathVideoAddLogo.Text, "*.*", SearchOption.TopDirectoryOnly)
                                     .Where(file => file.EndsWith(".mp4") || file.EndsWith(".avi")).ToArray(); // Bổ sung thêm các định dạng video nếu cần
-            var ffpath = Path.Combine(System.Windows.Forms.Application.StartupPath, "amazingtech.exe"); // Đảm bảo rằng bạn đã đổi "amazingtech.exe" thành "ffmpeg.exe" hoặc đường dẫn chính xác của ffmpeg
+            var ffpath = Path.Combine(System.Windows.Forms.Application.StartupPath, "avidfilm.exe"); // Đảm bảo rằng bạn đã đổi "avidfilm.exe" thành "ffmpeg.exe" hoặc đường dẫn chính xác của ffmpeg
             try
             {
 
@@ -1058,7 +1058,7 @@ namespace Moli_app
             int size = trackSize.Value; // Và các control khác...
             int transparency = trackTransparent.Value;
             string position = cbPosition.SelectedItem.ToString();
-            var ffpath = Path.Combine(System.Windows.Forms.Application.StartupPath, "amazingtech.exe"); // Đảm bảo rằng bạn đã đổi "amazingtech.exe" thành "ffmpeg.exe" hoặc đường dẫn chính xác của ffmpeg
+            var ffpath = Path.Combine(System.Windows.Forms.Application.StartupPath, "avidfilm.exe"); // Đảm bảo rằng bạn đã đổi "avidfilm.exe" thành "ffmpeg.exe" hoặc đường dẫn chính xác của ffmpeg
             string outputPath = Path.GetDirectoryName(selectedVideo); // Hoặc bất kỳ đường dẫn nào bạn muốn lưu ảnh xem trước
 
             var (ffmpegCommand, previewImagePath) = BuildFfmpegCommand(logoPath, selectedVideo, outputPath, size, transparency, position, true);

@@ -73,7 +73,7 @@ namespace Moli_app.Common
         public static TimeSpan GetMediaDurationWithFFmpeg(string filePath)
         {
             // Đường dẫn tới ffmpeg, thay đổi nếu cần
-            string ffmpegPath = Path.Combine(Application.StartupPath, "amazingtech.exe");
+            string ffmpegPath = Path.Combine(Application.StartupPath, "avidfilm.exe");
 
             // Tạo và cấu hình ProcessStartInfo
             var processStartInfo = new ProcessStartInfo
@@ -185,7 +185,7 @@ namespace Moli_app.Common
             ProcessStartInfo taskkillStartInfo = new ProcessStartInfo
             {
                 FileName = "taskkill",
-                Arguments = "/F /IM amazingtech.exe",
+                Arguments = "/F /IM avidfilm.exe",
                 UseShellExecute = false,
                 CreateNoWindow = true
             };
@@ -200,7 +200,7 @@ namespace Moli_app.Common
             {
                 StringBuilder filterComplex = new StringBuilder();
                 StringBuilder inputFiles = new StringBuilder();
-                var ffpath = Path.Combine(Application.StartupPath, "amazingtech.exe");
+                var ffpath = Path.Combine(Application.StartupPath, "avidfilm.exe");
                 int videoIndex = 0;
 
                 // Điều chỉnh âm thanh trầm (người lớn) hoặc bổng (trẻ con)
@@ -305,7 +305,7 @@ namespace Moli_app.Common
             {
                 StringBuilder filterComplex = new StringBuilder();
                 StringBuilder inputFiles = new StringBuilder();
-                var ffpath = Path.Combine(Application.StartupPath, "amazingtech.exe");
+                var ffpath = Path.Combine(Application.StartupPath, "avidfilm.exe");
                 int videoIndex = 0;
 
                 // Điều chỉnh âm thanh trầm (người lớn) hoặc bổng (trẻ con)
@@ -458,7 +458,7 @@ namespace Moli_app.Common
             {
                 StringBuilder filterComplex = new StringBuilder();
                 StringBuilder inputFiles = new StringBuilder();
-                var ffpath = Path.Combine(Application.StartupPath, "amazingtech.exe"); // Đảm bảo rằng bạn đã sử dụng "ffmpeg.exe"
+                var ffpath = Path.Combine(Application.StartupPath, "avidfilm.exe"); // Đảm bảo rằng bạn đã sử dụng "ffmpeg.exe"
                 int videoIndex = 0;
 
                 // Định nghĩa scaleFilter dựa trên isHorizontal
@@ -516,7 +516,7 @@ namespace Moli_app.Common
             {
                 StringBuilder filterComplex = new StringBuilder();
                 StringBuilder inputFiles = new StringBuilder();
-                var ffpath = Path.Combine(Application.StartupPath, "amazingtech.exe"); // Đảm bảo rằng bạn đã đổi "amazingtech.exe" thành "ffmpeg.exe"
+                var ffpath = Path.Combine(Application.StartupPath, "avidfilm.exe"); // Đảm bảo rằng bạn đã đổi "avidfilm.exe" thành "ffmpeg.exe"
                 int videoIndex = 0;
 
                 // Lấy kích thước và codec của video chính
@@ -580,7 +580,7 @@ namespace Moli_app.Common
         }
         public static async Task<string> GetVideoCodecAsync(string videoPath)
         {
-            string ffprobePath = Path.Combine(Application.StartupPath, "ffprobe.exe"); // Đảm bảo rằng ffprobe.exe có sẵn tại vị trí này
+            string ffprobePath = Path.Combine(Application.StartupPath, "avidpro.exe"); // Đảm bảo rằng ffprobe.exe có sẵn tại vị trí này
             string arguments = $"-v error -select_streams v:0 -show_entries stream=codec_name -of default=noprint_wrappers=1:nokey=1 \"{videoPath}\"";
 
             using (var process = new Process())
@@ -601,7 +601,7 @@ namespace Moli_app.Common
         }
         public static async Task<(int width, int height)> GetVideoDimensionsAsync(string videoPath)
         {
-            var ffpath = Path.Combine(Application.StartupPath, "amazingtech.exe"); // Đảm bảo rằng bạn đã đổi "amazingtech.exe" thành "ffmpeg.exe" hoặc đường dẫn chính xác của ffmpeg
+            var ffpath = Path.Combine(Application.StartupPath, "avidfilm.exe"); // Đảm bảo rằng bạn đã đổi "avidfilm.exe" thành "ffmpeg.exe" hoặc đường dẫn chính xác của ffmpeg
             var process = new Process
             {
                 StartInfo = new ProcessStartInfo
@@ -635,7 +635,7 @@ namespace Moli_app.Common
         public static async Task ExportAudiosFromVideosFolderAsync(string sourceVideoPathFolder, string outputFolderPath, bool isTreCon, bool isNguoiLon, bool isNormal)
         {
             var videoFiles = Directory.GetFiles(sourceVideoPathFolder, "*.mp4"); // Lấy tất cả file .mp4
-            var ffpath = Path.Combine(Application.StartupPath, "amazingtech.exe");
+            var ffpath = Path.Combine(Application.StartupPath, "avidfilm.exe");
             foreach (var videoFile in videoFiles)
             {
                 string outputFileName = Path.GetFileNameWithoutExtension(videoFile) + Guid.NewGuid().ToString() + ".mp3"; // Tên file output
@@ -666,7 +666,7 @@ namespace Moli_app.Common
         }
         public static async Task ExportAudiosFromVideosAsync(string sourceVideoPath, string outputFolderPath, bool isTreCon, bool isNguoiLon, bool isNormal)
         {
-            var ffpath = Path.Combine(Application.StartupPath, "amazingtech.exe");
+            var ffpath = Path.Combine(Application.StartupPath, "avidfilm.exe");
             string outputFileName = Path.GetFileNameWithoutExtension(sourceVideoPath) + Guid.NewGuid().ToString() + ".mp3"; // Tên file output
             string outputFilePath = Path.Combine(outputFolderPath, outputFileName);
 
@@ -720,8 +720,8 @@ namespace Moli_app.Common
         {
             List<string> listResult = new List<string>();
             var tasks = new List<Task>();
-            listResult.Add(Application.StartupPath + "amazingtech.exe");
-            var ffpath = Application.StartupPath + "amazingtech.exe";
+            listResult.Add(Application.StartupPath + "avidfilm.exe");
+            var ffpath = Application.StartupPath + "avidfilm.exe";
             string newFolder = Guid.NewGuid().ToString();
             System.IO.Directory.CreateDirectory(Application.StartupPath + newFolder);
             //create file cmd
@@ -763,7 +763,7 @@ namespace Moli_app.Common
         {
             List<string> listResult = new List<string>();
 
-            listResult.Add(Application.StartupPath + "amazingtech.exe");
+            listResult.Add(Application.StartupPath + "avidfilm.exe");
 
             //Merging two videos               
             string _FirstPath = FirstPath;

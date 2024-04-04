@@ -57,13 +57,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="amazing-youtube.exe">
+    <None Update="avidpro.exe">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="amazingtech.exe">
+    <None Update="avidyt.exe">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="ffprobe.exe">
+    <None Update="avidfilm.exe">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>

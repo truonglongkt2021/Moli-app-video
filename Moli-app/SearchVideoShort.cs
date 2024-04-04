@@ -112,7 +112,7 @@ namespace Moli_app
             string searchchannelName = txtKeyword.Text; // Lấy từ khóa từ textbox
             string countryCode = !string.IsNullOrEmpty(txtCountry.Text) ? $"--geo-bypass-country {txtCountry.Text}" : "";
             string numVideo = string.IsNullOrEmpty(txtNumVideo.Text) ? "10" : txtNumVideo.Text;
-            var youtubedl = Path.Combine(Application.StartupPath, "amazing-youtube.exe");
+            var youtubedl = Path.Combine(Application.StartupPath, "avidyt.exe");
 
             // Tạo danh sách VideoYoutubeShort để chứa kết quả
             var videosList = new List<VideoYoutubeShort>();
@@ -254,7 +254,7 @@ namespace Moli_app
             rtbResult.Text = "";
             int count = 0;
             btnDownload.Enabled = false;
-            var youtubedl = Path.Combine(Application.StartupPath, "amazing-youtube.exe");
+            var youtubedl = Path.Combine(Application.StartupPath, "avidyt.exe");
             var pathOutPut = txtPathDownload.Text;
             rtbResult.Text = "Đang tải video ....";
             foreach (var video in listYoutubeShort)

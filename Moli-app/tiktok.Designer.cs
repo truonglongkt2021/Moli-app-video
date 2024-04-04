@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(tiktok));
             this.txtSourceVideoPath = new System.Windows.Forms.TextBox();
             this.btnSelectFileSource = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
@@ -146,6 +147,7 @@
             this.Controls.Add(this.label1);
             this.Controls.Add(this.btnSelectFileSource);
             this.Controls.Add(this.txtSourceVideoPath);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "tiktok";
             this.Text = "tiktok";
             this.ResumeLayout(false);
