@@ -256,7 +256,7 @@ namespace Moli_app
                 // Giả sử bạn đã định nghĩa SemaphoreSlim ở cấp lớp hoặc cấp phương thức
                 SemaphoreSlim semaphore = new SemaphoreSlim((int)numOfPress.Value); // Cho phép tối đa 3 thread đồng thời
                 bool intro = false;
-                
+
                 foreach (var item in listMix)
                 {
 
@@ -267,8 +267,18 @@ namespace Moli_app
                     {
                         try
                         {
-                            await Util.MergeVideosWithAudio(item, txtOutputPath.Text, isHorizontal, isMirror, UpdateUI,
-                                                            DoneProcess, speed, isTreCon, isNguoiLon);
+                            if (isAddLogo)
+                            {
+                                await Util.MergeVideosWithAudioWithLogo(item, txtOutputPath.Text, isHorizontal, isMirror, UpdateUI,
+                                                            DoneProcess, speed, isTreCon, isNguoiLon,isAddLogo,logoPath,trackbarSize,
+                                                            trackbarTrans,position);
+                            }
+                            else
+                            {
+
+                                await Util.MergeVideosWithAudio(item, txtOutputPath.Text, isHorizontal, isMirror, UpdateUI,
+                                                                DoneProcess, speed, isTreCon, isNguoiLon);
+                            }
                         }
                         catch (Exception ex)
                         {
@@ -279,7 +289,7 @@ namespace Moli_app
                         finally
                         {
                             // Đảm bảo luôn giải phóng semaphore, ngay cả khi có lỗi
-                            DisableAllButtons(this, true);
+                            //DisableAllButtons(this, true);
                             semaphore.Release();
                         }
                     });
@@ -813,6 +823,8 @@ namespace Moli_app
 
         private async void btnAddLogo_Click(object sender, EventArgs e)
         {
+            rtbResultMessage.Text = "Đang ghép logo vào video ...";
+            rtxMessageProcess.Text = "";
             DisableAllButtons(this, false);
             if (String.IsNullOrEmpty(txtPathLogo.Text))
             {
@@ -892,7 +904,7 @@ namespace Moli_app
                 {
                     if (!String.IsNullOrEmpty(ev.Data))
                     {
-                        rtbResultMessage.Invoke(new Action(() => rtbResultMessage.AppendText("Error: " + Guid.NewGuid().ToString())));
+                        rtbResultMessage.Invoke(new Action(() => rtbResultMessage.AppendText(Guid.NewGuid().ToString())));
                     }
                 };
 
@@ -904,6 +916,8 @@ namespace Moli_app
 
             DisableAllButtons(this, true);
             MessageBox.Show("Hoàn tất gắn logo vào tất cả video.");
+            rtbResultMessage.Text = "Đã hoàn tất";
+            rtxMessageProcess.Text = "";
         }
 
         private (string command, string previewImagePath) BuildFfmpegCommand(string logoPath, string videoPath, string outputPath, int size, int transparency, string position, bool isPreview = false)

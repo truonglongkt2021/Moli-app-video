@@ -256,6 +256,7 @@ namespace Moli_app
             btnDownload.Enabled = false;
             var youtubedl = Path.Combine(Application.StartupPath, "amazing-youtube.exe");
             var pathOutPut = txtPathDownload.Text;
+            rtbResult.Text = "Đang tải video ....";
             foreach (var video in listYoutubeShort)
             {
                 count++;
@@ -263,36 +264,42 @@ namespace Moli_app
                 {
                     using (Process youtubeDlProcess = new Process())
                     {
-                        // Thiết lập Process để gọi amazing-youtube
-                        youtubeDlProcess.StartInfo.FileName = youtubedl; // Hoặc đường dẫn đầy đủ tới amazing-youtube nếu không có trong PATH
-                        youtubeDlProcess.StartInfo.Arguments = $"{video.VideoUrl} -o \"{pathOutPut}\\{txtKeyword.Text}_{Guid.NewGuid().ToString()}.%(ext)s\""; // Định dạng tên file được lưu
+                        // Cài đặt Process để gọi youtube-dl
+                        youtubeDlProcess.StartInfo.FileName = youtubedl; // Đường dẫn tới youtube-dl
+                        youtubeDlProcess.StartInfo.Arguments = $"{video.VideoUrl} -o \"{pathOutPut}\\{txtKeyword.Text}_{Guid.NewGuid().ToString()}.%(ext)s\"";
                         youtubeDlProcess.StartInfo.UseShellExecute = false;
                         youtubeDlProcess.StartInfo.RedirectStandardOutput = true;
                         youtubeDlProcess.StartInfo.RedirectStandardError = true;
                         youtubeDlProcess.StartInfo.CreateNoWindow = true;
 
-                        // Bắt đầu quá trình và đọc output (nếu cần)
                         youtubeDlProcess.Start();
                         string output = youtubeDlProcess.StandardOutput.ReadToEnd();
                         string error = youtubeDlProcess.StandardError.ReadToEnd();
 
                         await youtubeDlProcess.WaitForExitAsync();
 
-                        if (!string.IsNullOrEmpty(error))
+                        // Cập nhật rtbResult từ thread UI
+                        this.Invoke(new Action(() =>
                         {
-                            Console.WriteLine($"Error downloading video {video.Title}: {error}");
-                        }
-                        else
-                        {
-                            Console.WriteLine($"Downloaded video {video.Title} successfully.");
-                        }
+                            if (!string.IsNullOrEmpty(error))
+                            {
+                                rtbResult.AppendText($"Error downloading video {video.Title}: {error}");
+                            }
+                            else
+                            {
+                                rtbResult.AppendText($"Downloaded video {video.Title} successfully.");
+                            }
+                            // Đảm bảo con trỏ ở cuối văn bản để cuộn đến vị trí đó
+                            rtbResult.SelectionStart = rtbResult.Text.Length;
+                            rtbResult.ScrollToCaret();
+                        }));
                     }
                 }
                 catch (Exception ex)
                 {
                     Console.WriteLine($"An error occurred while downloading video {video.Title}: {ex.Message}");
                 }
-                rtbResult.Text = "Đã tải " + count.ToString() + "/" + listYoutubeShort.Count().ToString();
+                //rtbResult.Text = "Đã tải " + count.ToString() + "/" + listYoutubeShort.Count().ToString();
             }
             DisableAllButtons(this, true);
         }

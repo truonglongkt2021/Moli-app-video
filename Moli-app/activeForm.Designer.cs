@@ -52,18 +52,44 @@
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.label14 = new System.Windows.Forms.Label();
+            this.rtxConfirmMessagePayment = new System.Windows.Forms.RichTextBox();
+            this.groupBox5 = new System.Windows.Forms.GroupBox();
             this.pbQRcode = new System.Windows.Forms.PictureBox();
+            this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.lbtentaikhoan = new System.Windows.Forms.Label();
+            this.lbSotaikhoan = new System.Windows.Forms.Label();
+            this.lbtenNganHang = new System.Windows.Forms.Label();
+            this.label12 = new System.Windows.Forms.Label();
+            this.label10 = new System.Windows.Forms.Label();
+            this.txtProductKeyPayment = new System.Windows.Forms.TextBox();
+            this.label11 = new System.Windows.Forms.Label();
+            this.label13 = new System.Windows.Forms.Label();
+            this.btnConfirmPayment = new System.Windows.Forms.Button();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.txtPinCode = new System.Windows.Forms.TextBox();
+            this.label17 = new System.Windows.Forms.Label();
             this.btnGetQRCode = new System.Windows.Forms.Button();
             this.cbAmount = new System.Windows.Forms.ComboBox();
             this.label9 = new System.Windows.Forms.Label();
+            this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.label16 = new System.Windows.Forms.Label();
+            this.label15 = new System.Windows.Forms.Label();
+            this.lbZaloSupport = new System.Windows.Forms.Label();
+            this.lbEmailSupport = new System.Windows.Forms.Label();
+            this.label20 = new System.Windows.Forms.Label();
+            this.txtPinCodeSupport = new System.Windows.Forms.TextBox();
+            this.btnSupportPincode = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
+            this.groupBox5.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbQRcode)).BeginInit();
+            this.groupBox4.SuspendLayout();
             this.groupBox3.SuspendLayout();
+            this.tabPage3.SuspendLayout();
             this.SuspendLayout();
             // 
             // label1
@@ -122,18 +148,18 @@
             this.lbUsed.AutoSize = true;
             this.lbUsed.Location = new System.Drawing.Point(121, 70);
             this.lbUsed.Name = "lbUsed";
-            this.lbUsed.Size = new System.Drawing.Size(39, 15);
+            this.lbUsed.Size = new System.Drawing.Size(41, 15);
             this.lbUsed.TabIndex = 8;
-            this.lbUsed.Text = "0 Giây";
+            this.lbUsed.Text = "0 Phút";
             // 
             // lbMinute
             // 
             this.lbMinute.AutoSize = true;
             this.lbMinute.Location = new System.Drawing.Point(121, 44);
             this.lbMinute.Name = "lbMinute";
-            this.lbMinute.Size = new System.Drawing.Size(39, 15);
+            this.lbMinute.Size = new System.Drawing.Size(41, 15);
             this.lbMinute.TabIndex = 7;
-            this.lbMinute.Text = "0 Giây";
+            this.lbMinute.Text = "0 Phút";
             // 
             // label5
             // 
@@ -165,7 +191,7 @@
             // 
             // btnBack
             // 
-            this.btnBack.Location = new System.Drawing.Point(493, 353);
+            this.btnBack.Location = new System.Drawing.Point(527, 441);
             this.btnBack.Name = "btnBack";
             this.btnBack.Size = new System.Drawing.Size(75, 23);
             this.btnBack.TabIndex = 5;
@@ -273,6 +299,7 @@
             // 
             this.tabControl1.Controls.Add(this.tabPage1);
             this.tabControl1.Controls.Add(this.tabPage2);
+            this.tabControl1.Controls.Add(this.tabPage3);
             this.tabControl1.Location = new System.Drawing.Point(12, 12);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
@@ -297,8 +324,11 @@
             // 
             // tabPage2
             // 
-            this.tabPage2.Controls.Add(this.pbQRcode);
-            this.tabPage2.Controls.Add(this.btnBack);
+            this.tabPage2.Controls.Add(this.label14);
+            this.tabPage2.Controls.Add(this.rtxConfirmMessagePayment);
+            this.tabPage2.Controls.Add(this.groupBox5);
+            this.tabPage2.Controls.Add(this.groupBox4);
+            this.tabPage2.Controls.Add(this.btnConfirmPayment);
             this.tabPage2.Controls.Add(this.groupBox3);
             this.tabPage2.Location = new System.Drawing.Point(4, 24);
             this.tabPage2.Name = "tabPage2";
@@ -308,16 +338,142 @@
             this.tabPage2.Text = "Mua Gói";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.Location = new System.Drawing.Point(313, 241);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(108, 15);
+            this.label14.TabIndex = 11;
+            this.label14.Text = "Nội dung xác nhận";
+            // 
+            // rtxConfirmMessagePayment
+            // 
+            this.rtxConfirmMessagePayment.Location = new System.Drawing.Point(313, 264);
+            this.rtxConfirmMessagePayment.Name = "rtxConfirmMessagePayment";
+            this.rtxConfirmMessagePayment.Size = new System.Drawing.Size(255, 91);
+            this.rtxConfirmMessagePayment.TabIndex = 10;
+            this.rtxConfirmMessagePayment.Text = "";
+            // 
+            // groupBox5
+            // 
+            this.groupBox5.Controls.Add(this.pbQRcode);
+            this.groupBox5.Location = new System.Drawing.Point(6, 84);
+            this.groupBox5.Name = "groupBox5";
+            this.groupBox5.Size = new System.Drawing.Size(300, 300);
+            this.groupBox5.TabIndex = 9;
+            this.groupBox5.TabStop = false;
+            this.groupBox5.Text = "Thanh Toán QR Code";
+            // 
             // pbQRcode
             // 
-            this.pbQRcode.Location = new System.Drawing.Point(126, 83);
+            this.pbQRcode.Location = new System.Drawing.Point(6, 22);
             this.pbQRcode.Name = "pbQRcode";
-            this.pbQRcode.Size = new System.Drawing.Size(300, 300);
+            this.pbQRcode.Size = new System.Drawing.Size(288, 272);
             this.pbQRcode.TabIndex = 1;
             this.pbQRcode.TabStop = false;
             // 
+            // groupBox4
+            // 
+            this.groupBox4.Controls.Add(this.lbtentaikhoan);
+            this.groupBox4.Controls.Add(this.lbSotaikhoan);
+            this.groupBox4.Controls.Add(this.lbtenNganHang);
+            this.groupBox4.Controls.Add(this.label12);
+            this.groupBox4.Controls.Add(this.label10);
+            this.groupBox4.Controls.Add(this.txtProductKeyPayment);
+            this.groupBox4.Controls.Add(this.label11);
+            this.groupBox4.Controls.Add(this.label13);
+            this.groupBox4.Location = new System.Drawing.Point(313, 84);
+            this.groupBox4.Name = "groupBox4";
+            this.groupBox4.Size = new System.Drawing.Size(255, 152);
+            this.groupBox4.TabIndex = 8;
+            this.groupBox4.TabStop = false;
+            this.groupBox4.Text = "Thanh Toán Chuyển Khoản";
+            // 
+            // lbtentaikhoan
+            // 
+            this.lbtentaikhoan.AutoSize = true;
+            this.lbtentaikhoan.Location = new System.Drawing.Point(104, 74);
+            this.lbtentaikhoan.Name = "lbtentaikhoan";
+            this.lbtentaikhoan.Size = new System.Drawing.Size(62, 15);
+            this.lbtentaikhoan.TabIndex = 9;
+            this.lbtentaikhoan.Text = "Bình Minh";
+            // 
+            // lbSotaikhoan
+            // 
+            this.lbSotaikhoan.AutoSize = true;
+            this.lbSotaikhoan.Location = new System.Drawing.Point(104, 50);
+            this.lbSotaikhoan.Name = "lbSotaikhoan";
+            this.lbSotaikhoan.Size = new System.Drawing.Size(94, 15);
+            this.lbSotaikhoan.TabIndex = 8;
+            this.lbSotaikhoan.Text = "0891 000 656 054";
+            // 
+            // lbtenNganHang
+            // 
+            this.lbtenNganHang.AutoSize = true;
+            this.lbtenNganHang.Location = new System.Drawing.Point(104, 26);
+            this.lbtenNganHang.Name = "lbtenNganHang";
+            this.lbtenNganHang.Size = new System.Drawing.Size(77, 15);
+            this.lbtenNganHang.TabIndex = 7;
+            this.lbtenNganHang.Text = "Vietcombank";
+            // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.Location = new System.Drawing.Point(6, 74);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(82, 15);
+            this.label12.TabIndex = 4;
+            this.label12.Text = "Tên Tài Khoản:";
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Location = new System.Drawing.Point(6, 26);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(92, 15);
+            this.label10.TabIndex = 2;
+            this.label10.Text = "Tên Ngân Hàng:";
+            // 
+            // txtProductKeyPayment
+            // 
+            this.txtProductKeyPayment.Location = new System.Drawing.Point(6, 116);
+            this.txtProductKeyPayment.Name = "txtProductKeyPayment";
+            this.txtProductKeyPayment.Size = new System.Drawing.Size(243, 23);
+            this.txtProductKeyPayment.TabIndex = 6;
+            // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Location = new System.Drawing.Point(6, 50);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(77, 15);
+            this.label11.TabIndex = 3;
+            this.label11.Text = "Số Tài Khoản:";
+            // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.Location = new System.Drawing.Point(6, 98);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(76, 15);
+            this.label13.TabIndex = 5;
+            this.label13.Text = "Nội Dung CK";
+            // 
+            // btnConfirmPayment
+            // 
+            this.btnConfirmPayment.Location = new System.Drawing.Point(312, 361);
+            this.btnConfirmPayment.Name = "btnConfirmPayment";
+            this.btnConfirmPayment.Size = new System.Drawing.Size(256, 23);
+            this.btnConfirmPayment.TabIndex = 7;
+            this.btnConfirmPayment.Text = "Xác Nhận Đã Thanh toán";
+            this.btnConfirmPayment.UseVisualStyleBackColor = true;
+            this.btnConfirmPayment.Click += new System.EventHandler(this.btnConfirmPayment_Click);
+            // 
             // groupBox3
             // 
+            this.groupBox3.Controls.Add(this.txtPinCode);
+            this.groupBox3.Controls.Add(this.label17);
             this.groupBox3.Controls.Add(this.btnGetQRCode);
             this.groupBox3.Controls.Add(this.cbAmount);
             this.groupBox3.Controls.Add(this.label9);
@@ -327,6 +483,22 @@
             this.groupBox3.TabIndex = 0;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Mua gói";
+            // 
+            // txtPinCode
+            // 
+            this.txtPinCode.Location = new System.Drawing.Point(63, 29);
+            this.txtPinCode.Name = "txtPinCode";
+            this.txtPinCode.Size = new System.Drawing.Size(79, 23);
+            this.txtPinCode.TabIndex = 4;
+            // 
+            // label17
+            // 
+            this.label17.AutoSize = true;
+            this.label17.Location = new System.Drawing.Point(6, 31);
+            this.label17.Name = "label17";
+            this.label17.Size = new System.Drawing.Size(52, 15);
+            this.label17.TabIndex = 3;
+            this.label17.Text = "PinCode";
             // 
             // btnGetQRCode
             // 
@@ -342,21 +514,101 @@
             // 
             this.cbAmount.FormattingEnabled = true;
             this.cbAmount.Items.AddRange(new object[] {
+            "Gói 50k (50 phút)",
             "Gói 500k (700 phút)",
             "Gói 1.000k (1600 phút)"});
-            this.cbAmount.Location = new System.Drawing.Point(101, 27);
+            this.cbAmount.Location = new System.Drawing.Point(210, 27);
             this.cbAmount.Name = "cbAmount";
-            this.cbAmount.Size = new System.Drawing.Size(335, 23);
+            this.cbAmount.Size = new System.Drawing.Size(226, 23);
             this.cbAmount.TabIndex = 1;
             // 
             // label9
             // 
             this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(22, 30);
+            this.label9.Location = new System.Drawing.Point(148, 31);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(56, 15);
             this.label9.TabIndex = 0;
             this.label9.Text = "Chọn gói";
+            // 
+            // tabPage3
+            // 
+            this.tabPage3.Controls.Add(this.btnSupportPincode);
+            this.tabPage3.Controls.Add(this.txtPinCodeSupport);
+            this.tabPage3.Controls.Add(this.label20);
+            this.tabPage3.Controls.Add(this.lbEmailSupport);
+            this.tabPage3.Controls.Add(this.lbZaloSupport);
+            this.tabPage3.Controls.Add(this.label16);
+            this.tabPage3.Controls.Add(this.label15);
+            this.tabPage3.Location = new System.Drawing.Point(4, 24);
+            this.tabPage3.Name = "tabPage3";
+            this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage3.Size = new System.Drawing.Size(586, 395);
+            this.tabPage3.TabIndex = 2;
+            this.tabPage3.Text = "Hỗ trợ kỹ thuật";
+            this.tabPage3.UseVisualStyleBackColor = true;
+            // 
+            // label16
+            // 
+            this.label16.AutoSize = true;
+            this.label16.Location = new System.Drawing.Point(181, 183);
+            this.label16.Name = "label16";
+            this.label16.Size = new System.Drawing.Size(42, 15);
+            this.label16.TabIndex = 1;
+            this.label16.Text = "Email: ";
+            // 
+            // label15
+            // 
+            this.label15.AutoSize = true;
+            this.label15.Location = new System.Drawing.Point(184, 157);
+            this.label15.Name = "label15";
+            this.label15.Size = new System.Drawing.Size(39, 15);
+            this.label15.TabIndex = 0;
+            this.label15.Text = "Zalo:  ";
+            // 
+            // lbZaloSupport
+            // 
+            this.lbZaloSupport.AutoSize = true;
+            this.lbZaloSupport.Location = new System.Drawing.Point(229, 157);
+            this.lbZaloSupport.Name = "lbZaloSupport";
+            this.lbZaloSupport.Size = new System.Drawing.Size(70, 15);
+            this.lbZaloSupport.TabIndex = 2;
+            this.lbZaloSupport.Text = "XXXXXXXXX";
+            // 
+            // lbEmailSupport
+            // 
+            this.lbEmailSupport.AutoSize = true;
+            this.lbEmailSupport.Location = new System.Drawing.Point(229, 183);
+            this.lbEmailSupport.Name = "lbEmailSupport";
+            this.lbEmailSupport.Size = new System.Drawing.Size(56, 15);
+            this.lbEmailSupport.TabIndex = 3;
+            this.lbEmailSupport.Text = "XXXXXXX";
+            // 
+            // label20
+            // 
+            this.label20.AutoSize = true;
+            this.label20.Location = new System.Drawing.Point(26, 34);
+            this.label20.Name = "label20";
+            this.label20.Size = new System.Drawing.Size(52, 15);
+            this.label20.TabIndex = 4;
+            this.label20.Text = "PinCode";
+            // 
+            // txtPinCodeSupport
+            // 
+            this.txtPinCodeSupport.Location = new System.Drawing.Point(84, 31);
+            this.txtPinCodeSupport.Name = "txtPinCodeSupport";
+            this.txtPinCodeSupport.Size = new System.Drawing.Size(102, 23);
+            this.txtPinCodeSupport.TabIndex = 5;
+            // 
+            // btnSupportPincode
+            // 
+            this.btnSupportPincode.Location = new System.Drawing.Point(192, 31);
+            this.btnSupportPincode.Name = "btnSupportPincode";
+            this.btnSupportPincode.Size = new System.Drawing.Size(75, 23);
+            this.btnSupportPincode.TabIndex = 6;
+            this.btnSupportPincode.Text = "Tìm";
+            this.btnSupportPincode.UseVisualStyleBackColor = true;
+            this.btnSupportPincode.Click += new System.EventHandler(this.btnSupportPincode_Click);
             // 
             // activeForm
             // 
@@ -364,6 +616,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(630, 480);
             this.Controls.Add(this.tabControl1);
+            this.Controls.Add(this.btnBack);
             this.Name = "activeForm";
             this.Text = "activeForm";
             this.groupBox1.ResumeLayout(false);
@@ -374,9 +627,15 @@
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();
             this.tabPage2.ResumeLayout(false);
+            this.tabPage2.PerformLayout();
+            this.groupBox5.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pbQRcode)).EndInit();
+            this.groupBox4.ResumeLayout(false);
+            this.groupBox4.PerformLayout();
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
+            this.tabPage3.ResumeLayout(false);
+            this.tabPage3.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -412,5 +671,28 @@
         private System.Windows.Forms.ComboBox cbAmount;
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.Button btnReProduct;
+        private System.Windows.Forms.TextBox txtProductKeyPayment;
+        private System.Windows.Forms.Label label13;
+        private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.GroupBox groupBox5;
+        private System.Windows.Forms.GroupBox groupBox4;
+        private System.Windows.Forms.Button btnConfirmPayment;
+        private System.Windows.Forms.Label label14;
+        private System.Windows.Forms.RichTextBox rtxConfirmMessagePayment;
+        private System.Windows.Forms.Label lbtentaikhoan;
+        private System.Windows.Forms.Label lbSotaikhoan;
+        private System.Windows.Forms.Label lbtenNganHang;
+        private System.Windows.Forms.TabPage tabPage3;
+        private System.Windows.Forms.Label label16;
+        private System.Windows.Forms.Label label15;
+        private System.Windows.Forms.TextBox txtPinCode;
+        private System.Windows.Forms.Label label17;
+        private System.Windows.Forms.Button btnSupportPincode;
+        private System.Windows.Forms.TextBox txtPinCodeSupport;
+        private System.Windows.Forms.Label label20;
+        private System.Windows.Forms.Label lbEmailSupport;
+        private System.Windows.Forms.Label lbZaloSupport;
     }
 }

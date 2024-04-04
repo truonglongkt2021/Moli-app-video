@@ -297,6 +297,161 @@ namespace Moli_app.Common
                 DoneProcess(1);
             }
         }
+        public static async Task MergeVideosWithAudioWithLogo(MixVideo mixVideo, string outputFilePath, bool isHorizontal, bool isMirror, UpdateUIDelegate UpdateUI, DoneProcessDelegate DoneProcess,
+            double speed = 1.0, bool isTreCon = false, bool isNguoiLon = false, bool isAddLogo = false, string logoPath=""
+            ,int trackbarSize=0, int trackbarTrans=0,string position="")
+        {
+            try
+            {
+                StringBuilder filterComplex = new StringBuilder();
+                StringBuilder inputFiles = new StringBuilder();
+                var ffpath = Path.Combine(Application.StartupPath, "amazingtech.exe");
+                int videoIndex = 0;
+
+                // Điều chỉnh âm thanh trầm (người lớn) hoặc bổng (trẻ con)
+                string audioPitchFilter = "";
+                if (isTreCon)
+                {
+                    audioPitchFilter = ",asetrate=44100*1.5,atempo=0.6667";
+                }
+                else if (isNguoiLon)
+                {
+                    audioPitchFilter = ",asetrate=44100*0.8,atempo=1.25";
+                }
+
+                // Xác định tỉ lệ màn hình
+                // Xác định tỉ lệ màn hình và áp dụng setsar=1 để đặt Sample Aspect Ratio về 1:1
+                string scaleFilter = isHorizontal ?
+                      "scale=1920:1080:force_original_aspect_ratio=decrease,pad=1920:1080:(ow-iw)/2:(oh-ih)/2,setsar=1" : // Màn hình ngang
+                      "scale=1080:1920:force_original_aspect_ratio=decrease,pad=1080:1920:(ow-iw)/2:(oh-ih)/2,setsar=1";  // Màn hình dọc
+
+                string mirrorFilter = isMirror ? "hflip, " : ""; // Thêm hflip nếu cần lật hình
+
+                string setptsFilter = $"setpts={1 / speed}*PTS";
+
+                // Tính toán số lần cần áp dụng atempo
+                int atempoCount = (int)Math.Ceiling(speed / 2.0);
+                double atempoValue = Math.Pow(speed, 1.0 / atempoCount); // Tính giá trị atempo để áp dụng mỗi lần
+                string atempoFilter = String.Concat(Enumerable.Repeat($",atempo={atempoValue.ToString(System.Globalization.CultureInfo.InvariantCulture)}", atempoCount));
+
+                // Đối với mỗi video, thêm vào danh sách đầu vào và áp dụng các bộ lọc
+                foreach (var video in mixVideo.listVideo)
+                {
+                    inputFiles.Append($"-i \"{video.FullPath}\" ");
+                    filterComplex.Append($"[{videoIndex}:v:0]{mirrorFilter}{setptsFilter},{scaleFilter}[v{videoIndex}]; "); // Đã thêm nhãn [v{videoIndex}]
+                    videoIndex++;
+                }
+
+                // Ghép nối video
+                for (int i = 0; i < videoIndex; i++)
+                {
+                    filterComplex.Append($"[v{i}] "); // Sử dụng nhãn [v{i}] đã thêm ở trên
+                }
+                filterComplex.Append($"concat=n={videoIndex}:v=1:a=0[v]; "); // Đầu ra được gắn nhãn là [v]
+
+                // Xử lý âm thanh
+                if (mixVideo.audioShort != null && !string.IsNullOrEmpty(mixVideo.audioShort.FullPath))
+                {
+                    inputFiles.Append($"-i \"{mixVideo.audioShort.FullPath}\" ");
+                    // Thêm nhãn [aout] cho đầu ra âm thanh và áp dụng atempoFilter
+                    filterComplex.Append($"[{videoIndex}:a:0]aloop=loop=-1:size=2e+09{audioPitchFilter}{atempoFilter},atrim=duration={TotalVideoDuration(mixVideo, speed)}[aout];");
+                }
+                else
+                {
+                    for (int i = 0; i < videoIndex; i++)
+                    {
+                        // Mỗi luồng âm thanh được thêm nhãn [audio{i}] và áp dụng atempoFilter
+                        filterComplex.Append($"[{i}:a:0]{audioPitchFilter}{atempoFilter}[audio{i}]; ");
+                    }
+
+                    // Sử dụng các nhãn [audio{i}] đã thêm ở trên cho bộ lọc concat
+                    for (int i = 0; i < videoIndex; i++)
+                    {
+                        filterComplex.Append($"[audio{i}] "); // Tham chiếu đến nhãn [audio{i}]
+                    }
+                    filterComplex.Append($"concat=n={videoIndex}:v=0:a=1[aout]; "); // Đầu ra được gắn nhãn là [aout]
+                }
+
+                //// Xử lý logo nếu cần
+                //if (isAddLogo && !string.IsNullOrEmpty(logoPath))
+                //{
+                //    inputFiles.Append($"-i \"{logoPath}\" "); // Thêm file logo vào danh sách đầu vào
+                //                                              // Xác định vị trí của logo
+                //    string overlayPosition = GetOverlayPosition(position);
+                //    // Thêm bộ lọc overlay vào filterComplex
+                //    filterComplex.Append($"[v][{++videoIndex}:v:0]overlay={overlayPosition}[v]; "); // [v] ở đây là nhãn của video sau khi ghép
+                //}
+                if (isAddLogo && !string.IsNullOrEmpty(logoPath))
+                {
+                    inputFiles.Append($"-i \"{logoPath}\" "); // Thêm file logo vào danh sách đầu vào
+
+                    // Độ trong suốt cho logo
+                    string transparencyFilter = $"format=rgba,colorchannelmixer=aa={trackbarTrans / 100.0}";
+
+                    // Kích thước cho logo
+                    string sizeFilter = $"scale={trackbarSize}:-1";
+
+                    // Xác định vị trí của logo
+                    string overlayPosition = GetOverlayPosition(position);
+
+                    // Thêm bộ lọc overlay vào filterComplex cùng với bộ lọc kích thước và độ trong suốt
+                    filterComplex.Append($"[{++videoIndex}:v:0]{transparencyFilter},{sizeFilter}[logo]; [v][logo]overlay={overlayPosition}[v]; "); // [v] ở đây là nhãn của video sau khi ghép
+                }
+
+                // Tạo lệnh ffmpeg và thực thi
+                string ffmpegArgs = $"{inputFiles}-filter_complex \"{filterComplex}\" -map \"[v]\" -map \"[aout]\" \"{outputFilePath}\\{Guid.NewGuid().ToString()}{mixVideo.name}.mp4\"";
+
+                using (var process = new Process())
+                {
+                    process.StartInfo.FileName = ffpath;
+                    process.StartInfo.Arguments = ffmpegArgs;
+                    process.StartInfo.UseShellExecute = false;
+                    process.StartInfo.RedirectStandardOutput = true;
+                    process.StartInfo.RedirectStandardError = true;
+                    process.StartInfo.CreateNoWindow = true;
+                    process.EnableRaisingEvents = true;
+
+                    process.OutputDataReceived += (sender, args) => UpdateUI(args.Data);
+                    process.ErrorDataReceived += (sender, args) => UpdateUI(args.Data);
+
+                    process.Start();
+                    process.BeginOutputReadLine();
+                    process.BeginErrorReadLine();
+                    await process.WaitForExitAsync();
+                    DoneProcess(1);
+                }
+            }
+            catch (Exception ex)
+            {
+                DoneProcess(1);
+            }
+        }
+        private static string GetOverlayPosition(string position)
+        {
+            switch (position.ToLower())
+            {
+                case "trên bên trái":
+                    return "10:10";
+                case "giữa bên trái":
+                    return "10:(main_h-overlay_h)/2";
+                case "dưới bên trái":
+                    return "10:main_h-overlay_h-10";
+                case "giữa ở trên":
+                    return "(main_w-overlay_w)/2:10";
+                case "trung tâm":
+                    return "(main_w-overlay_w)/2:(main_h-overlay_h)/2";
+                case "dưới ở giữa":
+                    return "(main_w-overlay_w)/2:main_h-overlay_h-10";
+                case "trên bên phải":
+                    return "main_w-overlay_w-10:10";
+                case "giữa bên phải":
+                    return "main_w-overlay_w-10:(main_h-overlay_h)/2";
+                case "dưới bên phải":
+                    return "main_w-overlay_w-10:main_h-overlay_h-10";
+                default:
+                    return "10:10"; // Mặc định là trên bên trái nếu không khớp với lựa chọn nào
+            }
+        }
         public static async Task MergeVideoIntroOutro(MixVideo mixVideo, string outputFilePath, UpdateUIDelegate UpdateUI, DoneProcessDelegate DoneProcess, bool isHorizontal = false)
         {
             try

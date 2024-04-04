@@ -836,16 +836,16 @@
             this.rtxMessageProcess.BackColor = System.Drawing.SystemColors.InactiveCaption;
             this.rtxMessageProcess.Location = new System.Drawing.Point(611, 604);
             this.rtxMessageProcess.Name = "rtxMessageProcess";
-            this.rtxMessageProcess.Size = new System.Drawing.Size(212, 66);
+            this.rtxMessageProcess.Size = new System.Drawing.Size(380, 33);
             this.rtxMessageProcess.TabIndex = 74;
             this.rtxMessageProcess.Text = "";
             // 
             // rtbResultMessage
             // 
             this.rtbResultMessage.BackColor = System.Drawing.SystemColors.InactiveBorder;
-            this.rtbResultMessage.Location = new System.Drawing.Point(829, 604);
+            this.rtbResultMessage.Location = new System.Drawing.Point(611, 635);
             this.rtbResultMessage.Name = "rtbResultMessage";
-            this.rtbResultMessage.Size = new System.Drawing.Size(162, 66);
+            this.rtbResultMessage.Size = new System.Drawing.Size(380, 35);
             this.rtbResultMessage.TabIndex = 75;
             this.rtbResultMessage.Text = "";
             // 

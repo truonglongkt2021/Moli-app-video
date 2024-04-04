@@ -19,6 +19,9 @@ namespace Moli_app
         public activeForm()
         {
             InitializeComponent();
+            cbAmount.SelectedIndex = 1;
+            var productKey = SystemInfoHelper.getProductKey(); // Giả sử bạn đã có hàm GetProductKey()
+            txtProductKeyPayment.Text = productKey.Replace("-", "");
             DisableAllButtons(this, false);
             this.Load += ActiveForm_Load;
         }
@@ -57,8 +60,8 @@ namespace Moli_app
                 }
 
                 lbProductKey.Text = productKey;
-                lbMinute.Text = returnModel.NumberMin.ToString() + " Giây";
-                lbUsed.Text = returnModel.NumberUsed.ToString() + " Giây";
+                lbMinute.Text = SecondsToMinutesString(returnModel.NumberMin);
+                lbUsed.Text = SecondsToMinutesString(returnModel.NumberUsed);
                 DisableAllButtons(this, true);
             }
             catch (Exception ex)
@@ -67,7 +70,11 @@ namespace Moli_app
                 MessageBox.Show("Error: " + ex.Message);
             }
         }
-       
+        // Hàm chuyển đổi giây sang phút
+        static string SecondsToMinutesString(double seconds)
+        {
+            return (Math.Round(seconds / 60.0, 1)).ToString() + " Phút";
+        }
         private async void btnActive_Click(object sender, EventArgs e)
         {
             DisableAllButtons(this, false);
@@ -102,8 +109,8 @@ namespace Moli_app
             }
             // showw result 
             lbProductKey.Text = productKey;
-            lbMinute.Text = ReturnModel.NumberMin.ToString() + " Giây";
-            lbUsed.Text = ReturnModel.NumberUsed.ToString() + " Giây";
+            lbMinute.Text = SecondsToMinutesString(ReturnModel.NumberMin);
+            lbUsed.Text = SecondsToMinutesString(ReturnModel.NumberUsed);
             Program.MinuteRemain = ReturnModel.NumberMin - ReturnModel.NumberUsed;
             Program.MinuteUsed = ReturnModel.NumberUsed;
             DisableAllButtons(this, true);
@@ -257,11 +264,36 @@ namespace Moli_app
             }
         }
 
-        private void btnGetQRCode_Click(object sender, EventArgs e)
+        private async void btnGetQRCode_Click(object sender, EventArgs e)
         {
-            var amount = cbAmount.SelectedIndex==1?500000:1000000;
+            if (txtPinCode.Text == "")
+            {
+                MessageBox.Show("Vui lòng chọn Pincode Người quản lý.");
+                return;
+            }
+            var modUser = await ApiHelper.GetMod(txtPinCode.Text);
+            lbtentaikhoan.Text = modUser.tenTaiKhoan;
+            lbtenNganHang.Text = modUser.tenNganHang;
+            lbSotaikhoan.Text = modUser.soTaiKhoan;
+            lbZaloSupport.Text = modUser.soDienThoai;
+            lbEmailSupport.Text = modUser.email;
+            if (!modUser.IsActive)
+            {
+                MessageBox.Show("Không tìm thấy Người quản lý, vui lòng chọn lại Pincode.");
+                return;
+            }
+            var amount = 50000;
+            switch (cbAmount.SelectedIndex)
+            {
+                case 0: amount = 50000; break;
+                case 1: amount = 500000; break;
+                case 2: amount = 1000000; break;
+                default:
+                    amount = 50000;
+                    break;
+            }
             var productKey = SystemInfoHelper.getProductKey(); // Giả sử bạn đã có hàm GetProductKey()
-            var url = $"https://img.vietqr.io/image/970423-00136212001-compact2.jpg?amount={amount}&addInfo={productKey}&accountName=Truong%20Long";
+            var url = $"https://img.vietqr.io/image/{modUser.tenNganHang}-{modUser.soTaiKhoan}-qr_only.jpg?amount={amount}&addInfo={productKey}&accountName={modUser.tenTaiKhoan}";
             pbQRcode.SizeMode = PictureBoxSizeMode.Zoom;
             LoadImageAsync(url);
         }
@@ -292,6 +324,55 @@ namespace Moli_app
                     MessageBox.Show("Không thể tải hình ảnh.");
                 }
             }
+        }
+
+        private async void btnConfirmPayment_Click(object sender, EventArgs e)
+        {
+            DialogResult result = MessageBox.Show("Xác nhận đã thanh toán, \n bộ phận kỹ thuật sẽ active gói cho bạn trong thời gian nhanh nhất", "Xác Nhận Thanh Toán", MessageBoxButtons.OKCancel);
+            // Xử lý kết quả
+            if (result == DialogResult.OK)
+            {
+                // Hành động khi nút OK được nhấn
+                Console.WriteLine("Người dùng đã chọn OK.");
+                // Thêm code xử lý sau khi nút OK được nhấn ở đây
+                //gọi api, gửi mail thông báo
+                if (lbEmailSupport.Text=="")
+                {
+                    MessageBox.Show("Bạn chưa chọn đúng Pincode, vui lòng thử lại");
+                    return;
+                }
+                DisableAllButtons(this, false);
+                var ret = await ApiHelper.ConfirmPayment(rtxConfirmMessagePayment.Text,lbEmailSupport.Text);
+                if (ret.IsActive)
+                {
+                    MessageBox.Show("Chúng tôi đã nhận thông tin, bạn vui lòng chờ hỗ trợ cập nhật gói cho bạn");
+
+                }
+            }
+            else if (result == DialogResult.Cancel)
+            {
+                // Hành động khi nút Cancel được nhấn
+                Console.WriteLine("Người dùng đã chọn Cancel.");
+                DisableAllButtons(this, false);
+                // Thêm code xử lý sau khi nút Cancel được nhấn ở đây
+                return;
+            }
+            DisableAllButtons(this, false);
+        }
+
+        private async void btnSupportPincode_Click(object sender, EventArgs e)
+        {
+            if (txtPinCode.Text == "")
+            {
+                MessageBox.Show("Vui lòng chọn Pincode Người quản lý.");
+                return;
+            }
+            var modUser = await ApiHelper.GetMod(txtPinCode.Text);
+            lbtentaikhoan.Text = modUser.tenTaiKhoan;
+            lbtenNganHang.Text = modUser.tenNganHang;
+            lbSotaikhoan.Text = modUser.soTaiKhoan;
+            lbZaloSupport.Text = modUser.soDienThoai;
+            lbEmailSupport.Text = modUser.email;
         }
     }
 }
